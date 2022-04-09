@@ -15,10 +15,10 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    AlertDialog dialog;
-    NumberPicker[] numPickers = new NumberPicker[10];
-    Button btnDialog, btnAdd, btnDeleteAll, btnOK, btnShowList;
-    EditText edtYear, edtMonth, edtDate, edtCategory, edtStartHour, edtStartMinute, edtEndHour, edtEndMinute;
+    AlertDialog Dialog;
+    NumberPicker[] NumPickers = new NumberPicker[10];
+    Button BtnDialog, BtnAdd, BtnDeleteAll, BtnOK, BtnShowList;
+    EditText EdtYear, EdtMonth, EdtDate, EdtCategory, EdtStartHour, EdtStartMinute, EdtEndHour, EdtEndMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,85 +27,85 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        btnDialog = findViewById(R.id.btnDialog);
-        btnAdd = findViewById(R.id.btnAdd);
-        btnDeleteAll = findViewById(R.id.btnDeleteAll);
-        btnShowList = findViewById(R.id.btnShowList);
+        BtnDialog = findViewById(R.id.btnDialog);
+        BtnAdd = findViewById(R.id.btnAdd);
+        BtnDeleteAll = findViewById(R.id.btnDeleteAll);
+        BtnShowList = findViewById(R.id.btnShowList);
 
 
-        edtYear = (EditText) findViewById(R.id.edtYear);
-        edtMonth = (EditText) findViewById(R.id.edtMonth);
-        edtDate = (EditText) findViewById(R.id.edtDate);
-        edtCategory = (EditText) findViewById(R.id.edtCategory);
-        edtStartHour = (EditText) findViewById(R.id.edtStartHour);
-        edtStartMinute = (EditText) findViewById(R.id.edtStartMinute);
-        edtEndHour = (EditText) findViewById(R.id.edtEndHour);
-        edtEndMinute = (EditText) findViewById(R.id.edtEndMinute);
+        EdtYear = (EditText) findViewById(R.id.edtYear);
+        EdtMonth = (EditText) findViewById(R.id.edtMonth);
+        EdtDate = (EditText) findViewById(R.id.edtDate);
+        EdtCategory = (EditText) findViewById(R.id.edtCategory);
+        EdtStartHour = (EditText) findViewById(R.id.edtStartHour);
+        EdtStartMinute = (EditText) findViewById(R.id.edtStartMinute);
+        EdtEndHour = (EditText) findViewById(R.id.edtEndHour);
+        EdtEndMinute = (EditText) findViewById(R.id.edtEndMinute);
 
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
-        numPickers[0] = dialogView.findViewById(R.id.numPicker1);
-        numPickers[1] = dialogView.findViewById(R.id.numPicker2);
-        numPickers[2] = dialogView.findViewById(R.id.numPicker3);
-        numPickers[3] = dialogView.findViewById(R.id.numPicker4);
+        NumPickers[0] = dialogView.findViewById(R.id.numPicker1);
+        NumPickers[1] = dialogView.findViewById(R.id.numPicker2);
+        NumPickers[2] = dialogView.findViewById(R.id.numPicker3);
+        NumPickers[3] = dialogView.findViewById(R.id.numPicker4);
         for(int i = 0; i < 4; i+=2) {
-            numPickers[i].setTextSize(100);
-            numPickers[i].setMaxValue(12);
-            numPickers[i].setMinValue(0);
-            numPickers[i].setBackgroundColor(0xFF000000);
-            numPickers[i].setTextColor(0xFFFFFFFF);
+            NumPickers[i].setTextSize(100);
+            NumPickers[i].setMaxValue(12);
+            NumPickers[i].setMinValue(0);
+            NumPickers[i].setBackgroundColor(0xFF000000);
+            NumPickers[i].setTextColor(0xFFFFFFFF);
         }
         for(int i = 1; i < 4; i+=2) {
-            numPickers[i].setTextSize(100);
-            numPickers[i].setMaxValue(59);
-            numPickers[i].setMinValue(0);
-            numPickers[i].setBackgroundColor(0xFF000000);
-            numPickers[i].setTextColor(0xFFFFFFFF);
+            NumPickers[i].setTextSize(100);
+            NumPickers[i].setMaxValue(59);
+            NumPickers[i].setMinValue(0);
+            NumPickers[i].setBackgroundColor(0xFF000000);
+            NumPickers[i].setTextColor(0xFFFFFFFF);
         }
 
-        btnOK = dialogView.findViewById(R.id.btnOK);
+        BtnOK = dialogView.findViewById(R.id.btnOK);
 
         builder.setView(dialogView);
-        dialog = builder.create();
-        btnDialog.setOnClickListener(new View.OnClickListener() {
+        Dialog = builder.create();
+        BtnDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
+                Dialog.show();
             }
         });
 
-        btnOK.setOnClickListener(new View.OnClickListener() {
+        BtnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar cal = Calendar.getInstance();
-                edtYear.setText(Integer.toString(cal.get(Calendar.YEAR)));
-                edtMonth.setText(Integer.toString(cal.get(Calendar.MONTH) + 1));
-                edtDate.setText(Integer.toString(cal.get(Calendar.DATE)));
-                edtStartHour.setText(Integer.toString(numPickers[0].getValue()));
-                edtStartMinute.setText(Integer.toString(numPickers[1].getValue()));
-                edtEndHour.setText(Integer.toString(numPickers[2].getValue()));
-                edtEndMinute.setText(Integer.toString(numPickers[3].getValue()));
-                edtCategory.setText("data");
-                dialog.dismiss();
+                EdtYear.setText(Integer.toString(cal.get(Calendar.YEAR)));
+                EdtMonth.setText(Integer.toString(cal.get(Calendar.MONTH) + 1));
+                EdtDate.setText(Integer.toString(cal.get(Calendar.DATE)));
+                EdtStartHour.setText(Integer.toString(NumPickers[0].getValue()));
+                EdtStartMinute.setText(Integer.toString(NumPickers[1].getValue()));
+                EdtEndHour.setText(Integer.toString(NumPickers[2].getValue()));
+                EdtEndMinute.setText(Integer.toString(NumPickers[3].getValue()));
+                EdtCategory.setText("data");
+                Dialog.dismiss();
             }
         });
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        BtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(checkEmpty()) {
-                    ActInfoDB.databaseWriteExecutor.execute(() -> {
+                    ActInfoDB.DatabaseWriteExecutor.execute(() -> {
                         ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
                         ActInfoDao mActInfoDao = db.actInfoDao();
                         ActInfo actInfo = new ActInfo();
-                        actInfo.setYear(Integer.parseInt(edtYear.getText().toString()));
-                        actInfo.setMonth(Integer.parseInt(edtMonth.getText().toString()));
-                        actInfo.setDate(Integer.parseInt(edtDate.getText().toString()));
-                        actInfo.setCategory(edtCategory.getText().toString());
-                        actInfo.setStartHour(Integer.parseInt(edtStartHour.getText().toString()));
-                        actInfo.setStartMinute(Integer.parseInt(edtStartMinute.getText().toString()));
-                        actInfo.setEndHour(Integer.parseInt(edtEndHour.getText().toString()));
-                        actInfo.setEndMinute(Integer.parseInt(edtEndMinute.getText().toString()));
+                        actInfo.setYear(Integer.parseInt(EdtYear.getText().toString()));
+                        actInfo.setMonth(Integer.parseInt(EdtMonth.getText().toString()));
+                        actInfo.setDate(Integer.parseInt(EdtDate.getText().toString()));
+                        actInfo.setCategory(EdtCategory.getText().toString());
+                        actInfo.setStartHour(Integer.parseInt(EdtStartHour.getText().toString()));
+                        actInfo.setStartMinute(Integer.parseInt(EdtStartMinute.getText().toString()));
+                        actInfo.setEndHour(Integer.parseInt(EdtEndHour.getText().toString()));
+                        actInfo.setEndMinute(Integer.parseInt(EdtEndMinute.getText().toString()));
                         mActInfoDao.insert(actInfo);
                     });
                     Toast.makeText(getApplicationContext(), "Data Added", Toast.LENGTH_SHORT).show();
@@ -115,10 +115,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnDeleteAll.setOnClickListener(new View.OnClickListener() {
+        BtnDeleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActInfoDB.databaseWriteExecutor.execute(() -> {
+                ActInfoDB.DatabaseWriteExecutor.execute(() -> {
                     ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
                     ActInfoDao mActInfoDao = db.actInfoDao();
                     mActInfoDao.deleteAll();
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnShowList.setOnClickListener(new View.OnClickListener() {
+        BtnShowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showList();
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean checkEmpty() {
         try {
-            Integer.parseInt(edtYear.getText().toString());
+            Integer.parseInt(EdtYear.getText().toString());
             return true;
         } catch(NumberFormatException e) {
             return false;

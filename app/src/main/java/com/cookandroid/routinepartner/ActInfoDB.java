@@ -15,7 +15,7 @@ public abstract class ActInfoDB extends RoomDatabase {
 
     private static volatile ActInfoDB INSTANCE = null;
     public abstract ActInfoDao actInfoDao();
-    static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
+    static final ExecutorService DatabaseWriteExecutor = Executors.newFixedThreadPool(4);
 
     // Database가 열려있지 않은 경우 연다
     static ActInfoDB getDatabase(final Context context) {
