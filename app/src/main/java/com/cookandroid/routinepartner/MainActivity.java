@@ -127,10 +127,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        btnShowList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showList();
+            }
+        });
     }
 
-
+    public void showList() {
+        Intent intent = new Intent(this, ActInfoListActivity.class);
+        startActivity(intent);
+    }
 
     public boolean checkEmpty() {
         try {

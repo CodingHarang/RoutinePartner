@@ -19,6 +19,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ActInfoListActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>
