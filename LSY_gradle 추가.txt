@@ -1,0 +1,10 @@
+MPAndroidChart
+
+build.gradle에 있는 dependencies 안에 아래 추가
+
+implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+
+
+settings.gradle에 있는 dependencyResolutionManagement 안에 아래 추가
+
+maven { url 'https://jitpack.io' }
