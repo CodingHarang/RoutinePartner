@@ -1,4 +1,4 @@
-package com.cookandroid.routinepartner;
+package com.example.routinepartner;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.cookandroid.routinepartner;
+package com.example.routinepartner;
 
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +18,8 @@ public class ActInfoListActivity extends AppCompatActivity {
     protected ActInfoRecyclerViewAdapter MAdapter;
     protected RecyclerView MRecyclerView;
     protected RecyclerView.LayoutManager MLayoutManager;
-    protected ArrayList<ActInfo> ActInfoArrayList;
-    protected ArrayList<ActInfoItem> ActInfoList = new ArrayList<ActInfoItem>();
+    protected ArrayList<ActInfo> ActInfoList;
+    protected ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +38,17 @@ public class ActInfoListActivity extends AppCompatActivity {
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDao mActInfoDao = db.actInfoDao();
-            ActInfoArrayList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
-            for(int i = 0; i < ActInfoArrayList.size(); i++) {
-                ActInfoList.add(new ActInfoItem(ActInfoArrayList.get(i).getYear(), ActInfoArrayList.get(i).getMonth(), ActInfoArrayList.get(i).getDate(), ActInfoArrayList.get(i).getCategory(), ActInfoArrayList.get(i).getStartHour(), ActInfoArrayList.get(i).getStartMinute(), ActInfoArrayList.get(i).getEndHour(), ActInfoArrayList.get(i).getEndMinute()));
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
+            for(int i = 0; i < ActInfoList.size(); i++) {
+                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
             }
         });
 
         BtnGetList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i = 0; i < ActInfoArrayList.size(); i++) {
-                    MAdapter.addItem(ActInfoList.get(i));
+                for(int i = 0; i < ActInfoList.size(); i++) {
+                    MAdapter.addItem(ActInfoItemList.get(i));
                 }
                 // ui를 바꾸는 task는 무조건 main thread에서만 일어나야 한다
                 MAdapter.notifyDataSetChanged();

@@ -1,4 +1,4 @@
-package com.cookandroid.routinepartner;
+package com.example.routinepartner;
 
 import android.content.Context;
 import android.view.LayoutInflater;

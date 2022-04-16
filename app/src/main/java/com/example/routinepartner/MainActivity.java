@@ -1,4 +1,4 @@
-package com.cookandroid.routinepartner;
+package com.example.routinepartner;
 
 import android.app.AlertDialog;
 import android.content.Intent;

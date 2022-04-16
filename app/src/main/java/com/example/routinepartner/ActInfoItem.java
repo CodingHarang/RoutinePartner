@@ -1,4 +1,4 @@
-package com.cookandroid.routinepartner;
+package com.example.routinepartner;
 
 // ActInfo의 데이터를 불러와 ActInfoItem에 저장
 public class ActInfoItem {

@@ -1,4 +1,4 @@
-package com.cookandroid.routinepartner;
+package com.example.routinepartner;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
