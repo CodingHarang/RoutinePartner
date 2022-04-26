@@ -4,8 +4,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -21,17 +27,27 @@ public class MainActivity extends AppCompatActivity {
 
     LottieAnimationView PetView;
     TextView PetName;
-    Button btn_NameSet;
-    String action="meal"; //actinfoitem 에서 가져옴
+    String action="meal"; //ActInfoItem 에서 가져옴
+    Context MainContext;
+    String text_PetName="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MainContext=this;
+
+
+        text_PetName=PreferenceManage.getString(MainContext,"rebuild");
+        if(text_PetName.isEmpty()){
+            text_PetName="";
+        }
+        PetName=(TextView) findViewById(R.id.PetName);
+        PetName.setText(text_PetName);
 
         PetView=findViewById(R.id.lottie);
         PetView.setAnimation("HappyDog.json");
-        PetView.setRepeatCount(2);  
+        PetView.setRepeatCount(2);
         PetView.playAnimation();
 
         PetView.addAnimatorListener(new Animator.AnimatorListener() {
@@ -59,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animator animator) {
                 PetView.setOnClickListener((view -> {
-                    PetView.setRepeatCount(1);  //app:lottie_loop="true"
+                    action="";
+                    PetView.setRepeatCount(1);
                     PetView.playAnimation();
                 }));
 
@@ -84,36 +101,6 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationRepeat(Animator animator) {
 
             }
-        });
-
-        PetName =(TextView) findViewById(R.id.PetName);
-        btn_NameSet=(Button)findViewById(R.id.btn_NameSet);
-
-        btn_NameSet.setOnClickListener((view)->{
-            AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("펫 이름 설정");
-            builder.setMessage("이름을 입력하시오.");
-            final EditText editText=new EditText(MainActivity.this);
-            builder.setView(editText);
-
-            builder.setPositiveButton("입력", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog,int which){
-                    String name;
-                    name=editText.getText().toString();
-                    PetName.setText(name);
-                    dialog.dismiss();
-                    //btn_NameSet.setText("이름변경");
-                }
-            });
-            builder.setNegativeButton("취소",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-            builder.show();
-
         });
 
     }
@@ -147,4 +134,44 @@ public class MainActivity extends AppCompatActivity {
         });
         img.startAnimation(fadeIn);
     }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.setup_menu,menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.NameSet:{
+                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("펫 이름 설정");
+                builder.setMessage("이름을 입력하시오.");
+                final EditText editText=new EditText(MainActivity.this);
+                builder.setView(editText);
+
+                builder.setPositiveButton("입력", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog,int which){
+                        String name;
+                        name=editText.getText().toString();
+                        PetName.setText(name);
+                        PreferenceManage.setString(MainContext, "rebuild", name);
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("취소",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                builder.show();
+            } break;
+
+            default:
+        }
+        return true;
+    }
+
 }
