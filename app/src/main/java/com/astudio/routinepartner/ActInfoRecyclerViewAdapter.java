@@ -73,4 +73,9 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
         ActInfoList.remove(position);
         notifyDataSetChanged();
     }
+
+    public void clearView() {
+        ActInfoList.clear();
+        notifyDataSetChanged();
+    }
 }

@@ -1,5 +1,5 @@
 package com.astudio.routinepartner;
-/*
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
@@ -294,4 +294,4 @@ public class BarChartActivity extends AppCompatActivity {
             DayList.add(CurrentDay);
         }
     }
-}*/
+}

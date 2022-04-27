@@ -3,9 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/MyProjects/RoutinePartner/app/src/main/res/drawable/ic_launcher_background.xml" value="0.205" />
         <entry key="..\:/MyProjects/RoutinePartner/app/src/main/res/layout/act_info_list.xml" value="0.17806484295845998" />
-        <entry key="..\:/MyProjects/RoutinePartner/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/MyProjects/RoutinePartner/app/src/main/res/layout/activity_bar_chart.xml" value="0.1875" />
+        <entry key="..\:/MyProjects/RoutinePartner/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/MyProjects/RoutinePartner/app/src/main/res/layout/dialog.xml" value="0.5" />
+        <entry key="..\:/MyProjects/RoutinePartner/app/src/main/res/layout/dialog_add.xml" value="0.1875" />
+        <entry key="..\:/MyProjects/RoutinePartner/app/src/main/res/menu/setup_menu.xml" value="0.36614583333333334" />
       </map>
     </option>
   </component>

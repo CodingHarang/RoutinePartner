@@ -6,7 +6,7 @@ public class ActInfoItem {
     String Category;
     int ItemId, Year, Month, Date, StartHour, StartMinute, EndHour, EndMinute;
 
-    public ActInfoItem(int id, int year, int month, int date, String category, int startHour, int startMinute, int endHour, int endMinute) {
+    public ActInfoItem(int id,  String category,int year, int month, int date, int startHour, int startMinute, int endHour, int endMinute) {
         ItemId = id;
         Year = year;
         Month = month;

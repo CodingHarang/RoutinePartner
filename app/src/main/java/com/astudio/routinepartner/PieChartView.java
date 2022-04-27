@@ -33,9 +33,9 @@ public class PieChartView extends View {
         ppaint.setStrokeWidth(5.0f);
         paint.setColor(Color.parseColor("#DFF4FF"));
         RectF rect = new RectF();
-        rect.set(100, 400, 1000, 1300);
+        rect.set(0, 0, 1000, 1000);
         RectF arcrect = new RectF();
-        arcrect.set(100, 400, 1000, 1300);
+        arcrect.set(0, 0, 1000, 1000);
         canvas.drawArc(rect, 0, 360, true, paint);
         SmallPaint.setColor(Color.parseColor("#DFF4FF"));
 
