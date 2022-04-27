@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.github.mikephil.charting.charts.BarChart;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +28,27 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Float> AngleList = new ArrayList<Float>();
     ArrayList<Integer> YesterDayTimeList = new ArrayList<>(Arrays.asList(22, 30, 0, 0));
     ArrayList<Float> YesterDayAngleList = new ArrayList<>();
+
+
+    //Test Code
+
+    Test t = new Test();
+
+    public void bringTodayData(){
+        t.testAddDayOne();
+        for(int i = 0 ; i < t.TestItemList.size(); i++){
+            TimeList.clear();
+            TimeList.add(t.TestItemList.get(i).StartTime);
+            TimeList.add(t.TestItemList.get(i).StartMin);
+            TimeList.add(t.TestItemList.get(i).EndTime);
+            TimeList.add(t.TestItemList.get(i).EndMin);
+            timeToAngle(TimeList);
+            t.CategoryList.add(t.TestItemList.get(i).Cate);
+        }
+
+    }
+
+    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +65,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(BarIntent);
             }
         });
+        
+        //시간 텍스트로 받을 경우 파싱하는 부분 필요 없으면 지움
+//        for(int i = 0; i<TimeData.size(); i++){
+//            timeParsing(TimeData.get(i));
+//            timeToAngle(TimeList);
+//        }
 
+        sendDataToPieChart();
 
-        for(int i = 0; i<TimeData.size(); i++){
-            timeParsing(TimeData.get(i));
-            timeToAngle(TimeList);
-        }
+//        PieChartAutoReset();
+    }
 
-        timeToAngleYesterday(YesterDayTimeList);
+    private void sendDataToPieChart(){
+//        timeToAngleYesterday(YesterDayTimeList);
+        bringTodayData();
 
         try{
             PieChart.Data.addAll(AngleList); //타임 리스트에 있는 시간에 관한 데이터를 파이차트뷰의 데이터리스트로 넘김
@@ -58,14 +88,12 @@ public class MainActivity extends AppCompatActivity {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
-
-//        PieChartAutoReset();
     }
 
 
+    //시간에 관한 데이터를 스트링으로 받을 경우 파싱
 
-
-    public void timeParsing(String GetTime){ //시간에 관한 데이터를 스트링으로 받을 경우 파싱
+    public void timeParsing(String GetTime){
         ArrayList<Integer> TempTimeList = new ArrayList<Integer>();
         String EachTime[] = GetTime.split("/");
         for(int i = 0; i < 4; i++){

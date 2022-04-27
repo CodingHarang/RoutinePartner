@@ -26,6 +26,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class BarChartActivity extends AppCompatActivity {
@@ -36,9 +38,10 @@ public class BarChartActivity extends AppCompatActivity {
     String CurrentCategory, EditStartText, EditEndText;
     Boolean CategoryValue = false, DateCompareValue = false;
     ArrayList<String> DayList = new ArrayList<>();
-    ArrayList<Integer> TimeList = new ArrayList<>();
+    ArrayList<Float> TimeList = new ArrayList<>();
     Spinner ChartSpinner;
     Button BtnMakeChart;
+//    int SYear, SMonth, SDay, EYear, EMonth, EDay;
 
 
     DatePickerDialog.OnDateSetListener ChartDatePicker = new DatePickerDialog.OnDateSetListener() {
@@ -63,6 +66,8 @@ public class BarChartActivity extends AppCompatActivity {
         ChartSpinner = (Spinner) findViewById(R.id.ChartSpinner);
         BtnMakeChart = (Button) findViewById(R.id.BtnMakeChart);
 
+        bringDataFromTest();
+
         
         //스피너에 관한 부분
         
@@ -82,20 +87,31 @@ public class BarChartActivity extends AppCompatActivity {
                         break;
                     case 1:
                         CategoryValue = true;
+                        DayList.clear();
+                        TimeList.clear();
                         CurrentCategory = ActItems[i];
-                        insertExampleData();
+                        getData();
                         break;
                     case 2:
                         CategoryValue = true;
+                        DayList.clear();
+                        TimeList.clear();
                         CurrentCategory = ActItems[i];
+                        getData();
                         break;
                     case 3:
                         CategoryValue = true;
+                        DayList.clear();
+                        TimeList.clear();
                         CurrentCategory = ActItems[i];
+                        getData();
                         break;
                     case 4:
                         CategoryValue = true;
+                        DayList.clear();
+                        TimeList.clear();
                         CurrentCategory = ActItems[i];
+                        getData();
                         break;
                 }
             }
@@ -118,6 +134,12 @@ public class BarChartActivity extends AppCompatActivity {
                 DateWhen = EditStart;
                 new DatePickerDialog(BarChartActivity.this, ChartDatePicker, ChartCalender.get(Calendar.YEAR),
                         ChartCalender.get(Calendar.MONTH), ChartCalender.get(Calendar.DAY_OF_MONTH)).show();
+
+//                SYear = ChartCalender.get(Calendar.YEAR);
+//                SMonth = ChartCalender.get(Calendar.MONTH);
+//                SDay = ChartCalender.get(Calendar.DAY_OF_MONTH);
+//
+//                Log.v("값 확인", ""+SYear+"  "+SMonth+"  "+SDay);
             }
         });
 
@@ -181,7 +203,7 @@ public class BarChartActivity extends AppCompatActivity {
     
     //차트 설정에 관한 부분
 
-    private void drawBarChart(ArrayList<String> daylist, ArrayList<Integer> timelist){
+    private void drawBarChart(ArrayList<String> daylist, ArrayList<Float> timelist){
 
         YAxis Yraxis, Ylaxis;
 
@@ -202,6 +224,7 @@ public class BarChartActivity extends AppCompatActivity {
 
         Bar_Chart.clear();
         Bar_Chart.setHighlightPerTapEnabled(false); //그래프 각 항목 터치시 하이라이트 안되게 설정
+        Bar_Chart.setHighlightPerDragEnabled(false);
         Bar_Chart.setTouchEnabled(true);
         Bar_Chart.setDragEnabled(true);
         Bar_Chart.setScaleEnabled(false);
@@ -212,7 +235,7 @@ public class BarChartActivity extends AppCompatActivity {
 
         ArrayList<BarEntry> entries = new ArrayList<>();
         for(int i = 0; i < daylist.size(); i++){
-            entries.add(new BarEntry((Integer) timelist.get(i), i));
+            entries.add(new BarEntry(timelist.get(i), i));
         }
 
         BarDataSet depenses = new BarDataSet(entries, "시간");
@@ -231,28 +254,44 @@ public class BarChartActivity extends AppCompatActivity {
     }
 
 
-    public void insertExampleData(){
-        DayList.add("4/5");
-        DayList.add("4/6");
-        DayList.add("4/7");
-        DayList.add("4/8");
-        DayList.add("4/9");
-        DayList.add("4/10");
-        DayList.add("4/11");
-        DayList.add("4/12");
-        DayList.add("4/13");
-        DayList.add("4/14");
+    //카테고리에 따른 값 계산
 
-        TimeList.add(5);
-        TimeList.add(12);
-        TimeList.add(10);
-        TimeList.add(2);
-        TimeList.add(6);
-        TimeList.add(5);
-        TimeList.add(10);
-        TimeList.add(2);
-        TimeList.add(6);
-        TimeList.add(5);
+
+    //test code
+    ArrayList<ArrayList<Test>> TestAllDayList = new ArrayList<>();
+    Test t = new Test();
+
+    private void bringDataFromTest() {
+        t.testAddDayOne();
+        t.testAddDayTwo();
     }
+    //
 
+    private void getData(){
+        float CategoryTime;
+        String CurrentDay;
+        //선택한 기간의 데이터 가져오기
+        //그 안에서 선택된 카테고리의 값만 가져오기
+        for(int i = 0; i < t.TestItemAllDayList.size(); i++){
+            CurrentDay = Integer.toString(t.TestItemAllDayList.get(i).get(0).Month)+"/"+Integer.toString(t.TestItemAllDayList.get(i).get(0).Day);
+            //Integer.toString(t.TestItemAllDayList.get(i).get(0).Year)+"/n"+
+            CategoryTime = 0;
+            for(int j = 0; j < t.TestItemAllDayList.get(i).size() ; j++){
+                if(t.TestItemAllDayList.get(i).get(j).Cate.equals(CurrentCategory)){
+                    float time;
+                    float CalSTime = t.TestItemAllDayList.get(i).get(j).StartTime, CalETime = t.TestItemAllDayList.get(i).get(j).EndTime,
+                            CalSMin = t.TestItemAllDayList.get(i).get(j).StartMin, CalEMin = t.TestItemAllDayList.get(i).get(j).EndMin;
+
+                    if(CalETime == 0){
+                        CalETime = 24;
+                    }
+
+                    time = ((CalETime*60+CalEMin)-(CalSTime*60+CalSMin))/60;
+                    CategoryTime += time;
+                }
+            }
+            TimeList.add(CategoryTime);
+            DayList.add(CurrentDay);
+        }
+    }
 }
