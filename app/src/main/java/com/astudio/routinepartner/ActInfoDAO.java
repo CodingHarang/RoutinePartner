@@ -15,6 +15,9 @@ public interface ActInfoDAO {
     @Query("DELETE FROM actInfo")
     void deleteAll();
 
+    @Query("DELETE FROM actInfo WHERE :id = actInfo.id")
+    void deleteByActId(int id);
+
     @Query("SELECT * FROM actInfo")
     ActInfo[] getAll();
 }

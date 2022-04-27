@@ -27,6 +27,8 @@ public class ActInfo {
     @ColumnInfo(name = "endMinute")
     private int EndMinute;
 
+    public int getId() { return this.id; }
+
     public int getYear() {
         return this.Year;
     }

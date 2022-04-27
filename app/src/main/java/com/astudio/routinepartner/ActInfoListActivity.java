@@ -40,7 +40,7 @@ public class ActInfoListActivity extends AppCompatActivity {
             ActInfoDAO mActInfoDao = db.actInfoDao();
             ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
             for(int i = 0; i < ActInfoList.size(); i++) {
-                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
             }
         });
 

@@ -31,6 +31,12 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(Context, Integer.toString(Index), Toast.LENGTH_SHORT).show();
+                    ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+                        ActInfoDB db = ActInfoDB.getDatabase(Context);
+                        ActInfoDAO mActInfoDao = db.actInfoDao();
+                        mActInfoDao.deleteByActId(ActInfoList.get(Index).ItemId);
+                    });
+                    Toast.makeText(Context, "id" + Integer.toString(Index) + "deleted", Toast.LENGTH_SHORT).show();
                     delItem(Index);
                 }
             });
@@ -38,7 +44,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
 
         public void setItem(ActInfoItem item, int position) {
             Index = position;
-            BtnEdit.setText(item.Category + "\n" + Integer.toString(item.Year) + " - " + Integer.toString(item.Month) + " - " + Integer.toString(item.Date) + "\n" + Integer.toString(item.StartHour) + " : " + Integer.toString(item.StartMinute) + " ~ " + Integer.toString(item.EndHour) + " : " + Integer.toString(item.EndMinute));
+            BtnEdit.setText(item.Category + "   id : " + Integer.toString(item.ItemId) + "\n" + Integer.toString(item.Year) + " - " + Integer.toString(item.Month) + " - " + Integer.toString(item.Date) + "\n" + Integer.toString(item.StartHour) + " : " + Integer.toString(item.StartMinute) + " ~ " + Integer.toString(item.EndHour) + " : " + Integer.toString(item.EndMinute));
 
         }
     }

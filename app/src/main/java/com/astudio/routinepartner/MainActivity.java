@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +19,8 @@ public class MainActivity extends AppCompatActivity {
     AlertDialog Dialog;
     NumberPicker[] NumPickers = new NumberPicker[10];
     Button BtnDialog, BtnAdd, BtnDeleteAll, BtnOK, BtnShowList;
-    EditText EdtYear, EdtMonth, EdtDate, EdtCategory, EdtStartHour, EdtStartMinute, EdtEndHour, EdtEndMinute;
+    EditText EdtCategory;
+    TextView TxtTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,43 +29,44 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        TxtTime = findViewById(R.id.txtTime);
         BtnDialog = findViewById(R.id.btnDialog);
-        BtnAdd = findViewById(R.id.btnAdd);
         BtnDeleteAll = findViewById(R.id.btnDeleteAll);
         BtnShowList = findViewById(R.id.btnShowList);
 
 
-        EdtYear = (EditText) findViewById(R.id.edtYear);
-        EdtMonth = (EditText) findViewById(R.id.edtMonth);
-        EdtDate = (EditText) findViewById(R.id.edtDate);
-        EdtCategory = (EditText) findViewById(R.id.edtCategory);
-        EdtStartHour = (EditText) findViewById(R.id.edtStartHour);
-        EdtStartMinute = (EditText) findViewById(R.id.edtStartMinute);
-        EdtEndHour = (EditText) findViewById(R.id.edtEndHour);
-        EdtEndMinute = (EditText) findViewById(R.id.edtEndMinute);
-
-
         View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
-        NumPickers[0] = dialogView.findViewById(R.id.numPicker1);
-        NumPickers[1] = dialogView.findViewById(R.id.numPicker2);
-        NumPickers[2] = dialogView.findViewById(R.id.numPicker3);
-        NumPickers[3] = dialogView.findViewById(R.id.numPicker4);
-        for(int i = 0; i < 4; i+=2) {
-            NumPickers[i].setTextSize(100);
+        NumPickers[0] = dialogView.findViewById(R.id.numPickerAMPMS);
+        NumPickers[1] = dialogView.findViewById(R.id.numPickerAMPME);
+        NumPickers[2] = dialogView.findViewById(R.id.numPickerHourS);
+        NumPickers[3] = dialogView.findViewById(R.id.numPickerHourE);
+        NumPickers[4] = dialogView.findViewById(R.id.numPickerMinuteS);
+        NumPickers[5] = dialogView.findViewById(R.id.numPickerMinuteE);
+        EdtCategory = dialogView.findViewById(R.id.edtCategory);
+        BtnOK = dialogView.findViewById(R.id.btnOK);
+
+        for(int i = 2; i < 4; i++) {
+            NumPickers[i].setTextSize(40);
             NumPickers[i].setMaxValue(12);
             NumPickers[i].setMinValue(0);
             NumPickers[i].setBackgroundColor(0xFF000000);
             NumPickers[i].setTextColor(0xFFFFFFFF);
         }
-        for(int i = 1; i < 4; i+=2) {
-            NumPickers[i].setTextSize(100);
+        for(int i = 4; i < 6; i++) {
+            NumPickers[i].setTextSize(40);
             NumPickers[i].setMaxValue(59);
             NumPickers[i].setMinValue(0);
             NumPickers[i].setBackgroundColor(0xFF000000);
             NumPickers[i].setTextColor(0xFFFFFFFF);
         }
-
-        BtnOK = dialogView.findViewById(R.id.btnOK);
+        for(int i = 0; i < 2; i++) {
+            NumPickers[i].setTextSize(30);
+            NumPickers[i].setMaxValue(1);
+            NumPickers[i].setMinValue(0);
+            NumPickers[i].setBackgroundColor(0xFF000000);
+            NumPickers[i].setTextColor(0xFFFFFFFF);
+            NumPickers[i].setDisplayedValues(new String[] {"AM", "PM"});
+        }
 
         builder.setView(dialogView);
         Dialog = builder.create();
@@ -71,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Dialog.show();
+                for(int i = 0; i < 6; i++) {
+                    NumPickers[i].setValue(0);
+                }
             }
         });
 
@@ -78,19 +84,40 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Calendar cal = Calendar.getInstance();
-                EdtYear.setText(Integer.toString(cal.get(Calendar.YEAR)));
-                EdtMonth.setText(Integer.toString(cal.get(Calendar.MONTH) + 1));
-                EdtDate.setText(Integer.toString(cal.get(Calendar.DATE)));
-                EdtStartHour.setText(Integer.toString(NumPickers[0].getValue()));
-                EdtStartMinute.setText(Integer.toString(NumPickers[1].getValue()));
-                EdtEndHour.setText(Integer.toString(NumPickers[2].getValue()));
-                EdtEndMinute.setText(Integer.toString(NumPickers[3].getValue()));
-                EdtCategory.setText("data");
+                String CategoryName, Year, Month, Date, SAMPM, Shour, Sminute, EAMPM, Ehour, Eminute;
+                CategoryName = EdtCategory.getText().toString();
+                Year = Integer.toString(cal.get(Calendar.YEAR));
+                Month = Integer.toString(cal.get(Calendar.MONTH) + 1);
+                Date = Integer.toString(cal.get(Calendar.DATE));
+                SAMPM = NumPickers[0].getValue() == 0 ? "AM" : "PM";
+                Shour = Integer.toString(NumPickers[2].getValue());
+                Sminute = Integer.toString(NumPickers[4].getValue());
+                EAMPM = NumPickers[1].getValue() == 0 ? "AM" : "PM";
+                Ehour = Integer.toString(NumPickers[3].getValue());
+                Eminute = Integer.toString(NumPickers[5].getValue());
+                TxtTime.setText(CategoryName + "\n" + Year + "-" + Month + "-" + Date + "  " + SAMPM + " " + Shour + ":" + Sminute + " ~ " + EAMPM + " " + Ehour + ":" + Eminute);
+
+                ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+                    ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+                    ActInfoDAO mActInfoDao = db.actInfoDao();
+                    ActInfo actInfo = new ActInfo();
+                    actInfo.setYear(Integer.parseInt(Year));
+                    actInfo.setMonth(Integer.parseInt(Month));
+                    actInfo.setDate(Integer.parseInt(Date));
+                    actInfo.setCategory(CategoryName);
+                    actInfo.setStartHour(SAMPM == "AM" ? Integer.parseInt(Shour) : Integer.parseInt(Shour) + 12);
+                    actInfo.setStartMinute(Integer.parseInt(Sminute));
+                    actInfo.setEndHour(EAMPM == "AM" ? Integer.parseInt(Ehour) : Integer.parseInt(Ehour) + 12);
+                    actInfo.setEndMinute(Integer.parseInt(Eminute));
+                    mActInfoDao.insert(actInfo);
+                });
+                Toast.makeText(getApplicationContext(), "Data Added", Toast.LENGTH_SHORT).show();
+
                 Dialog.dismiss();
             }
         });
 
-        BtnAdd.setOnClickListener(new View.OnClickListener() {
+        /*BtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(checkEmpty()) {
@@ -113,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Fill Empty Please", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
 
         BtnDeleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,12 +167,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public boolean checkEmpty() {
-        try {
-            Integer.parseInt(EdtYear.getText().toString());
-            return true;
-        } catch(NumberFormatException e) {
-            return false;
-        }
-    }
 }

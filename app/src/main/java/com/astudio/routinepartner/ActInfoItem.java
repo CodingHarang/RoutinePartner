@@ -4,9 +4,10 @@ package com.astudio.routinepartner;
 public class ActInfoItem {
 
     String Category;
-    int Year, Month, Date, StartHour, StartMinute, EndHour, EndMinute;
+    int ItemId, Year, Month, Date, StartHour, StartMinute, EndHour, EndMinute;
 
-    public ActInfoItem(int year, int month, int date, String category, int startHour, int startMinute, int endHour, int endMinute) {
+    public ActInfoItem(int id, int year, int month, int date, String category, int startHour, int startMinute, int endHour, int endMinute) {
+        ItemId = id;
         Year = year;
         Month = month;
         Date = date;
