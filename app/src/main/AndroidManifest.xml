@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RoutinePartner">
         <activity
-            android:name="com.example.routinepartner.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,9 +20,9 @@
         </activity>
 
         <activity
-            android:name="com.example.routinepartner.ActInfoListActivity"
+            android:name=".ActInfoListActivity"
             android:exported="true"
-            android:parentActivityName="com.example.routinepartner.MainActivity">
+            android:parentActivityName=".MainActivity">
         </activity>
     </application>
 
