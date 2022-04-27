@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Context MainContext;
     String text_PetName="";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,21 +52,22 @@ public class MainActivity extends AppCompatActivity {
         PetView.playAnimation();
 
         PetView.addAnimatorListener(new Animator.AnimatorListener() {
+            FadeInAndOut FadeAnimation=new FadeInAndOut();
             @Override
             public void onAnimationStart(Animator animator) {
                 ImageView img=(ImageView) findViewById(R.id.imageView);
                 switch(action){
                     case "meal":
                         img.setImageResource(R.drawable.foodbowl);
-                        fadeOutImage(img);
+                        FadeAnimation.fadeOutImage(img);
                         break;
                     case "sleep":
                         img.setImageResource(R.drawable.bed);
-                        fadeOutImage(img);
+                        FadeAnimation.fadeOutImage(img);
                         break;
                     case "study":
                         img.setImageResource(R.drawable.book);
-                        fadeOutImage(img);
+                        FadeAnimation.fadeOutImage(img);
                         break;
                     default:
                 }
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     action="interaction";
                     ImageView HeartImage=findViewById(R.id.HeartImage);
                     HeartImage.setImageResource(R.drawable.heart);
-                    fadeInImage(HeartImage);
+                    FadeAnimation.fadeInImage(HeartImage);
                     PetView.setRepeatCount(1);
                     PetView.playAnimation();
                     return true;
@@ -103,36 +105,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void fadeOutImage(final ImageView img) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setDuration(2000);
-        fadeOut.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationEnd(Animation animation) {
-                img.setVisibility(View.GONE); }
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-            public void onAnimationStart(Animation animation) {}
-        });
-        img.startAnimation(fadeOut);
-    }
-
-    private void fadeInImage(final ImageView img) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new AccelerateInterpolator());
-        fadeIn.setDuration(2000);
-        fadeIn.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationEnd(Animation animation) {
-                img.setVisibility(View.GONE); }
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-            public void onAnimationStart(Animation animation) {}
-        });
-        img.startAnimation(fadeIn);
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
