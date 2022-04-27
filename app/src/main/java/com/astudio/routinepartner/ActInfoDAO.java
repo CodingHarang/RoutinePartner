@@ -1,4 +1,4 @@
-package com.example.routinepartner;
+package com.astudio.routinepartner;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

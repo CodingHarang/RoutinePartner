@@ -1,4 +1,4 @@
-package com.example.routinepartner;
+package com.astudio.routinepartner;
 
 import android.os.Bundle;
 import android.view.View;

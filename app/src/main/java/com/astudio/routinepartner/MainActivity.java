@@ -1,4 +1,4 @@
-package com.example.routinepartner;
+package com.astudio.routinepartner;
 
 import android.app.AlertDialog;
 import android.content.Intent;

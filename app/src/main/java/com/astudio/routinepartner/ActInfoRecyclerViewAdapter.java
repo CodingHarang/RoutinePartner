@@ -1,4 +1,4 @@
-package com.example.routinepartner;
+package com.astudio.routinepartner;
 
 import android.content.Context;
 import android.view.LayoutInflater;
