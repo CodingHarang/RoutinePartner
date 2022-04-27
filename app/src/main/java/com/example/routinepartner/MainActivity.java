@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 if(checkEmpty()) {
                     ActInfoDB.DatabaseWriteExecutor.execute(() -> {
                         ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-                        ActInfoDao mActInfoDao = db.actInfoDao();
+                        ActInfoDAO mActInfoDao = db.actInfoDao();
                         ActInfo actInfo = new ActInfo();
                         actInfo.setYear(Integer.parseInt(EdtYear.getText().toString()));
                         actInfo.setMonth(Integer.parseInt(EdtMonth.getText().toString()));
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ActInfoDB.DatabaseWriteExecutor.execute(() -> {
                     ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-                    ActInfoDao mActInfoDao = db.actInfoDao();
+                    ActInfoDAO mActInfoDao = db.actInfoDao();
                     mActInfoDao.deleteAll();
                 });
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();

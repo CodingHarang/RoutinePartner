@@ -7,7 +7,7 @@ import androidx.room.Query;
 
 // Data Access Object
 @Dao
-public interface ActInfoDao {
+public interface ActInfoDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(ActInfo actInfo);

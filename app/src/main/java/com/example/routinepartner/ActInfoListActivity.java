@@ -37,7 +37,7 @@ public class ActInfoListActivity extends AppCompatActivity {
         // main thread 와 multi thread는 따로 움직여서 다른 일을 같이 처리하면 collision이 일어난다
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-            ActInfoDao mActInfoDao = db.actInfoDao();
+            ActInfoDAO mActInfoDao = db.actInfoDao();
             ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
             for(int i = 0; i < ActInfoList.size(); i++) {
                 ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));

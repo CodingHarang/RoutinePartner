@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 public abstract class ActInfoDB extends RoomDatabase {
 
     private static volatile ActInfoDB INSTANCE = null;
-    public abstract ActInfoDao actInfoDao();
+    public abstract ActInfoDAO actInfoDao();
     static final ExecutorService DatabaseWriteExecutor = Executors.newFixedThreadPool(4);
 
     // Database가 열려있지 않은 경우 연다
@@ -34,4 +34,3 @@ public abstract class ActInfoDB extends RoomDatabase {
         INSTANCE = null;
     }
 }
-
