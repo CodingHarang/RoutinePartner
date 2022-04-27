@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edtYear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Year : "/>
+    <EditText
+        android:id="@+id/edtMonth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Month : "/>
+    <EditText
+        android:id="@+id/edtDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date : "/>
+    <EditText
+        android:id="@+id/edtCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Category : "/>
+    <EditText
+        android:id="@+id/edtStartHour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="StartHour : "/>
+    <EditText
+        android:id="@+id/edtStartMinute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="StartMinute : "/>
+    <EditText
+        android:id="@+id/edtEndHour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="EndHour : "/>
+    <EditText
+        android:id="@+id/edtEndMinute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="EndMinute : "/>
+    <TextView
+        android:id="@+id/txtDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="data"/>
+    <Button
+        android:id="@+id/btnDialog"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="OpenDialog" />
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="Add" />
+    <Button
+        android:id="@+id/btnDeleteAll"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="DeleteAll" />
+    <Button
+        android:id="@+id/btnShowList"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="ShowList" />
+
+</LinearLayout>
