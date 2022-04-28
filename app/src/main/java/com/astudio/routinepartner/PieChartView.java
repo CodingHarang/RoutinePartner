@@ -20,18 +20,21 @@ public class PieChartView extends View {
     Paint SmallPaint = new Paint();
     ArrayList<Float> Data = new ArrayList<Float>();
     ArrayList<Float> YesterdayData = new ArrayList<>();
-    String[] PColors = {"#527FCD","#7FC4FF","#7FF3FF","#36CEB5","#19CE80","#61B585","#1ECE18","#EEA333","#FF774D"};
+    String[] PColors = {"#527FCD","#7FC4FF","#7FF3FF","#36CEB5","#19CE80","#61B585","#1ECE18","#EEA333","#FF774D","#527FCD"};
 
     public PieChartView(Context context, AttributeSet attrs){
         super(context, attrs);
         setBackgroundColor(Color.WHITE);
     }
 
+    public void reset() {
+        Data.clear();
+    }
     protected void onDraw(Canvas canvas){
         ppaint.setColor(Color.parseColor("#35475B"));
         ppaint.setStyle(Paint.Style.STROKE);
         ppaint.setStrokeWidth(5.0f);
-        paint.setColor(Color.parseColor("#DFF4FF"));
+        paint.setColor(Color.parseColor("#FFFFFF"));
         RectF rect = new RectF();
         rect.set(0, 0, 1000, 1000);
         RectF arcrect = new RectF();
@@ -49,13 +52,13 @@ public class PieChartView extends View {
 //        }
 
         for(int i = 0; i < Data.size()/2; i++){
-            Log.d("데이터","추가"+i);
             paint.setColor(Color.parseColor(PColors[i])); //색은 추후에 카테고리에 따라 바뀌게 설정
             canvas.drawArc(arcrect, Data.get(2*i), Data.get(2*i+1), true, paint);
+            Log.d("데이터",Data.get(2*i) + " to "+ Data.get(2*i+1));
         }
 
 
-        if(YesterdayData != null){ //전날에 걸친 시간 표시 / style: 원 안
+        /*if(YesterdayData != null){ //전날에 걸친 시간 표시 / style: 원 안
             SmallPaint.setStyle(Paint.Style.STROKE);
             SmallPaint.setStrokeWidth(40.0f);
             RectF smallarcrect = new RectF();
@@ -64,10 +67,11 @@ public class PieChartView extends View {
                 SmallPaint.setColor(Color.parseColor(PColors[0]));
                 canvas.drawArc(smallarcrect, YesterdayData.get(2*i), YesterdayData.get(2*i+1), false, SmallPaint);
             }
-        }
-
+        }*/
         canvas.drawArc(rect, 0, 360, true, ppaint);
-
+    }
+    public void update() {
+        invalidate();
     }
 
 }

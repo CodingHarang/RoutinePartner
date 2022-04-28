@@ -1,17 +1,21 @@
 package com.astudio.routinepartner;
 
 import android.animation.Animator;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -24,24 +28,38 @@ import com.airbnb.lottie.LottieAnimationView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import android.app.PendingIntent;
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends AppCompatActivity {
 
     AlertDialog Dialog;
     NumberPicker[] NumPickers = new NumberPicker[10];
-    Button BtnEat, BtnStudy, BtnSleep, BtnEtc, BtnOK, BtnShowList, BtnAddTestData, BtnDeleteAll, BtnGetAll;
+    Button BtnEat, BtnStudy, BtnSleep, BtnEtc, BtnOK, BtnShowList, BtnAddTestData, BtnDeleteAll, BtnGetAll, BtnShowPieChart;
     EditText EdtCategory;
     TextView TxtTime;
 
-    protected ArrayList<ActInfo> AllActInfoList;
-    protected ArrayList<ActInfoItem> AllActInfoItemList = new ArrayList<ActInfoItem>();
+    PieChartView PieChart;
+    ArrayList<String> TimeData = new ArrayList<String>(Arrays.asList("00/00/08/30", "08/30/09/10","10/00/14/00","14/00/16/50","17/00/21/30","21/30/00/00"));
+    ArrayList<Integer> TimeList = new ArrayList<Integer>();
+    ArrayList<Float> AngleList = new ArrayList<Float>();
+    ArrayList<Integer> YesterDayTimeList = new ArrayList<>(Arrays.asList(22, 30, 0, 0));
+    ArrayList<Float> YesterDayAngleList = new ArrayList<>();
+
+
+    protected ArrayList<ActInfo> ActInfoList;
+    protected ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //--------------------------------------------------------------------YJS
-        //--------------------------------------------------------------------YJS
+        //<--------------------------------------------------------------------YJS
+        //<--------------------------------------------------------------------YJS
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         TxtTime = findViewById(R.id.txtTime);
@@ -126,21 +144,47 @@ public class MainActivity extends AppCompatActivity {
         BtnGetAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AllActInfoItemList.clear();
+                ActInfoItemList.clear();
                 ActInfoDB.DatabaseWriteExecutor.execute(() -> {
                     ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
                     ActInfoDAO mActInfoDao = db.actInfoDao();
-                    AllActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
-                    for(int i = 0; i < AllActInfoList.size(); i++) {
-                        AllActInfoItemList.add(new ActInfoItem(AllActInfoList.get(i).getId(), AllActInfoList.get(i).getCategory(), AllActInfoList.get(i).getYear(), AllActInfoList.get(i).getMonth(), AllActInfoList.get(i).getDate(), AllActInfoList.get(i).getStartHour(), AllActInfoList.get(i).getStartMinute(), AllActInfoList.get(i).getEndHour(), AllActInfoList.get(i).getEndMinute()));
+                    ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
+                    for(int i = 0; i < ActInfoList.size(); i++) {
+                        ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
                     }
                 });
             }
         });
-        //--------------------------------------------------------------------YJS
-        //--------------------------------------------------------------------YJS
+        //-------------------------------------------------------------------->YJS
+        //-------------------------------------------------------------------->YJS
+
+        //<--------------------------------------------------------------------LSY
+        //<--------------------------------------------------------------------LSY
 
 
+        BtnShowPieChart = findViewById(R.id.btnShowPieChart);
+        ImageButton BtnChart = (ImageButton) findViewById(R.id.BtnChart);
+
+        PieChart = (PieChartView) findViewById(R.id.PieChartView);
+        BtnShowPieChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timeToAngle();
+                Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
+                sendDataToPieChart();
+                PieChart.update();
+            }
+        });
+
+        BtnChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent BarIntent = new Intent(getApplicationContext(), BarChartActivity.class);
+                startActivity(BarIntent);
+            }
+        });
+        //-------------------------------------------------------------------->LSY
+        //-------------------------------------------------------------------->LSY
     }
 
 
@@ -152,7 +196,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+    //<--------------------------------------------------------------------YJS
+    //<--------------------------------------------------------------------YJS
     public void showList() {
         Intent intent = new Intent(this, ActInfoListActivity.class);
         startActivity(intent);
@@ -195,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             addToDB("Etc", 2022, 4, i, 17 , 0, 18, 0);
             addToDB("Study", 2022, 4, i, 18, 0, 21, 0);
             addToDB("Eat", 2022, 4, i, 21, 0, 22, 0);
-            addToDB("Sleep", 2022, 4, i, 22, 0, 0, 0);
+            addToDB("Sleep", 2022, 4, i, 22, 0, 24, 0);
         }
         for(int i = 1; i < 31; i++) {
             addToDB("Sleep", 2022, 5, i, 0, 0, 7, 0);
@@ -205,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             addToDB("Etc", 2022, 5, i, 17 , 0, 18, 0);
             addToDB("Study", 2022, 5, i, 18, 0, 21, 0);
             addToDB("Eat", 2022, 5, i, 21, 0, 22, 0);
-            addToDB("Sleep", 2022, 5, i, 22, 0, 0, 0);
+            addToDB("Sleep", 2022, 5, i, 22, 0, 24, 0);
         }
     }
 
@@ -225,4 +270,97 @@ public class MainActivity extends AppCompatActivity {
             mActInfoDao.insert(actInfo);
         });
     }
+
+    //-------------------------------------------------------------------->YJS
+    //-------------------------------------------------------------------->YJS
+
+    //<--------------------------------------------------------------------LSY
+    //<--------------------------------------------------------------------LSY
+    private void sendDataToPieChart(){
+        PieChart.reset();
+        try{
+            PieChart.Data.addAll(AngleList); //타임 리스트에 있는 시간에 관한 데이터를 파이차트뷰의 데이터리스트로 넘김
+            //PieChart.YesterdayData.addAll(YesterDayAngleList);
+            Log.v("데이터 넘김", "" + YesterDayAngleList);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    //숫자로 받을 경우 바로 TimeLsit에 추가
+
+    public void timeToAngle(){
+        Calendar cal = Calendar.getInstance();
+        CountDownLatch CDL = new CountDownLatch(1);
+        ActInfoItemList.clear();
+        AngleList.clear();
+        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+            ActInfoDAO mActInfoDao = db.actInfoDao();
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))));
+            CDL.countDown();
+        });
+        try {
+            CDL.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < ActInfoList.size(); i++) {
+            ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+        }
+        for(int i = 0; i < ActInfoItemList.size(); i++) {
+            AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
+            AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
+            Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
+        }
+    }
+
+    /*public void timeToAngleYesterday(ArrayList<Integer> arr){
+        int BeforeTime, AfterTime;
+        Float StartAngle, DrawAngle;
+
+        BeforeTime = YesterDayTimeList.get(0)*60 + YesterDayTimeList.get(1);
+        AfterTime = YesterDayTimeList.get(2)*60 + YesterDayTimeList.get(3);
+
+        if(AfterTime == 0){
+            AfterTime = 1440;
+        }
+
+        StartAngle = BeforeTime * 0.25f - 90;
+        DrawAngle = (AfterTime - BeforeTime) * 0.25f;
+
+        YesterDayAngleList.add(StartAngle);
+        YesterDayAngleList.add(DrawAngle);
+    }*/
+
+
+
+    /*public void PieChartAutoReset(){ //0시마다 원형시간표 리셋
+        AlarmManager PieReset = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        Intent RePie = new Intent(MainActivity.this, AlarmRecever.class);
+        PendingIntent ResetSender = PendingIntent.getBroadcast(MainActivity.this, 0, RePie, 0);
+
+        Calendar ResetCal = Calendar.getInstance();
+        ResetCal.setTimeInMillis(System.currentTimeMillis());
+        ResetCal.set(Calendar.HOUR_OF_DAY, 0);
+        ResetCal.set(Calendar.MINUTE, 0);
+        ResetCal.set(Calendar.SECOND, 0);
+
+        PieReset.setInexactRepeating(AlarmManager.RTC_WAKEUP, ResetCal.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, ResetSender);
+
+        SimpleDateFormat Format = new SimpleDateFormat("MM/dd kk:mm:ss");
+        String SetResetTime = Format.format(new Date(ResetCal.getTimeInMillis()+ AlarmManager.INTERVAL_DAY));
+    }*/
+
+    /*public class AlarmRecever extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            AngleList.clear();
+        }
+    }*/
+    //-------------------------------------------------------------------->LSY
+    //-------------------------------------------------------------------->LSY
 }

@@ -65,6 +65,11 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnShowPieChart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ShowPieChart"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

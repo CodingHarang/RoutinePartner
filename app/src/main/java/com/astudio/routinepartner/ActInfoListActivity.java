@@ -23,7 +23,6 @@ public class ActInfoListActivity extends AppCompatActivity {
     protected RecyclerView.LayoutManager MLayoutManager;
     protected ArrayList<ActInfo> ActInfoList;
     protected ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
-    int flag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +42,6 @@ public class ActInfoListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CountDownLatch CDL = new CountDownLatch(1);
                 MAdapter.clearView();
-                flag = 0;
                 // database에서 data를 불러오는 task는 main thread에서 할 수 없음
                 // main thread 와 multi thread는 따로 움직여서 다른 일을 같이 처리하면 순서의 역전이 일어난다
                 ActInfoDB.DatabaseWriteExecutor.execute(() -> {
@@ -51,7 +49,6 @@ public class ActInfoListActivity extends AppCompatActivity {
                     ActInfoDAO mActInfoDao = db.actInfoDao();
                     ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(2022, 4, 28)));
                     CDL.countDown();
-                    endThread();
                 });
                 try {
                     CDL.await();
@@ -68,8 +65,5 @@ public class ActInfoListActivity extends AppCompatActivity {
                 MAdapter.notifyDataSetChanged();
             }
         });
-    }
-    public void endThread() {
-        flag = 1;
     }
 }
