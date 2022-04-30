@@ -1,8 +1,11 @@
 package com.astudio.routinepartner;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,20 +14,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 // 정한 날짜의 ActInfo를 확인하고 수정하는 Activity
 public class ActInfoListActivity extends AppCompatActivity {
 
-    Button BtnGetList;
-    protected ActInfoRecyclerViewAdapter MAdapter;
-    protected RecyclerView MRecyclerView;
-    protected RecyclerView.LayoutManager MLayoutManager;
-    protected ArrayList<ActInfo> ActInfoList;
-    protected ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
+    Button BtnGetList, BtnSdate, BtnEdate;
+    ActInfoRecyclerViewAdapter MAdapter;
+    RecyclerView MRecyclerView;
+    RecyclerView.LayoutManager MLayoutManager;
+    ArrayList<ActInfo> ActInfoList;
+    ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
+
+    DatePickerDialog datePickerDialog;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_info_list);
 
@@ -34,6 +41,13 @@ public class ActInfoListActivity extends AppCompatActivity {
         MAdapter = new ActInfoRecyclerViewAdapter(getApplicationContext());
         MRecyclerView.setAdapter(MAdapter);
         MRecyclerView.setLayoutManager(MLayoutManager);
+
+        BtnSdate = findViewById(R.id.btnSdate);
+        BtnEdate = findViewById(R.id.btnEdate);
+
+        Calendar cal = Calendar.getInstance();
+        BtnSdate.setText((cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DATE));
+        BtnEdate.setText((cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DATE));
 
 
 
@@ -63,6 +77,15 @@ public class ActInfoListActivity extends AppCompatActivity {
                 }
                 // ui를 바꾸는 task는 무조건 main thread에서만 일어나야 한다
                 MAdapter.notifyDataSetChanged();
+            }
+        });
+
+        datePickerDialog = new DatePickerDialog(this);
+        BtnSdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+                Toast.makeText(getApplicationContext(), "" + datePickerDialog.getDatePicker().getDayOfMonth(), Toast.LENGTH_SHORT).show();
             }
         });
     }

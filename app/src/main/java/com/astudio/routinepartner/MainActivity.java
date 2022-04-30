@@ -1,5 +1,6 @@
 package com.astudio.routinepartner;
 
+
 import android.animation.Animator;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -281,6 +282,8 @@ public class MainActivity extends AppCompatActivity {
 
     //<--------------------------------------------------------------------YJS
     //<--------------------------------------------------------------------YJS
+
+
     public void showList() {
         Intent intent = new Intent(this, ActInfoListActivity.class);
         startActivity(intent);
@@ -315,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void makeTestData() {
-        for(int i = 1; i < 30; i++) {
+        for(int i = 1; i <= 30; i++) {
             addToDB("Sleep", 2022, 4, i, 0, 0, 7, 0);
             addToDB("Etc", 2022, 4, i, 8, 0, 9, 0);
             addToDB("Study", 2022, 4, i, 9, 0, 13, 0);
@@ -325,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
             addToDB("Eat", 2022, 4, i, 21, 0, 22, 0);
             addToDB("Sleep", 2022, 4, i, 22, 0, 24, 0);
         }
-        for(int i = 1; i < 31; i++) {
+        for(int i = 1; i <= 31; i++) {
             addToDB("Sleep", 2022, 5, i, 0, 0, 7, 0);
             addToDB("Etc", 2022, 5, i, 8, 0, 9, 0);
             addToDB("Study", 2022, 5, i, 9, 0, 13, 0);
