@@ -1,6 +1,5 @@
 package com.astudio.routinepartner;
 
-
 import android.animation.Animator;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -282,8 +281,6 @@ public class MainActivity extends AppCompatActivity {
 
     //<--------------------------------------------------------------------YJS
     //<--------------------------------------------------------------------YJS
-
-
     public void showList() {
         Intent intent = new Intent(this, ActInfoListActivity.class);
         startActivity(intent);
@@ -366,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
         PieChart.reset();
         try{
             PieChart.Data.addAll(AngleList); //타임 리스트에 있는 시간에 관한 데이터를 파이차트뷰의 데이터리스트로 넘김
+            PieChart.CategoryList.addAll(PieCategoryList);
             //PieChart.YesterdayData.addAll(YesterDayAngleList);
             Log.v("데이터 넘김", "" + YesterDayAngleList);
         }catch (NullPointerException e){
@@ -373,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    ArrayList<String> PieCategoryList = new ArrayList<>();
 
     //숫자로 받을 경우 바로 TimeLsit에 추가
 
@@ -399,7 +397,9 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < ActInfoItemList.size(); i++) {
             AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
             AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
+            PieCategoryList.add(ActInfoItemList.get(i).Category);
             Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
+            Log.v("카테고리", ""+ActInfoItemList.get(i).Category);
         }
     }
 
