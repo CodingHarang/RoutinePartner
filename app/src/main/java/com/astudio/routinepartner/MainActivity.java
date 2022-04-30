@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     AlertDialog Dialog;
     NumberPicker[] NumPickers = new NumberPicker[10];
-    Button BtnEat, BtnStudy, BtnSleep, BtnEtc, BtnOK, BtnShowList, BtnAddTestData, BtnDeleteAll, BtnGetAll, BtnShowPieChart;
+    Button BtnEat, BtnStudy, BtnSleep, BtnEtc, BtnOK, BtnShowList, BtnAddTestData, BtnDeleteAll, BtnShowPieChart;
     EditText EdtCategory;
     TextView TxtTime;
 
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         BtnShowList = findViewById(R.id.btnShowList);
         BtnAddTestData = findViewById(R.id.btnAddTestData);
         BtnDeleteAll = findViewById(R.id.btnDeleteAll);
-        BtnGetAll = findViewById(R.id.btnGetAll);
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add, null);
 
@@ -147,20 +146,6 @@ public class MainActivity extends AppCompatActivity {
                     mActInfoDao.deleteAll();
                 });
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
-            }
-        });
-        BtnGetAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActInfoItemList.clear();
-                ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-                    ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-                    ActInfoDAO mActInfoDao = db.actInfoDao();
-                    ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
-                    for(int i = 0; i < ActInfoList.size(); i++) {
-                        ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
-                    }
-                });
             }
         });
         //-------------------------------------------------------------------->YJS
