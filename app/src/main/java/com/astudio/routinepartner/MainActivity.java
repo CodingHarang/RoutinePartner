@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void makeTestData() {
-        for(int i = 1; i < 30; i++) {
+        for(int i = 1; i < 31; i++) {
             addToDB("Sleep", 2022, 4, i, 0, 0, 7, 0);
             addToDB("Etc", 2022, 4, i, 8, 0, 9, 0);
             addToDB("Study", 2022, 4, i, 9, 0, 13, 0);
@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
             addToDB("Eat", 2022, 4, i, 21, 0, 22, 0);
             addToDB("Sleep", 2022, 4, i, 22, 0, 24, 0);
         }
-        for(int i = 1; i < 31; i++) {
+        for(int i = 1; i < 32; i++) {
             addToDB("Sleep", 2022, 5, i, 0, 0, 7, 0);
             addToDB("Etc", 2022, 5, i, 8, 0, 9, 0);
             addToDB("Study", 2022, 5, i, 9, 0, 13, 0);
@@ -363,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
         PieChart.reset();
         try{
             PieChart.Data.addAll(AngleList); //타임 리스트에 있는 시간에 관한 데이터를 파이차트뷰의 데이터리스트로 넘김
+            PieChart.CategoryList.addAll(PieCategoryList);
             //PieChart.YesterdayData.addAll(YesterDayAngleList);
             Log.v("데이터 넘김", "" + YesterDayAngleList);
         }catch (NullPointerException e){
@@ -370,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    ArrayList<String> PieCategoryList = new ArrayList<>();
 
     //숫자로 받을 경우 바로 TimeLsit에 추가
 
@@ -396,7 +397,9 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < ActInfoItemList.size(); i++) {
             AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
             AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
+            PieCategoryList.add(ActInfoItemList.get(i).Category);
             Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
+            Log.v("카테고리", ""+ActInfoItemList.get(i).Category);
         }
     }
 
