@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 // Database Object
-@Database(entities = {ActInfo.class}, version = 1, exportSchema = false)
+@Database(entities = {ActInfo.class}, version = 1)
 public abstract class ActInfoDB extends RoomDatabase {
 
     private static volatile ActInfoDB INSTANCE = null;
