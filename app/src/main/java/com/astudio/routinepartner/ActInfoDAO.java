@@ -22,8 +22,8 @@ public interface ActInfoDAO {
     ActInfo[] getAll();
 
     // 오늘 한 일 불러오기
-    @Query("SELECT * FROM actInfo WHERE :year = actInfo.year AND :month = actInfo.month AND :date = actInfo.date")
-    ActInfo[] getItemByDate(int year, int month, int date);
+    @Query("SELECT * FROM actInfo WHERE (((:Syear * 10000 + :Smonth * 100 + :Sdate) <= (actInfo.year * 10000 + actInfo.month * 100 + actInfo.date)) AND ((:Eyear * 10000 + :Emonth * 100 + :Edate) >= (actInfo.year * 10000 + actInfo.month * 100 + actInfo.date)))")
+    ActInfo[] getItemByDate(int Syear, int Smonth, int Sdate, int Eyear, int Emonth, int Edate);
 
     // 카테고리별 불러오기
     @Query("SELECT * FROM actInfo WHERE :category = actInfo.category")

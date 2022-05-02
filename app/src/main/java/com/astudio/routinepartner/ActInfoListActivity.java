@@ -1,28 +1,39 @@
 package com.astudio.routinepartner;
 
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 // 정한 날짜의 ActInfo를 확인하고 수정하는 Activity
 public class ActInfoListActivity extends AppCompatActivity {
 
-    Button BtnGetList;
-    protected ActInfoRecyclerViewAdapter MAdapter;
-    protected RecyclerView MRecyclerView;
-    protected RecyclerView.LayoutManager MLayoutManager;
-    protected ArrayList<ActInfo> ActInfoList;
-    protected ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
+    Button BtnGetList, BtnSdate, BtnEdate, Btndate;
+    ActInfoRecyclerViewAdapter MAdapter;
+    RecyclerView MRecyclerView;
+    RecyclerView.LayoutManager MLayoutManager;
+    ArrayList<ActInfo> ActInfoList;
+    ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
+    int Syear, Smonth, Sdate, Eyear, Emonth, Edate;
+    Calendar cal = Calendar.getInstance();
+
+    SimpleDateFormat SDF = new SimpleDateFormat("yyyy/MM/dd", Locale.KOREA);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,20 +45,29 @@ public class ActInfoListActivity extends AppCompatActivity {
         MAdapter = new ActInfoRecyclerViewAdapter(getApplicationContext());
         MRecyclerView.setAdapter(MAdapter);
         MRecyclerView.setLayoutManager(MLayoutManager);
+        BtnSdate = findViewById(R.id.btnSdate);
+        BtnEdate = findViewById(R.id.btnEdate);
 
+        Syear = cal.get(Calendar.YEAR);
+        Smonth = cal.get(Calendar.MONTH) + 1;
+        Sdate = cal.get(Calendar.DATE);
+        Eyear = cal.get(Calendar.YEAR);
+        Emonth = cal.get(Calendar.MONTH) + 1;
+        Edate = cal.get(Calendar.DATE);
 
+        BtnSdate.setText(SDF.format(cal.getTime()));
+        BtnEdate.setText(SDF.format(cal.getTime()));
 
         BtnGetList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CountDownLatch CDL = new CountDownLatch(1);
                 MAdapter.clearView();
-                // database에서 data를 불러오는 task는 main thread에서 할 수 없음
-                // main thread 와 multi thread는 따로 움직여서 다른 일을 같이 처리하면 순서의 역전이 일어난다
+                ActInfoItemList.clear();
                 ActInfoDB.DatabaseWriteExecutor.execute(() -> {
                     ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
                     ActInfoDAO mActInfoDao = db.actInfoDao();
-                    ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(2022, 4, 28)));
+                    ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(Syear, Smonth, Sdate, Eyear, Emonth, Edate)));
                     CDL.countDown();
                 });
                 try {
@@ -61,9 +81,49 @@ public class ActInfoListActivity extends AppCompatActivity {
                 for(int i = 0; i < ActInfoList.size(); i++) {
                     MAdapter.addItem(ActInfoItemList.get(i));
                 }
-                // ui를 바꾸는 task는 무조건 main thread에서만 일어나야 한다
                 MAdapter.notifyDataSetChanged();
             }
         });
+        DatePickerDialog.OnDateSetListener DatePickerDiag = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                cal.set(Calendar.YEAR, year);
+                cal.set(Calendar.MONTH, month);
+                cal.set(Calendar.DAY_OF_MONTH, day);
+                updateDate(Btndate);
+            }
+        };
+
+        BtnSdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Btndate = BtnSdate;
+                new DatePickerDialog(getContext(), DatePickerDiag, Syear, Smonth - 1, Sdate).show();
+            }
+        });
+        BtnEdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Btndate = BtnEdate;
+                new DatePickerDialog(getContext(), DatePickerDiag, Eyear, Emonth - 1, Edate).show();
+            }
+        });
+    }
+    public void updateDate(Button Btndate){
+        Btndate.setText(SDF.format(cal.getTime()));
+        if(Btndate == BtnSdate) {
+            Syear = cal.get(Calendar.YEAR);
+            Smonth = cal.get(Calendar.MONTH) + 1;
+            Sdate = cal.get(Calendar.DATE);
+            Toast.makeText(getApplicationContext(), "Syear" + Syear + Smonth + Sdate, Toast.LENGTH_SHORT).show();
+        } else {
+            Eyear = cal.get(Calendar.YEAR);
+            Emonth = cal.get(Calendar.MONTH) + 1;
+            Edate = cal.get(Calendar.DATE);
+            Toast.makeText(getApplicationContext(), "Eyear" + Eyear + Emonth + Edate, Toast.LENGTH_SHORT).show();
+        }
+    }
+    public Context getContext() {
+        return this;
     }
 }
