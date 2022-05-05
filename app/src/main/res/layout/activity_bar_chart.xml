@@ -8,14 +8,14 @@
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/BarChart"
-        android:layout_width="412dp"
+        android:layout_width="380dp"
         android:layout_height="370dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.155" />
+        app:layout_constraintVertical_bias="0.138" />
 
     <Spinner
         android:id="@+id/ChartSpinner"

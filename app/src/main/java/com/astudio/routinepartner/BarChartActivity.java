@@ -21,19 +21,27 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
 
 public class BarChartActivity extends AppCompatActivity {
+    protected ArrayList<ActInfo> ActInfoList;
+    protected ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
     BarChart Bar_Chart;
     Calendar ChartCalender = Calendar.getInstance();
     EditText DateWhen, EditStart, EditEnd;
+//    String[] ActItems = {"Select","Eat", "Sleep", "Study", "Etc"};
     String[] ActItems = {"행동 선택","식사", "수면", "공부", "기타"};
     String CurrentCategory, EditStartText, EditEndText;
     Boolean CategoryValue = false, DateCompareValue = false;
@@ -41,7 +49,8 @@ public class BarChartActivity extends AppCompatActivity {
     ArrayList<Float> TimeList = new ArrayList<>();
     Spinner ChartSpinner;
     Button BtnMakeChart;
-//    int SYear, SMonth, SDay, EYear, EMonth, EDay;
+
+    int Syear, Smonth, Sday, Eyear, Emonth, Eday;
 
 
     DatePickerDialog.OnDateSetListener ChartDatePicker = new DatePickerDialog.OnDateSetListener() {
@@ -90,28 +99,24 @@ public class BarChartActivity extends AppCompatActivity {
                         DayList.clear();
                         TimeList.clear();
                         CurrentCategory = ActItems[i];
-                        getData();
                         break;
                     case 2:
                         CategoryValue = true;
                         DayList.clear();
                         TimeList.clear();
                         CurrentCategory = ActItems[i];
-                        getData();
                         break;
                     case 3:
                         CategoryValue = true;
                         DayList.clear();
                         TimeList.clear();
                         CurrentCategory = ActItems[i];
-                        getData();
                         break;
                     case 4:
                         CategoryValue = true;
                         DayList.clear();
                         TimeList.clear();
                         CurrentCategory = ActItems[i];
-                        getData();
                         break;
                 }
             }
@@ -134,12 +139,6 @@ public class BarChartActivity extends AppCompatActivity {
                 DateWhen = EditStart;
                 new DatePickerDialog(BarChartActivity.this, ChartDatePicker, ChartCalender.get(Calendar.YEAR),
                         ChartCalender.get(Calendar.MONTH), ChartCalender.get(Calendar.DAY_OF_MONTH)).show();
-
-//                SYear = ChartCalender.get(Calendar.YEAR);
-//                SMonth = ChartCalender.get(Calendar.MONTH);
-//                SDay = ChartCalender.get(Calendar.DAY_OF_MONTH);
-//
-//                Log.v("값 확인", ""+SYear+"  "+SMonth+"  "+SDay);
             }
         });
 
@@ -167,6 +166,8 @@ public class BarChartActivity extends AppCompatActivity {
                 }else if(!CategoryValue){
                     Toast.makeText(getApplicationContext(), "카테고리를 선택해주세요", Toast.LENGTH_SHORT).show();
                 }else{
+//                    getData();
+                    getCategory();
                     drawBarChart(DayList, TimeList);
                 }
             }
@@ -183,8 +184,20 @@ public class BarChartActivity extends AppCompatActivity {
         DateWhen.setText(SDF.format(ChartCalender.getTime()));
 
         if(DateWhen == EditStart){
+            Syear = ChartCalender.get(Calendar.YEAR);
+            Smonth = ChartCalender.get(Calendar.MONTH) + 1;
+            Sday = ChartCalender.get(Calendar.DAY_OF_MONTH);
+//
+            Log.v("값 확인", ""+Syear+"  "+Smonth+"  "+Sday);
+
             EditStartText = SDF.format(ChartCalender.getTime());
         }else if(DateWhen == EditEnd){
+            Eyear = ChartCalender.get(Calendar.YEAR);
+            Emonth = ChartCalender.get(Calendar.MONTH) + 1;
+            Eday = ChartCalender.get(Calendar.DAY_OF_MONTH);
+//
+            Log.v("값 확인", ""+Eyear+"  "+Emonth+"  "+Eday);
+
             EditEndText = SDF.format(ChartCalender.getTime());
         }
     }
@@ -235,15 +248,28 @@ public class BarChartActivity extends AppCompatActivity {
 
         ArrayList<BarEntry> entries = new ArrayList<>();
         for(int i = 0; i < daylist.size(); i++){
-            entries.add(new BarEntry(timelist.get(i), i));
+            entries.add(new BarEntry(i, timelist.get(i)));
         }
 
-        BarDataSet depenses = new BarDataSet(entries, "시간");
-        depenses.setAxisDependency(YAxis.AxisDependency.LEFT);
+        BarDataSet barDataSet = new BarDataSet(entries, "시간");
+        barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        barDataSet.setValueTextSize(10f);
 
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add((IBarDataSet) barDataSet);
+        BarData data = new BarData(barDataSet);
 
-        BarData data = new BarData(daylist, depenses);
-        depenses.setColors(ColorTemplate.LIBERTY_COLORS);
+        IndexAxisValueFormatter formatter = new IndexAxisValueFormatter(){
+            @Override
+            public String getFormattedValue(float value) {
+                return daylist.get((int)value);
+            }
+        };
+
+        XAxis xAxis = Bar_Chart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(daylist));
+
+        barDataSet.setColors(ColorTemplate.LIBERTY_COLORS);
 
         Bar_Chart.setData(data);
         Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정
@@ -258,35 +284,85 @@ public class BarChartActivity extends AppCompatActivity {
 
 
     //test code
-    ArrayList<ArrayList<Test>> TestAllDayList = new ArrayList<>();
+    ArrayList<ArrayList<ActInfoItem>> AllDayList = new ArrayList<>();
     Test t = new Test();
+    ArrayList<ArrayList<Test>> testdaylist = new ArrayList<>();
 
     private void bringDataFromTest() {
         t.testAddDayOne();
         t.testAddDayTwo();
     }
-    //
 
-    private void getData(){
+
+
+    //선택한 기간의 데이터 가져오기
+
+//    private void getData(){
+//        CountDownLatch CDL = new CountDownLatch(1);
+//        ActInfoItemList.clear();
+//        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+//            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+//            ActInfoDAO mActInfoDao = db.actInfoDao();
+//            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(Syear, Smonth, Sday, Eyear, Emonth, Eday)));
+//            CDL.countDown();
+//        });
+//        try {
+//            CDL.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        for(int i = 0; i < ActInfoList.size(); i++) {
+//            ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+//        }
+//
+//        AllDayList.add(ActInfoItemList);
+//    }
+
+
+//    private void getCategory(){
+//        float CategoryTime;
+//        String CurrentDay;
+//        //그 안에서 선택된 카테고리의 값만 가져오기
+//        for(int i = 0; i < AllDayList.size(); i++) {
+//            CurrentDay = Integer.toString(AllDayList.get(i).get(0).Month) + "/" + Integer.toString(AllDayList.get(i).get(0).Date);
+//            CategoryTime = 0;
+//            for (int j = 0; j < AllDayList.get(i).size(); j++) {
+//                if (AllDayList.get(i).get(j).Category.equals(CurrentCategory)) {
+//                    float time;
+//                    float CalSTime = AllDayList.get(i).get(j).StartHour, CalETime = AllDayList.get(i).get(j).EndHour,
+//                            CalSMin = AllDayList.get(i).get(j).StartMinute, CalEMin = AllDayList.get(i).get(j).EndMinute;
+//
+//                    if (CalETime == 0) {
+//                        CalETime = 24;
+//                    }
+//
+//                    time = ((CalETime * 60 + CalEMin) - (CalSTime * 60 + CalSMin)) / 60;
+//                    CategoryTime += time;
+//                }
+//            }
+//            TimeList.add(CategoryTime);
+//            DayList.add(CurrentDay);
+//        }
+//    }
+
+    private void getCategory(){
         float CategoryTime;
         String CurrentDay;
-        //선택한 기간의 데이터 가져오기
         //그 안에서 선택된 카테고리의 값만 가져오기
-        for(int i = 0; i < t.TestItemAllDayList.size(); i++){
-            CurrentDay = Integer.toString(t.TestItemAllDayList.get(i).get(0).Month)+"/"+Integer.toString(t.TestItemAllDayList.get(i).get(0).Day);
-            //Integer.toString(t.TestItemAllDayList.get(i).get(0).Year)+"/n"+
+        for(int i = 0; i < t.TestItemAllDayList.size(); i++) {
+            CurrentDay = Integer.toString(t.TestItemAllDayList.get(i).get(0).Month) + "/" + Integer.toString(t.TestItemAllDayList.get(i).get(0).Day);
             CategoryTime = 0;
-            for(int j = 0; j < t.TestItemAllDayList.get(i).size() ; j++){
-                if(t.TestItemAllDayList.get(i).get(j).Cate.equals(CurrentCategory)){
+            for (int j = 0; j < t.TestItemAllDayList.get(i).size(); j++) {
+                if (t.TestItemAllDayList.get(i).get(j).Cate.equals(CurrentCategory)) {
                     float time;
                     float CalSTime = t.TestItemAllDayList.get(i).get(j).StartTime, CalETime = t.TestItemAllDayList.get(i).get(j).EndTime,
                             CalSMin = t.TestItemAllDayList.get(i).get(j).StartMin, CalEMin = t.TestItemAllDayList.get(i).get(j).EndMin;
 
-                    if(CalETime == 0){
+                    if (CalETime == 0) {
                         CalETime = 24;
                     }
 
-                    time = ((CalETime*60+CalEMin)-(CalSTime*60+CalSMin))/60;
+                    time = ((CalETime * 60 + CalEMin) - (CalSTime * 60 + CalSMin)) / 60;
                     CategoryTime += time;
                 }
             }

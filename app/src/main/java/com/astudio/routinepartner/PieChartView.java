@@ -41,9 +41,9 @@ public class PieChartView extends View {
         TextPaint.setColor(Color.parseColor("#000000"));
         TextPaint.setTextSize(40);
         RectF rect = new RectF();
-        rect.set(275, 70, 1175, 970);
+        rect.set((getWidth()/2)-430, getHeight()/2-630, (getWidth()/2)+ 470, getHeight()/2 +270);
         RectF arcrect = new RectF();
-        arcrect.set(275, 70, 1175, 970);
+        arcrect.set((getWidth()/2)-430, getHeight()/2-630, (getWidth()/2)+ 470, getHeight()/2 +270);
         canvas.drawArc(rect, 0, 360, true, paint);
         SmallPaint.setColor(Color.parseColor("#DFF4FF"));
 
@@ -52,7 +52,7 @@ public class PieChartView extends View {
         float TextStartPoint = -90;
         for(int i = 0; i < 24; i++){
             float radius = 500;
-            float x = (float)(radius * Math.cos(TextStartPoint * Math.PI / 180F)) + getWidth()/2 - 10;
+            float x = (float)(radius * Math.cos(TextStartPoint * Math.PI / 180F)) + getWidth()/2;
             float y = (float)(radius * Math.sin(TextStartPoint * Math.PI / 180F)) + getHeight()/2 -160;
             canvas.drawText(""+i , x, y , TextPaint);
             TextStartPoint += 15;
