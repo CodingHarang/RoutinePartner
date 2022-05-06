@@ -58,6 +58,7 @@ public class ActInfoListActivity extends AppCompatActivity {
         BtnSdate.setText(SDF.format(cal.getTime()));
         BtnEdate.setText(SDF.format(cal.getTime()));
 
+        MAdapter.setActivityContext(getContext());
         BtnGetList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +85,7 @@ public class ActInfoListActivity extends AppCompatActivity {
                 MAdapter.notifyDataSetChanged();
             }
         });
+
         DatePickerDialog.OnDateSetListener DatePickerDiag = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -93,7 +95,6 @@ public class ActInfoListActivity extends AppCompatActivity {
                 updateDate(Btndate);
             }
         };
-
         BtnSdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +110,7 @@ public class ActInfoListActivity extends AppCompatActivity {
             }
         });
     }
-    public void updateDate(Button Btndate){
+    void updateDate(Button Btndate){
         Btndate.setText(SDF.format(cal.getTime()));
         if(Btndate == BtnSdate) {
             Syear = cal.get(Calendar.YEAR);
@@ -123,7 +124,7 @@ public class ActInfoListActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Eyear" + Eyear + Emonth + Edate, Toast.LENGTH_SHORT).show();
         }
     }
-    public Context getContext() {
+    Context getContext() {
         return this;
     }
 }
