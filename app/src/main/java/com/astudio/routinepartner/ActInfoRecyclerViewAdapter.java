@@ -48,6 +48,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                     View dialogView = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_add, null);
                     EditText EdtCategory = dialogView.findViewById(R.id.edtCategory);
                     Button BtnOK = dialogView.findViewById(R.id.btnOK);
+                    Button BtnCancel = dialogView.findViewById(R.id.btnCancel);
                     NumberPicker[] NumPickers = new NumberPicker[10];
                     YJS.numPickerSetting(dialogView, NumPickers);
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityContext);
@@ -56,6 +57,12 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                     alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                     BtnOK.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+                    BtnCancel.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             alertDialog.dismiss();
