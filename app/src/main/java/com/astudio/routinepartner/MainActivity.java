@@ -1,14 +1,12 @@
 package com.astudio.routinepartner;
 
 import android.animation.Animator;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,15 +22,21 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.github.mikephil.charting.charts.RadarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.data.RadarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import android.app.PendingIntent;
+
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
 import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,9 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
     LottieAnimationView PetView;
     TextView PetName;
-    String action="meal"; //ActInfoItem 에서 가져옴
+    String Action ="meal"; //ActInfoItem 에서 가져옴
     Context MainContext;
     String text_PetName="";
+    RadarChart PetStateChart;
 
 
     @Override
@@ -202,16 +207,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationStart(Animator animator) {
                 ImageView img=(ImageView) findViewById(R.id.imageView);
-                switch(action){
-                    case "meal":
+                switch(Action){
+                    case "Eat":
                         img.setImageResource(R.drawable.foodbowl);
                         FadeAnimation.fadeOutImage(img);
                         break;
-                    case "sleep":
+                    case "Sleep":
                         img.setImageResource(R.drawable.bed);
                         FadeAnimation.fadeOutImage(img);
                         break;
-                    case "study":
+                    case "Study":
                         img.setImageResource(R.drawable.book);
                         FadeAnimation.fadeOutImage(img);
                         break;
@@ -223,13 +228,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animator animator) {
                 PetView.setOnClickListener((view -> {
-                    action="";
+                    Action ="";
                     PetView.setRepeatCount(1);
                     PetView.playAnimation();
                 }));
 
                 PetView.setOnLongClickListener((view) -> {
-                    action="interaction";
+                    Action ="interaction";
                     ImageView HeartImage=findViewById(R.id.HeartImage);
                     HeartImage.setImageResource(R.drawable.heart);
                     FadeAnimation.fadeInImage(HeartImage);
@@ -251,15 +256,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        PetStateChart=findViewById(R.id.RadarChart);
+        setRadarData();
+
+        String[] lables={"체력","포만감","지능","재미","사교"};
+
+        XAxis xAxis=PetStateChart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(lables));
+        xAxis.setTextSize(4f);
+        YAxis yAxis=PetStateChart.getYAxis();
+        yAxis.setDrawLabels(false);
+        yAxis.setLabelCount(5,false);
+        yAxis.setAxisMinimum(0);
+        yAxis.setAxisMaximum(50);
+        yAxis.setDrawLabels(false);
+
+        for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
+            set.setDrawValues(!set.isDrawValuesEnabled());
+        }
+        PetStateChart.invalidate();
+
         //-------------------------------------------------------------------->PSY
         //-------------------------------------------------------------------->PSY
     }
-
-
-
-
-
-
 
 
 
@@ -439,6 +459,60 @@ public class MainActivity extends AppCompatActivity {
     //<--------------------------------------------------------------------PSY
     //<--------------------------------------------------------------------PSY
 
+    public void setRadarData(){
+        ArrayList<RadarEntry> visitors=new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        float val1=0,val2=0,val3=0,val4=0,val5=0;
+        PSY PetStateManage=new PSY();
+
+        CountDownLatch CDL = new CountDownLatch(1);
+        ActInfoItemList.clear();
+        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+            ActInfoDAO mActInfoDao = db.actInfoDao();
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))));
+            CDL.countDown();
+        });
+        try {
+            CDL.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        for(int i = 0; i < ActInfoList.size(); i++) {
+            ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+        }
+
+        for(int i = 0; i < ActInfoItemList.size(); i++) {
+            PetStateManage.calRadarValue(ActInfoItemList.get(i).Category,ActInfoItemList.get(i).StartHour,ActInfoItemList.get(i).StartMinute,ActInfoItemList.get(i).EndHour,ActInfoItemList.get(i).EndMinute);
+        }
+
+        val1=PetStateManage.calCategoryData("Sleep");
+        val2=PetStateManage.calCategoryData("Eat");
+        val3=PetStateManage.calCategoryData("Study");
+
+        visitors.add(new RadarEntry(val1));
+        visitors.add(new RadarEntry(val2));
+        visitors.add(new RadarEntry(val3));
+        visitors.add(new RadarEntry(val4));
+        visitors.add(new RadarEntry(val5));
+
+        RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
+        set1.setColor(Color.BLUE);
+        set1.setLineWidth(0.5f);
+        set1.setDrawHighlightIndicators(false);
+        set1.setDrawHighlightCircleEnabled(true);
+
+
+        RadarData data=new RadarData();
+        data.addDataSet(set1);
+        data.setValueTextSize(3f);
+        data.setDrawValues(false);
+        data.setValueTextColor(Color.BLACK);
+
+        PetStateChart.setData(data);
+        PetStateChart.invalidate();
+    }
 
 
     public boolean onCreateOptionsMenu(Menu menu){
