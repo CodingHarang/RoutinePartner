@@ -48,15 +48,14 @@ public class MainActivity extends AppCompatActivity {
     TextView TxtTime;
 
     PieChartView PieChart;
-    ArrayList<String> TimeData = new ArrayList<String>(Arrays.asList("00/00/08/30", "08/30/09/10","10/00/14/00","14/00/16/50","17/00/21/30","21/30/00/00"));
     ArrayList<Integer> TimeList = new ArrayList<Integer>();
     ArrayList<Float> AngleList = new ArrayList<Float>();
-    ArrayList<Integer> YesterDayTimeList = new ArrayList<>(Arrays.asList(22, 30, 0, 0));
     ArrayList<Float> YesterDayAngleList = new ArrayList<>();
 
 
     protected ArrayList<ActInfo> ActInfoList;
     protected ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
+    protected ArrayList<ActInfoItem> ActInfoYesterdayItemList = new ArrayList<ActInfoItem>();
 
 
     LottieAnimationView PetView;
@@ -168,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 timeToAngle();
+                timeToAngleYesterday();
                 Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
                 sendDataToPieChart();
                 PieChart.update();
@@ -369,8 +369,9 @@ public class MainActivity extends AppCompatActivity {
         try{
             PieChart.Data.addAll(AngleList); //타임 리스트에 있는 시간에 관한 데이터를 파이차트뷰의 데이터리스트로 넘김
             PieChart.CategoryList.addAll(PieCategoryList);
-            //PieChart.YesterdayData.addAll(YesterDayAngleList);
-            Log.v("데이터 넘김", "" + YesterDayAngleList);
+            if(YesterDayAngleList != null){
+                PieChart.YesterdayData.addAll(YesterDayAngleList);
+            }
         }catch (NullPointerException e){
             e.printStackTrace();
         }
@@ -408,23 +409,44 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*public void timeToAngleYesterday(ArrayList<Integer> arr){
+    public void timeToAngleYesterday(){
         int BeforeTime, AfterTime;
-        Float StartAngle, DrawAngle;
+        float StartAngle, DrawAngle;
 
-        BeforeTime = YesterDayTimeList.get(0)*60 + YesterDayTimeList.get(1);
-        AfterTime = YesterDayTimeList.get(2)*60 + YesterDayTimeList.get(3);
-
-        if(AfterTime == 0){
-            AfterTime = 1440;
+        Calendar cal = Calendar.getInstance();
+        CountDownLatch CDL = new CountDownLatch(1);
+        ActInfoYesterdayItemList.clear();
+        YesterDayAngleList.clear();
+        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+            ActInfoDAO mActInfoDao = db.actInfoDao();
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE-1), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE-1))));
+            CDL.countDown();
+        });
+        try {
+            CDL.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-        StartAngle = BeforeTime * 0.25f - 90;
-        DrawAngle = (AfterTime - BeforeTime) * 0.25f;
+        int YdSize = ActInfoList.size()-1;
+        if((YdSize > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 24)
+        && (AngleList.get(0) == 270)){
+            ActInfoYesterdayItemList.add(new ActInfoItem(ActInfoList.get(YdSize).getId(), ActInfoList.get(YdSize).getCategory(), ActInfoList.get(YdSize).getYear(), ActInfoList.get(YdSize).getMonth(), ActInfoList.get(YdSize).getDate(), ActInfoList.get(YdSize).getStartHour(), ActInfoList.get(YdSize).getStartMinute(), ActInfoList.get(YdSize).getEndHour(), ActInfoList.get(YdSize).getEndMinute()));
+            BeforeTime = ActInfoYesterdayItemList.get(0).StartHour*60 + ActInfoYesterdayItemList.get(0).StartMinute;
+            AfterTime = ActInfoYesterdayItemList.get(0).EndHour*60 + ActInfoYesterdayItemList.get(0).EndMinute;
 
-        YesterDayAngleList.add(StartAngle);
-        YesterDayAngleList.add(DrawAngle);
-    }*/
+            if(AfterTime == 0){
+                AfterTime = 1440;
+            }
+
+            StartAngle = BeforeTime * 0.25f - 90;
+            DrawAngle = (AfterTime - BeforeTime) * 0.25f;
+
+            YesterDayAngleList.add(StartAngle);
+            YesterDayAngleList.add(DrawAngle);
+        }
+    }
 
 
 
