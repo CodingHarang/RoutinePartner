@@ -135,12 +135,12 @@ public class ActInfoListActivity extends AppCompatActivity {
             Syear = cal.get(Calendar.YEAR);
             Smonth = cal.get(Calendar.MONTH) + 1;
             Sdate = cal.get(Calendar.DATE);
-            Toast.makeText(getApplicationContext(), "Syear" + Syear + Smonth + Sdate, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Syear" + Syear + Smonth + Sdate, Toast.LENGTH_SHORT).show();
         } else {
             Eyear = cal.get(Calendar.YEAR);
             Emonth = cal.get(Calendar.MONTH) + 1;
             Edate = cal.get(Calendar.DATE);
-            Toast.makeText(getApplicationContext(), "Eyear" + Eyear + Emonth + Edate, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Eyear" + Eyear + Emonth + Edate, Toast.LENGTH_SHORT).show();
         }
     }
     Context getContext() {

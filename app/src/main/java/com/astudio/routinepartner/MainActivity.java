@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     AlertDialog Dialog;
     NumberPicker[] NumPickers = new NumberPicker[10];
-    Button BtnEat, BtnStudy, BtnSleep, BtnEtc, BtnOK, BtnShowList, BtnAddTestData, BtnDeleteAll, BtnShowPieChart;
+    Button BtnEat, BtnStudy, BtnSleep, BtnEtc, BtnOK, BtnCancel, BtnShowList, BtnAddTestData, BtnDeleteAll, BtnShowPieChart;
     EditText EdtCategory;
     TextView TxtTime;
 
@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         EdtCategory = dialogView.findViewById(R.id.edtCategory);
         BtnOK = dialogView.findViewById(R.id.btnOK);
+        BtnCancel = dialogView.findViewById(R.id.btnCancel);
         YJS.numPickerSetting(dialogView, NumPickers);
 
         builder.setView(dialogView);
@@ -129,7 +130,12 @@ public class MainActivity extends AppCompatActivity {
                 makeData();
             }
         });
-
+        BtnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog.dismiss();
+            }
+        });
         BtnShowList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

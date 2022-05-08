@@ -2,9 +2,10 @@
     <!-- Base application theme. -->
     <style name="Theme.RoutinePartner" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">#343434</item>
+        <item name="colorPrimaryVariant">#343434</item>
         <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimaryDark">#343434</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
@@ -14,7 +15,8 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="DialogTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorControlNormal">#FFFFFF</item>
+    <style name="numberPickerCustom" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="android:editTextColor">#BDBDBD</item>
+        <item name="android:colorControlNormal">#BDBDBD</item>
     </style>
 </resources>
