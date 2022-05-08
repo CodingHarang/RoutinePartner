@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.*;
+
 
 // 정한 날짜의 ActInfo를 확인하고 수정하는 Activity
 public class ActInfoListActivity extends AppCompatActivity {
@@ -79,6 +81,15 @@ public class ActInfoListActivity extends AppCompatActivity {
                 for(int i = 0; i < ActInfoList.size(); i++) {
                     ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
                 }
+                Collections.sort(ActInfoItemList, new Comparator<ActInfoItem>(){
+                    public int compare(ActInfoItem o1, ActInfoItem o2) {
+                        if(o1.StartHour == o2.StartHour) {
+                            if(o1.StartMinute == o2.StartMinute) return 0;
+                            return o1.StartMinute < o2.StartMinute ? -1 : 1;
+                        }
+                        return o1.StartHour < o2.StartHour ? -1 : 1;
+                    }
+                });
                 for(int i = 0; i < ActInfoList.size(); i++) {
                     MAdapter.addItem(ActInfoItemList.get(i));
                 }

@@ -17,4 +17,7 @@ public class ActInfoItem {
         EndHour = endHour;
         EndMinute = endMinute;
     }
+    public int getDate() {
+        return Date;
+    }
 }

@@ -28,4 +28,8 @@ public interface ActInfoDAO {
     // 카테고리별 불러오기
     @Query("SELECT * FROM actInfo WHERE :category = actInfo.category")
     ActInfo[] getItemByCategory(String category);
+
+    // 데이터 수정
+    @Query("UPDATE actInfo SET Year = :CYear, Month = :CMonth, Date = :CDate, StartHour = :CShour, StartMinute = :CSminute, EndHour = :CEhour, EndMinute = :CEminute WHERE id = :id")
+    void updateData(int id, int CYear, int CMonth, int CDate, int CShour, int CSminute, int CEhour, int CEminute);
 }

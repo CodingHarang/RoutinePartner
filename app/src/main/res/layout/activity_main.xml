@@ -24,7 +24,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:textAllCaps="false" />
 
         <ImageButton
             android:id="@+id/BtnChart"
@@ -40,7 +41,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@android:drawable/ic_menu_today" />
+            app:srcCompat="@android:drawable/ic_menu_today"
+            android:textAllCaps="false"  />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -123,20 +125,23 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="MakeData" />
+            android:text="MakeData"
+            android:textAllCaps="false"  />
         <Button
             android:id="@+id/btnDeleteAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="DeleteAll" />
+            android:text="DeleteAll"
+            android:textAllCaps="false"  />
         <Button
             android:id="@+id/btnShowPieChart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="ShowPieChart"/>
+            android:text="ShowPieChart"
+            android:textAllCaps="false" />
     </LinearLayout>
     <TextView
         android:id="@+id/txtTime"
@@ -154,7 +159,8 @@
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Eat" />
+            android:text="Eat"
+            android:textAllCaps="false"  />
 
         <Button
             android:id="@+id/btnStudy"
@@ -162,7 +168,8 @@
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Study" />
+            android:text="Study"
+            android:textAllCaps="false"  />
 
         <Button
             android:id="@+id/btnSleep"
@@ -170,7 +177,8 @@
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Sleep" />
+            android:text="Sleep"
+            android:textAllCaps="false"  />
 
         <Button
             android:id="@+id/btnEtc"
@@ -178,6 +186,7 @@
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Etc." />
+            android:text="Etc."
+            android:textAllCaps="false"  />
     </LinearLayout>
 </LinearLayout>
