@@ -37,6 +37,8 @@ import java.util.Calendar;
 
 import android.util.Log;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends AppCompatActivity {
@@ -407,6 +409,15 @@ public class MainActivity extends AppCompatActivity {
             Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
             Log.v("카테고리", ""+ActInfoItemList.get(i).Category);
         }
+        Collections.sort(ActInfoItemList, new Comparator<ActInfoItem>(){
+            public int compare(ActInfoItem o1, ActInfoItem o2) {
+                if(o1.StartHour == o2.StartHour) {
+                    if(o1.StartMinute == o2.StartMinute) return 0;
+                    return o1.StartMinute < o2.StartMinute ? -1 : 1;
+                }
+                return o1.StartHour < o2.StartHour ? -1 : 1;
+            }
+        });
     }
 
     public void timeToAngleYesterday(){

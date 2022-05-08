@@ -6,7 +6,8 @@
     tools:context=".ActInfoListActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="#343434">
 
     <Button
         android:id="@+id/btnGetList"
@@ -15,7 +16,8 @@
         android:layout_margin="5dp"
         android:text="ActInfoList"
         android:background="@drawable/round_square"
-        android:textAllCaps="false"  />
+        android:textAllCaps="false"
+        android:textColor="#BDBDBD" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -27,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@drawable/round_square"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#BDBDBD" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,7 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@drawable/round_square"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#BDBDBD" />
     </LinearLayout>
 
 

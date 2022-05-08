@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.*;
 
 
@@ -39,7 +38,7 @@ public class ActInfoListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_info_list);
+        setContentView(R.layout.acivity_act_info_list);
 
         BtnGetList = findViewById(R.id.btnGetList);
         MLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
