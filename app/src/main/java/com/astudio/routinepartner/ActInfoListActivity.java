@@ -82,11 +82,20 @@ public class ActInfoListActivity extends AppCompatActivity {
                 }
                 Collections.sort(ActInfoItemList, new Comparator<ActInfoItem>(){
                     public int compare(ActInfoItem o1, ActInfoItem o2) {
-                        if(o1.StartHour == o2.StartHour) {
-                            if(o1.StartMinute == o2.StartMinute) return 0;
-                            return o1.StartMinute < o2.StartMinute ? -1 : 1;
+                        if(o1.Year == o2.Year) {
+                            if(o1.Month == o2.Month) {
+                                if(o1.Date == o2.Date) {
+                                    if(o1.StartHour == o2.StartHour) {
+                                        if(o1.StartMinute == o2.StartMinute) return 0;
+                                        return o1.StartMinute < o2.StartMinute ? -1 : 1;
+                                    }
+                                    return o1.StartHour < o2.StartHour ? -1 : 1;
+                                }
+                                return o1.Date < o2.Date ? -1 : 1;
+                            }
+                            return o1.Month < o2.Month ? -1 : 1;
                         }
-                        return o1.StartHour < o2.StartHour ? -1 : 1;
+                        return o1.Year < o2.Year ? -1 : 1;
                     }
                 });
                 for(int i = 0; i < ActInfoList.size(); i++) {

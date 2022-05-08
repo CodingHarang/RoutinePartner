@@ -408,13 +408,6 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < ActInfoList.size(); i++) {
             ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
         }
-        for(int i = 0; i < ActInfoItemList.size(); i++) {
-            AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
-            AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
-            PieCategoryList.add(ActInfoItemList.get(i).Category);
-            Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
-            Log.v("카테고리", ""+ActInfoItemList.get(i).Category);
-        }
         Collections.sort(ActInfoItemList, new Comparator<ActInfoItem>(){
             public int compare(ActInfoItem o1, ActInfoItem o2) {
                 if(o1.StartHour == o2.StartHour) {
@@ -424,6 +417,15 @@ public class MainActivity extends AppCompatActivity {
                 return o1.StartHour < o2.StartHour ? -1 : 1;
             }
         });
+        for(int i = 0; i < ActInfoItemList.size(); i++) {
+            AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
+            AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
+            PieCategoryList.add(ActInfoItemList.get(i).Category);
+            Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
+            Log.v("카테고리", ""+ActInfoItemList.get(i).Category);
+        }
+
+
     }
 
     public void timeToAngleYesterday(){
@@ -447,7 +449,15 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        Collections.sort(ActInfoList, new Comparator<ActInfo>(){
+            public int compare(ActInfo o1, ActInfo o2) {
+                if(o1.getStartHour() == o2.getStartHour()) {
+                    if(o1.getStartMinute() == o2.getStartMinute()) return 0;
+                    return o1.getStartMinute() < o2.getStartMinute() ? -1 : 1;
+                }
+                return o1.getStartHour() < o2.getStartHour() ? -1 : 1;
+            }
+        });
         int YdSize = ActInfoList.size()-1;
         if((YdSize > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 24)
         && (AngleList.get(0) == 270)){
