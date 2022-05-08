@@ -63,15 +63,6 @@ public class PieChartView extends View {
             TextStartPoint += 15;
         }
 
-//        if(YesterdayData != null){ //전날에 걸친 시간 표시 / style: 원 밖
-//            RectF smallarcrect = new RectF();
-//            smallarcrect.set(50, 350, 1050, 1350);
-//            for(int i = 0; i < YesterdayData.size()/2; i++) {
-//                SmallPaint.setColor(Color.parseColor(PColors[0]));
-//                canvas.drawArc(smallarcrect, YesterdayData.get(2*i), YesterdayData.get(2*i+1), true, SmallPaint);
-//            }
-//        }
-
         for(int i = 0; i < Data.size()/2; i++){
             switch (CategoryList.get(i)){
                 case "Sleep":
@@ -89,7 +80,6 @@ public class PieChartView extends View {
                 default:
                     paint.setColor(Color.parseColor(PColors[4]));
             }
-//            paint.setColor(Color.parseColor(PColors[i]));
             canvas.drawArc(arcrect, Data.get(2*i), Data.get(2*i+1), true, paint);
             Log.d("데이터",Data.get(2*i) + " to "+ Data.get(2*i+1));
         }
@@ -116,6 +106,7 @@ public class PieChartView extends View {
             String YdCategory = "null";
             if(CategoryList.size() > 0){
                 YdCategory = CategoryList.get(0);
+                Log.v("전날 카테고리", ""+YdCategory);
             }
             switch (YdCategory) {
                 case "Sleep":

@@ -368,9 +368,12 @@ public class MainActivity extends AppCompatActivity {
     //<--------------------------------------------------------------------LSY
     private void sendDataToPieChart(){
         PieChart.reset();
+        PieChart.CategoryList.clear();
         try{
             PieChart.Data.addAll(AngleList); //타임 리스트에 있는 시간에 관한 데이터를 파이차트뷰의 데이터리스트로 넘김
+            Log.v("시간", ""+AngleList);
             PieChart.CategoryList.addAll(PieCategoryList);
+            Log.v("카테고리", ""+PieCategoryList);
             if(YesterDayAngleList != null){
                 PieChart.YesterdayData.addAll(YesterDayAngleList);
             }
@@ -386,6 +389,9 @@ public class MainActivity extends AppCompatActivity {
     public void timeToAngle(){
         Calendar cal = Calendar.getInstance();
         CountDownLatch CDL = new CountDownLatch(1);
+
+        AngleList.clear();
+        PieCategoryList.clear();
         ActInfoItemList.clear();
         AngleList.clear();
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
@@ -423,6 +429,8 @@ public class MainActivity extends AppCompatActivity {
     public void timeToAngleYesterday(){
         int BeforeTime, AfterTime;
         float StartAngle, DrawAngle;
+
+        YesterDayAngleList.clear();
 
         Calendar cal = Calendar.getInstance();
         CountDownLatch CDL = new CountDownLatch(1);
