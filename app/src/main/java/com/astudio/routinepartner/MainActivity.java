@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     LottieAnimationView PetView;
     TextView PetName;
-    String Action ="meal"; //ActInfoItem 에서 가져옴
+    String Action ="";
     Context MainContext;
     String text_PetName="";
     RadarChart PetStateChart;
@@ -128,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 makeData();
+                PetView.setRepeatCount(1);  //[PSY] 추가코드
+                PetView.playAnimation();    //[PSY] 추가코드
             }
         });
         BtnCancel.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                         FadeAnimation.fadeOutImage(img);
                         break;
                     case "Sleep":
-                        img.setImageResource(R.drawable.bed);
+                        img.setImageResource(R.drawable.dogbed);
                         FadeAnimation.fadeOutImage(img);
                         break;
                     case "Study":
@@ -277,8 +279,10 @@ public class MainActivity extends AppCompatActivity {
         yAxis.setDrawLabels(false);
         yAxis.setLabelCount(5,false);
         yAxis.setAxisMinimum(0);
-        yAxis.setAxisMaximum(50);
+        yAxis.setAxisMaximum(100);
         yAxis.setDrawLabels(false);
+
+        PetStateChart.getDescription().setEnabled(false);
 
         for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
             set.setDrawValues(!set.isDrawValuesEnabled());
@@ -316,6 +320,10 @@ public class MainActivity extends AppCompatActivity {
         TxtTime.setText(CategoryName + "\n" + Year + "-" + Month + "-" + Date + "  " + SAMPM + " " + Shour + ":" + Sminute + " ~ " + EAMPM + " " + Ehour + ":" + Eminute);
 
         addToDB(CategoryName, Year, Month, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
+
+        Action=CategoryName;  //[PSY] 추가코드
+        setRadarData();       //[PSY] 추가코드
+
         Toast.makeText(getApplicationContext(), "Data Added", Toast.LENGTH_SHORT).show();
         Dialog.dismiss();
     }
@@ -518,6 +526,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void setRadarData(){
         ArrayList<RadarEntry> visitors=new ArrayList<>();
+        ArrayList<Float> SleepStateDataList=new ArrayList<>();
+        ArrayList<Float> EatStateDataList=new ArrayList<>();
+        ArrayList<Float> StudyStateDataList=new ArrayList<>();
+        float SaveValue=0;
         Calendar cal = Calendar.getInstance();
         float val1=0,val2=0,val3=0,val4=0,val5=0;
         PSY PetStateManage=new PSY();
@@ -541,12 +553,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         for(int i = 0; i < ActInfoItemList.size(); i++) {
-            PetStateManage.calRadarValue(ActInfoItemList.get(i).Category,ActInfoItemList.get(i).StartHour,ActInfoItemList.get(i).StartMinute,ActInfoItemList.get(i).EndHour,ActInfoItemList.get(i).EndMinute);
+            SaveValue=PetStateManage.calRadarValue(ActInfoItemList.get(i).Category,ActInfoItemList.get(i).StartHour,ActInfoItemList.get(i).StartMinute,ActInfoItemList.get(i).EndHour,ActInfoItemList.get(i).EndMinute);
+            switch (ActInfoItemList.get(i).Category){
+                case "Sleep":
+                    SleepStateDataList.add(SaveValue);
+                    break;
+
+                case "Eat":
+                    EatStateDataList.add(SaveValue);
+                    break;
+
+                case "Study":
+                    StudyStateDataList.add(SaveValue);
+                    break;
+
+                default:
+                    break;
+            }
         }
 
-        val1=PetStateManage.calCategoryData("Sleep");
-        val2=PetStateManage.calCategoryData("Eat");
-        val3=PetStateManage.calCategoryData("Study");
+        val1=PetStateManage.calCategoryData(SleepStateDataList);
+        val2=PetStateManage.calCategoryData(EatStateDataList);
+        val3=PetStateManage.calCategoryData(StudyStateDataList);
 
         visitors.add(new RadarEntry(val1));
         visitors.add(new RadarEntry(val2));
@@ -557,15 +585,17 @@ public class MainActivity extends AppCompatActivity {
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
         set1.setColor(Color.BLUE);
         set1.setLineWidth(0.5f);
+        set1.setValueTextSize(3f);
+        set1.setValueTextColor(Color.BLACK);
         set1.setDrawHighlightIndicators(false);
         set1.setDrawHighlightCircleEnabled(true);
 
 
         RadarData data=new RadarData();
         data.addDataSet(set1);
-        data.setValueTextSize(3f);
-        data.setDrawValues(false);
-        data.setValueTextColor(Color.BLACK);
+        //data.setValueTextSize(3f);
+        //data.setDrawValues(false);
+        //data.setValueTextColor(Color.BLACK);
 
         PetStateChart.setData(data);
         PetStateChart.invalidate();

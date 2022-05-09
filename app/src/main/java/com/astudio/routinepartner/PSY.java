@@ -15,18 +15,20 @@ public class PSY {
     private ArrayList<Float> StudyStateData=new ArrayList<>();
 
 
-    public void calRadarValue(String category,int starthour,int startmin,int endhour,int endmin){
+    public float calRadarValue(String category,int starthour,int startmin,int endhour,int endmin){
         if(starthour>endhour){
-            TimeData =(24-starthour)*60+(60-startmin)+endhour+endmin;
+            TimeData =(24-starthour)*60+(60-startmin)+endhour*60+endmin;
             TimeData /=20;
         }else{
             TimeData =(endhour-starthour)*60+(endmin-startmin);
             TimeData /=20;
         }
 
-        switch(category){
+        return TimeData;
+
+        /*switch(category){
             case "Sleep":
-                SleepStateData.add(TimeData);
+                //SleepStateData.add(TimeData);
                 break;
 
             case "Eat":
@@ -39,11 +41,11 @@ public class PSY {
 
             default:
                 break;
-        }
+        }*/
 
     }
 
-    public float calCategoryData(String category){
+    /*public float calCategoryData(String category){
 
         switch(category){
             case "Sleep":
@@ -68,6 +70,14 @@ public class PSY {
                 break;
         }
 
+        return CategoryData;
+    }*/
+
+    public float calCategoryData(ArrayList<Float> StateDataList){
+        CategoryData=0;
+        for(int i=0;i<StateDataList.size();i++){
+            CategoryData+=StateDataList.get(i);
+        }
         return CategoryData;
     }
 
