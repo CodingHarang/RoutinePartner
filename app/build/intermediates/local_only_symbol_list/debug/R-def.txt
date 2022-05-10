@@ -9,6 +9,7 @@ color teal_700
 color white
 drawable bed
 drawable book
+drawable dogbed
 drawable foodbowl
 drawable heart
 drawable ic_baseline_delete_outline_24

@@ -32,6 +32,10 @@
         "source": "E:\\MyProjects\\RoutinePartner\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.webp"
     },
     {
+        "merged": "E:\\MyProjects\\RoutinePartner\\app\\build\\intermediates\\merged_res\\debug\\drawable-v24_dogbed.jpg.flat",
+        "source": "E:\\MyProjects\\RoutinePartner\\app\\src\\main\\res\\drawable-v24\\dogbed.jpg"
+    },
+    {
         "merged": "E:\\MyProjects\\RoutinePartner\\app\\build\\intermediates\\merged_res\\debug\\layout_acivity_act_info_list.xml.flat",
         "source": "E:\\MyProjects\\RoutinePartner\\app\\src\\main\\res\\layout\\acivity_act_info_list.xml"
     },
@@ -80,12 +84,12 @@
         "source": "E:\\MyProjects\\RoutinePartner\\app\\src\\main\\res\\layout\\dialog_add.xml"
     },
     {
-        "merged": "E:\\MyProjects\\RoutinePartner\\app\\build\\intermediates\\merged_res\\debug\\drawable-v24_bed.png.flat",
-        "source": "E:\\MyProjects\\RoutinePartner\\app\\src\\main\\res\\drawable-v24\\bed.png"
-    },
-    {
         "merged": "E:\\MyProjects\\RoutinePartner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_ic_launcher_round.webp.flat",
         "source": "E:\\MyProjects\\RoutinePartner\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "E:\\MyProjects\\RoutinePartner\\app\\build\\intermediates\\merged_res\\debug\\drawable-v24_bed.png.flat",
+        "source": "E:\\MyProjects\\RoutinePartner\\app\\src\\main\\res\\drawable-v24\\bed.png"
     },
     {
         "merged": "E:\\MyProjects\\RoutinePartner\\app\\build\\intermediates\\merged_res\\debug\\drawable-v24_ic_launcher_foreground.xml.flat",
