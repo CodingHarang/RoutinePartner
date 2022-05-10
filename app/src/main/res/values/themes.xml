@@ -21,4 +21,8 @@
         <item name="android:editTextColor">#BDBDBD</item>
         <item name="android:colorControlNormal">#BDBDBD</item>
     </style>
+
+    <style name="textColor" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="android:textColor">#BDBDBD</item>
+    </style>
 </resources>

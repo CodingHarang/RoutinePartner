@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.github.mikephil.charting.charts.RadarChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.RadarData;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         //<--------------------------------------------------------------------YJS
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        TxtTime = findViewById(R.id.txtTime);
+//        TxtTime = findViewById(R.id.txtTime);
         BtnEat = findViewById(R.id.btnEat);
         BtnStudy = findViewById(R.id.btnStudy);
         BtnSleep = findViewById(R.id.btnSleep);
@@ -269,18 +270,20 @@ public class MainActivity extends AppCompatActivity {
 
         PetStateChart=findViewById(R.id.RadarChart);
         setRadarData();
-
         String[] lables={"체력","포만감","지능","재미","사교"};
 
         XAxis xAxis=PetStateChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(lables));
-        xAxis.setTextSize(4f);
+        xAxis.setTextColor(0xFFBDBDBD);
+        xAxis.setTextSize(8f);
         YAxis yAxis=PetStateChart.getYAxis();
         yAxis.setDrawLabels(false);
         yAxis.setLabelCount(5,false);
         yAxis.setAxisMinimum(0);
         yAxis.setAxisMaximum(100);
         yAxis.setDrawLabels(false);
+        Legend legend=PetStateChart.getLegend();
+        legend.setTextColor(0xFFBDBDBD);
 
         PetStateChart.getDescription().setEnabled(false);
 
@@ -317,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
         EAMPM = NumPickers[1].getValue();
         Ehour = NumPickers[3].getValue();
         Eminute = NumPickers[5].getValue();
-        TxtTime.setText(CategoryName + "\n" + Year + "-" + Month + "-" + Date + "  " + SAMPM + " " + Shour + ":" + Sminute + " ~ " + EAMPM + " " + Ehour + ":" + Eminute);
+//        TxtTime.setText(CategoryName + "\n" + Year + "-" + Month + "-" + Date + "  " + SAMPM + " " + Shour + ":" + Sminute + " ~ " + EAMPM + " " + Ehour + ":" + Eminute);
 
         addToDB(CategoryName, Year, Month, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
 
@@ -586,7 +589,6 @@ public class MainActivity extends AppCompatActivity {
         set1.setColor(Color.BLUE);
         set1.setLineWidth(0.5f);
         set1.setValueTextSize(3f);
-        set1.setValueTextColor(Color.BLACK);
         set1.setDrawHighlightIndicators(false);
         set1.setDrawHighlightCircleEnabled(true);
 
@@ -595,7 +597,6 @@ public class MainActivity extends AppCompatActivity {
         data.addDataSet(set1);
         //data.setValueTextSize(3f);
         //data.setDrawValues(false);
-        //data.setValueTextColor(Color.BLACK);
 
         PetStateChart.setData(data);
         PetStateChart.invalidate();

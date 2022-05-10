@@ -241,6 +241,7 @@ public class BarChartActivity extends AppCompatActivity {
         Xaxis.setDrawAxisLine(false);
         Xaxis.setDrawGridLines(false);
         Xaxis.setCenterAxisLabels(false);
+        Xaxis.setTextColor(0xFFBDBDBD);
 
         Bar_Chart.setHighlightPerTapEnabled(false); //그래프 각 항목 터치시 하이라이트 안되게 설정
         Bar_Chart.setHighlightPerDragEnabled(false);
@@ -290,6 +291,7 @@ public class BarChartActivity extends AppCompatActivity {
             Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정
 //        Bar_Chart.setVisibleXRangeMaximum(8);
             Bar_Chart.setVisibleXRange(0, Chartdata);
+            Bar_Chart.getBarData().setValueTextColor(0xFFBDBDBD);
             Bar_Chart.animateXY(1000, 1000);
             Bar_Chart.invalidate();
         }
