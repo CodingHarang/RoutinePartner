@@ -172,7 +172,6 @@ public class BarChartActivity extends AppCompatActivity {
                     getData();
                     getCategory();
                     drawBarChart(DayList, TimeList);
-
                 }
             }
         });
@@ -221,7 +220,7 @@ public class BarChartActivity extends AppCompatActivity {
 
     //차트 설정에 관한 부분
 
-    private void drawBarChart(ArrayList<String> daylist, ArrayList<Float> timelist){
+    private void drawBarChart(ArrayList<String> daylist, ArrayList<Float> timelist) {
 
         Bar_Chart.clear();
 
@@ -252,44 +251,48 @@ public class BarChartActivity extends AppCompatActivity {
         Bar_Chart.setDrawGridBackground(false);
         Bar_Chart.setDrawValueAboveBar(true); //수치가 그래프 위에 표시
         Bar_Chart.setDescription(null);
+        Bar_Chart.setNoDataText("No chart data available.");
+
 
         ArrayList<BarEntry> entries = new ArrayList<>();
-        for(int i = 0; i < daylist.size(); i++){
-            entries.add(new BarEntry(i, timelist.get(i)));
-        }
-
-        BarDataSet barDataSet = new BarDataSet(entries, "시간");
-        barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        barDataSet.setValueTextSize(10f);
-
-        BarData data = new BarData(barDataSet);
-
-        data.setBarWidth(0.8f);
-
-        //그래프 위치 설정
-        for(int d = 0; d < Chartdata; d++){
-            if(daylist.size() == d) {
-                Xaxis.setAxisMinimum(barDataSet.getXMin() - 0.5f - (Chartdata - d) * 0.5f);
-                Xaxis.setAxisMaximum(barDataSet.getXMax() + 0.5f + (Chartdata - d) * 0.5f);
-                break;
-            }else{
-                Xaxis.setAxisMinimum(barDataSet.getXMin() - 0.5f);
-                Xaxis.setAxisMaximum(barDataSet.getXMax() + 0.5f);
+        if (daylist.size() != 0) {
+            for (int i = 0; i < daylist.size(); i++) {
+                entries.add(new BarEntry(i, timelist.get(i)));
             }
-        }
 
-        Xaxis.setGranularity(1f);
+            BarDataSet barDataSet = new BarDataSet(entries, "시간");
+            barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+            barDataSet.setValueTextSize(10f);
 
-        Bar_Chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(daylist));
+            BarData data = new BarData(barDataSet);
 
-        barDataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+            data.setBarWidth(0.8f);
 
-        Bar_Chart.setData(data);
-        Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정
+            //그래프 위치 설정
+            for (int d = 0; d < Chartdata; d++) {
+                if (daylist.size() == d) {
+                    Xaxis.setAxisMinimum(barDataSet.getXMin() - 0.5f - (Chartdata - d) * 0.5f);
+                    Xaxis.setAxisMaximum(barDataSet.getXMax() + 0.5f + (Chartdata - d) * 0.5f);
+                    break;
+                } else {
+                    Xaxis.setAxisMinimum(barDataSet.getXMin() - 0.5f);
+                    Xaxis.setAxisMaximum(barDataSet.getXMax() + 0.5f);
+                }
+            }
+
+            Xaxis.setGranularity(1f);
+
+            Bar_Chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(daylist));
+
+            barDataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+
+            Bar_Chart.setData(data);
+            Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정
 //        Bar_Chart.setVisibleXRangeMaximum(8);
-        Bar_Chart.setVisibleXRange(0, Chartdata);
-        Bar_Chart.animateXY(1000, 1000);
-        Bar_Chart.invalidate();
+            Bar_Chart.setVisibleXRange(0, Chartdata);
+            Bar_Chart.animateXY(1000, 1000);
+            Bar_Chart.invalidate();
+        }
     }
 
 
@@ -318,7 +321,6 @@ public class BarChartActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         for(int i = 0; i < ActInfoList.size(); i++) {
-//            int year = ActInfoList.get(i).getYear(), month = ActInfoList.get(i).getMonth(), day = ActInfoList.get(i).getDate();
             if((i>0) && ((ActInfoList.get(i).getYear() != ActInfoList.get(i-1).getYear() || ActInfoList.get(i).getMonth() != ActInfoList.get(i-1).getMonth()) || ActInfoList.get(i).getDate() != ActInfoList.get(i-1).getDate())){
                 AllDayList.add(ActInfoItemList);
                 ActInfoItemList = new ArrayList<>();
@@ -335,7 +337,6 @@ public class BarChartActivity extends AppCompatActivity {
             Log.v("데이터", " "+ ActInfoList.get(i).getCategory());
         }
         AllDayList.add(ActInfoItemList);
-        Log.v("사이즈", ""+AllDayList.size());
     }
 
 
@@ -346,7 +347,11 @@ public class BarChartActivity extends AppCompatActivity {
         String CurrentDay;
         //그 안에서 선택된 카테고리의 값만 가져오기
         for(int i = 0; i < AllDayList.size(); i++) {
-            CurrentDay = Integer.toString(AllDayList.get(i).get(0).Month) + "/" + Integer.toString(AllDayList.get(i).get(0).Date);
+            Log.v("리스트 값", ""+AllDayList.get(i).size());
+            if (AllDayList.get(i).size() != 0) {
+                CurrentDay = Integer.toString(AllDayList.get(i).get(0).Month) + "/" + Integer.toString(AllDayList.get(i).get(0).Date);
+                DayList.add(CurrentDay);
+            }
             CategoryTime = 0;
             for (int j = 0; j < AllDayList.get(i).size(); j++) {
                 if (AllDayList.get(i).get(j).Category.equals(CurrentCategory)) {
@@ -363,7 +368,6 @@ public class BarChartActivity extends AppCompatActivity {
                 }
             }
             TimeList.add(CategoryTime);
-            DayList.add(CurrentDay);
         }
         Log.v("카테고리 사이즈", ""+DayList.size());
     }
