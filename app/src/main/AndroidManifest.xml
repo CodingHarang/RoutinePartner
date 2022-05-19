@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.astudio.routinepartner">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,6 +29,23 @@
             android:name=".BarChartActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"/>
+
+        <receiver android:name=".WidgetProvider"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE1"/>
+                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE2"/>
+                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE3"/>
+                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE4"/>
+                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE5"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider" />
+        </receiver>
+
+        <service android:name=".WidgetService"></service>
     </application>
 
 </manifest>
