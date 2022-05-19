@@ -145,9 +145,6 @@ public class SetCategoryActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
         //완료
 
         CheckButton.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +155,7 @@ public class SetCategoryActivity extends AppCompatActivity {
                 }else{
                     NameSet = SetCategoryName.getText().toString();
                     GoalSet = Integer.parseInt(GoalData.getText().toString());
-                    SetCategoryAdapter.addItem(new CategoryInfo(NameSet, ColorSet, StatSet, GoalTypeSet, GoalSet));
+                    //SetCategoryAdapter.addItem(new CategoryInfo(NameSet, ColorSet, StatSet, GoalTypeSet, GoalSet));
                     for(int i = 0; i < SetCategoryAdapter.CategoryItem.size(); i++){
                         Log.v("어레이", ""+SetCategoryAdapter.CategoryItem.get(i).getName());
                     }
