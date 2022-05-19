@@ -84,9 +84,8 @@ public class SettingActivity extends AppCompatActivity {
         adapter.setOnItemLongClickListener(new SetCategoryAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View v, int pos) {
-                Toast.makeText(getApplicationContext(),"롱클릭 성공", Toast.LENGTH_SHORT).show();
-                SetCategoryAdapter.CategoryItem.remove(pos);
-                adapter.notifyItemRemoved(pos);
+                Toast.makeText(getApplicationContext(),"롱클릭 성공" + pos, Toast.LENGTH_SHORT).show();
+                adapter.delItem(pos);
             }
         });
 

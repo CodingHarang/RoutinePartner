@@ -32,7 +32,7 @@ public class SetCategoryActivity extends AppCompatActivity {
     EditText SetCategoryName, GoalData;
     TextView GoalText;
     Spinner SetStat;
-    Button SetColor, CheakButton;
+    Button SetColor, CheckButton;
     RadioGroup RadioGroup;
     String NameSet, ColorSet, StatSet, GoalTypeSet;
     int ColorInt, GoalSet;
@@ -49,7 +49,7 @@ public class SetCategoryActivity extends AppCompatActivity {
         RadioGroup = findViewById(R.id.RadioGroup);
         GoalData = findViewById(R.id.GoalData);
         GoalText = findViewById(R.id.GoalText);
-        CheakButton = findViewById(R.id.CheckBtn);
+        CheckButton = findViewById(R.id.CheckBtn);
         GoalData.setVisibility(View.GONE);
         GoalText.setVisibility(View.GONE);
 
@@ -150,7 +150,7 @@ public class SetCategoryActivity extends AppCompatActivity {
 
         //완료
 
-        CheakButton.setOnClickListener(new View.OnClickListener() {
+        CheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(SetCategoryName.getText().length() == 0 || ColorSet == null || StatSet == null || GoalTypeSet == null || GoalData.getText().length() == 0){
