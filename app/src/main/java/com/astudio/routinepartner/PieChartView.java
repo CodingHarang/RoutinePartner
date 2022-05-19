@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.jar.Attributes;
@@ -27,7 +28,8 @@ public class PieChartView extends View {
     String[] PColors = {"#527FCD","#7FC4FF","#7FF3FF","#36CEB5","#19CE80","#61B585","#1ECE18","#EEA333","#FF774D","#527FCD"};
     ArrayList<String> CategoryList = new ArrayList<>();
     Boolean YsData;
-    int Left = getWidth()/4, Right = (getWidth()/4)*3, Top = getHeight()/4, Bottom = (getHeight()/4)*3;
+    static int TimeInterval = 3;
+
 
     public PieChartView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -62,14 +64,15 @@ public class PieChartView extends View {
         //파이차트 바깥쪽에 시간 텍스트 표시
 
         float TextStartPoint = -90;
-        for(int i = 0; i < 24; i++){
+        for(int i = 0; i < 24; i += TimeInterval){
             float radius = (float)(Interval+50);
 //            float radius = (float)(Interval+((Interval/100)*15));
             float x = (float)(radius * Math.cos(TextStartPoint * Math.PI / 180F)) + getWidth()/2-20;
             float y = (float)(radius * Math.sin(TextStartPoint * Math.PI / 180F)) + getHeight()/2+10;
             canvas.drawText(""+i , x, y , TextPaint);
-            TextStartPoint += 15;
+            TextStartPoint += 15*TimeInterval;
         }
+
 
         for(int i = 0; i < Data.size()/2; i++){
             switch (CategoryList.get(i)){
@@ -114,7 +117,6 @@ public class PieChartView extends View {
             String YdCategory = "null";
             if(CategoryList.size() > 0){
                 YdCategory = CategoryList.get(0);
-                Log.v("전날 카테고리", ""+YdCategory);
             }
             switch (YdCategory) {
                 case "Sleep":
@@ -136,7 +138,6 @@ public class PieChartView extends View {
 //            smallarcrect.set((getWidth() / 2) - 405, getHeight() / 2 - 606, (getWidth() / 2) + 445, getHeight() / 2 + 246);
             smallarcrect.set(Left+(float)(Interval/100*6), Top+(float)(Interval/100*6), Right-(float)(Interval/100*6), Bottom-(float)(Interval/100*6));
             for (int i = 0; i < YesterdayData.size() / 2; i++) {
-                SmallPaint.setColor(Color.parseColor(PColors[0]));
                 canvas.drawArc(smallarcrect, YesterdayData.get(2 * i)+0.8f, YesterdayData.get(2 * i + 1)-0.8f, false, SmallPaint);
             }
         }

@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
         BtnShowPieChart = findViewById(R.id.btnShowPieChart);
         ImageButton BtnChart = (ImageButton) findViewById(R.id.BtnChart);
+        ImageButton SettingButton = findViewById(R.id.SettingBtn);
 
         PieChart = (PieChartView) findViewById(R.id.PieChartView);
         BtnShowPieChart.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +193,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(BarIntent);
             }
         });
+
+        //설정 창으로 넘어가는 버튼
+
+        SettingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent SettingIntent = new Intent(getApplicationContext(), SettingActivity.class);
+                startActivity(SettingIntent);
+            }
+        });
+
+
         //-------------------------------------------------------------------->LSY
         //-------------------------------------------------------------------->LSY
 
@@ -458,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE-1), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE-1))));
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE)-1, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE)-1)));
             CDL.countDown();
         });
         try {
@@ -494,32 +507,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
-    /*public void PieChartAutoReset(){ //0시마다 원형시간표 리셋
-        AlarmManager PieReset = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        Intent RePie = new Intent(MainActivity.this, AlarmRecever.class);
-        PendingIntent ResetSender = PendingIntent.getBroadcast(MainActivity.this, 0, RePie, 0);
-
-        Calendar ResetCal = Calendar.getInstance();
-        ResetCal.setTimeInMillis(System.currentTimeMillis());
-        ResetCal.set(Calendar.HOUR_OF_DAY, 0);
-        ResetCal.set(Calendar.MINUTE, 0);
-        ResetCal.set(Calendar.SECOND, 0);
-
-        PieReset.setInexactRepeating(AlarmManager.RTC_WAKEUP, ResetCal.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, ResetSender);
-
-        SimpleDateFormat Format = new SimpleDateFormat("MM/dd kk:mm:ss");
-        String SetResetTime = Format.format(new Date(ResetCal.getTimeInMillis()+ AlarmManager.INTERVAL_DAY));
-    }*/
-
-    /*public class AlarmRecever extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            AngleList.clear();
-        }
-    }*/
     //-------------------------------------------------------------------->LSY
     //-------------------------------------------------------------------->LSY
 
