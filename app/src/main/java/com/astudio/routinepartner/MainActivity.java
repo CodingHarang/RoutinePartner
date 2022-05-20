@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     Context MainContext;
     String text_PetName="";
     RadarChart PetStateChart;
+    ArrayList<String> LableList=new ArrayList<>();
 
 
     @Override
@@ -280,13 +281,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ArrayList<String> CategoryStat=new ArrayList<>(Arrays.asList("포만감","체력","지능","체력"));
+        ArrayList<String> StatList = new ArrayList<>(Arrays.asList("지능", "재미", "체력", "포만감", "잔고", "자아실현"));
 
         PetStateChart=findViewById(R.id.RadarChart);
-        setRadarData();
-        String[] lables={"체력","포만감","지능","재미","사교"};
+        setRadarDataFirst();
+        String[] lables={"체력","포만감","지능"};  //카테고리는 4개 stat은 3개
+
+        LableList=CategoryStat;
+        for(int i=0;i<CategoryStat.size();i++){
+            for(int j=0;j<CategoryStat.size();j++){
+                if(i!=j&&LableList.get(i)==CategoryStat.get(j)){
+                    LableList.remove(i);
+                    break;
+                }
+            }
+        }
 
         XAxis xAxis=PetStateChart.getXAxis();
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(lables));
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(LableList));
         xAxis.setTextColor(0xFFBDBDBD);
         xAxis.setTextSize(8f);
         YAxis yAxis=PetStateChart.getYAxis();
@@ -513,15 +526,42 @@ public class MainActivity extends AppCompatActivity {
 
     //<--------------------------------------------------------------------PSY
     //<--------------------------------------------------------------------PSY
+    ArrayList<String> CategoryList=new ArrayList<>(Arrays.asList("식사","수면","공부","운동"));
+
+    public void setRadarDataFirst(){ //데이터 추가하는 데에는 문제없음(처음 시작하나 이미 사용중이나 상관없음)
+
+        ArrayList<RadarEntry> visitors=new ArrayList<>();
+        PSY BeforeDataManage=new PSY();
+
+        for(int i=0;i<CategoryList.size();i++){
+            visitors.add(new RadarEntry(PreferenceManage.getFloat(MainContext,"Value"+i)));
+        }
+
+        RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
+        set1.setColor(Color.BLUE);
+        set1.setLineWidth(0.5f);
+        set1.setValueTextSize(3f);
+        set1.setDrawHighlightIndicators(false);
+        set1.setDrawHighlightCircleEnabled(true);
+
+        RadarData data=new RadarData();
+        data.addDataSet(set1);
+
+        PetStateChart.setData(data);
+        PetStateChart.invalidate();
+    }
 
     public void setRadarData(){
         ArrayList<RadarEntry> visitors=new ArrayList<>();
-        ArrayList<Float> SleepStateDataList=new ArrayList<>();
-        ArrayList<Float> EatStateDataList=new ArrayList<>();
-        ArrayList<Float> StudyStateDataList=new ArrayList<>();
-        float SaveValue=0;
         Calendar cal = Calendar.getInstance();
-        float val1=0,val2=0,val3=0,val4=0,val5=0;
+
+        ArrayList<ArrayList<Float>> RadarCategoryDataList=new ArrayList<>(); //각 카테고리별로 총합 시간(횟수) 데이터 저장
+        ArrayList<Float> TotalDataList=new ArrayList<>();
+
+        for(int i=0;i<CategoryList.size();i++){
+            RadarCategoryDataList.set(i,new ArrayList<>(Arrays.asList(0f)));
+        }
+
         PSY PetStateManage=new PSY();
 
         CountDownLatch CDL = new CountDownLatch(1);
@@ -543,34 +583,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         for(int i = 0; i < ActInfoItemList.size(); i++) {
-            SaveValue=PetStateManage.calRadarValue(ActInfoItemList.get(i).Category,ActInfoItemList.get(i).StartHour,ActInfoItemList.get(i).StartMinute,ActInfoItemList.get(i).EndHour,ActInfoItemList.get(i).EndMinute);
-            switch (ActInfoItemList.get(i).Category){
-                case "Sleep":
-                    SleepStateDataList.add(SaveValue);
-                    break;
-
-                case "Eat":
-                    EatStateDataList.add(SaveValue);
-                    break;
-
-                case "Study":
-                    StudyStateDataList.add(SaveValue);
-                    break;
-
-                default:
-                    break;
+            float TimeData=PetStateManage.calTimeValue(ActInfoItemList.get(i).Category,ActInfoItemList.get(i).StartHour,ActInfoItemList.get(i).StartMinute,ActInfoItemList.get(i).EndHour,ActInfoItemList.get(i).EndMinute);
+            int index=-1;
+            for(int j=0;i<CategoryList.size();j++){
+                if(ActInfoItemList.get(i).Category==CategoryList.get(j)){
+                    index=j;
+                }
+            }
+            if(index>=0){
+                RadarCategoryDataList.get(index).add(TimeData);
             }
         }
 
-        val1=PetStateManage.calCategoryData(SleepStateDataList);
-        val2=PetStateManage.calCategoryData(EatStateDataList);
-        val3=PetStateManage.calCategoryData(StudyStateDataList);
-
-        visitors.add(new RadarEntry(val1));
-        visitors.add(new RadarEntry(val2));
-        visitors.add(new RadarEntry(val3));
-        visitors.add(new RadarEntry(val4));
-        visitors.add(new RadarEntry(val5));
+        for(int i=0;i<CategoryList.size();i++){
+            float value=PetStateManage.calCategoryData(RadarCategoryDataList.get(i));
+            TotalDataList.add(value);//카테고리는 4개지만 스텟이 3개
+            visitors.add(new RadarEntry(value));
+            PreferenceManage.setFloat(MainContext,"Value"+i,value);
+            RadarCategoryDataList.get(i).clear();
+        }
 
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
         set1.setColor(Color.BLUE);
@@ -582,8 +613,6 @@ public class MainActivity extends AppCompatActivity {
 
         RadarData data=new RadarData();
         data.addDataSet(set1);
-        //data.setValueTextSize(3f);
-        //data.setDrawValues(false);
 
         PetStateChart.setData(data);
         PetStateChart.invalidate();
