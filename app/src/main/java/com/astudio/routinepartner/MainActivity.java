@@ -183,10 +183,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
-
-
         BtnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -347,6 +343,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         ArrayList<String> CategoryStat=new ArrayList<>(Arrays.asList("포만감","체력","지능","체력"));
+        //ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "수면", "공부", "운동"));
+        ArrayList<Integer> Order=new ArrayList<>(Arrays.asList(1,2,3,4));
         ArrayList<String> StatList = new ArrayList<>(Arrays.asList("지능", "재미", "체력", "포만감", "잔고", "자아실현"));
 
         PetStateChart=findViewById(R.id.RadarChart);
@@ -363,7 +361,6 @@ public class MainActivity extends AppCompatActivity {
             labels[size]=item;
             size++;
         }
-        //lables=Arrays.stream(lables).distinct().toArray(String[]::new);
 
         XAxis xAxis=PetStateChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
@@ -613,12 +610,15 @@ public class MainActivity extends AppCompatActivity {
     //<--------------------------------------------------------------------PSY
     ArrayList<String> CategoryList=new ArrayList<>(Arrays.asList("식사","수면","공부","운동"));
     ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
+    ArrayList<Integer> CategoryStatInt=new ArrayList<>(Arrays.asList(3,2,0,2));
+    ArrayList<Integer> Order=new ArrayList<>(Arrays.asList(1,2,3,4));
 
     public void setRadarDataFirst(){ //데이터 추가하는 데에는 문제없음(처음 시작하나 이미 사용중이나 상관없음)
 
         ArrayList<RadarEntry> visitors=new ArrayList<>();
         ArrayList<Float> GoalSuccessCheck=new ArrayList<>();
         PSY BeforeDataManage=new PSY();
+        ArrayList<Float> TestArray=new ArrayList<>();
 
         for(int i=0;i<CategoryList.size();i++){
             float GoalSuccessCheckValue=PreferenceManage.getFloat(MainContext,"CategoryValue"+i);
@@ -626,23 +626,35 @@ public class MainActivity extends AppCompatActivity {
             //visitors.add(new RadarEntry(PreferenceManage.getFloat(MainContext,"Value"+i)));
         }
 
-        for(int i=0;i<CategoryList.size();i++){
-            if(BeforeDataManage.isGoalAchieved(GoalSuccessCheck).get(i)){
-                GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)+10);
-            }else{
-                GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)-10);
+        for(int i=0;i<GoalSuccessCheck.size();i++){
+            TestArray.add(0f);
+        }
+
+        if(!GoalSuccessCheck.containsAll(TestArray)){
+            for(int i=0;i<CategoryList.size();i++){
+
+                if(BeforeDataManage.isGoalAchieved(GoalSuccessCheck).get(i)){
+                    GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)+10);
+                }else{
+                    GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)-10);
+                }
+            }
+
+            for(int i=0;i<LableList.size();i++){
+                ArrayList<Float> RadarStatDataList=new ArrayList<>();
+                for(int j=0;j<CategoryStat.size();j++){
+                    if(LableList.get(i)==CategoryStat.get(j)){
+                        RadarStatDataList.add(i, GoalSuccessCheck.get(j));
+                    }
+                }
+                visitors.add(new RadarEntry(RadarStatDataList.get(i)));
+            }
+        }else{
+            for(int i=0;i<LableList.size();i++){
+                visitors.add(new RadarEntry(0));
             }
         }
 
-        for(int i=0;i<LableList.size();i++){
-            ArrayList<Float> RadarStatDataList=new ArrayList<>();
-            for(int j=0;j<CategoryStat.size();j++){
-                if(LableList.get(i)==CategoryStat.get(j)){
-                    RadarStatDataList.add(i, GoalSuccessCheck.get(j));
-                }
-            }
-            visitors.add(new RadarEntry(RadarStatDataList.get(i)));
-        }
 
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
         set1.setColor(Color.BLUE);
@@ -695,14 +707,18 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i = 0; i < ActInfoItemList.size(); i++) {
             float TimeData=PetStateManage.calTimeValue(ActInfoItemList.get(i).Category,ActInfoItemList.get(i).StartHour,ActInfoItemList.get(i).StartMinute,ActInfoItemList.get(i).EndHour,ActInfoItemList.get(i).EndMinute);
-            int index=-1;
-            for(int j=0;i<CategoryList.size();j++){
+            int index=CategoryList.indexOf(ActInfoItemList.get(i).Category);
+            /*for(int j=0;i<CategoryList.size();j++){
                 if(ActInfoItemList.get(i).Category==CategoryList.get(j)){
                     index=j;
                 }
-            }
+            }*/
             if(index>=0){
                 RadarCategoryDataList.get(index).add(TimeData);
+            }else{
+                for(int k=0;k<CategoryList.size();k++){
+                    RadarCategoryDataList.get(k).add(0f);
+                }
             }
         }
 

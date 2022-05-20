@@ -16,14 +16,18 @@ public class PSY {
     ArrayList<Integer> GoalType = new ArrayList<>(Arrays.asList(2, 1, 1, 1));
     ArrayList<String> StatList = new ArrayList<>(Arrays.asList("지능", "재미", "체력", "포만감", "잔고", "자아실현"));
     ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
+    ArrayList<Integer> CategoryStatInt=new ArrayList<>(Arrays.asList(3,2,0,2));
+    ArrayList<Integer> Order=new ArrayList<>(Arrays.asList(1,2,3,4));
 
     public float calTimeValue(String category, int SH, int SM, int EH, int EM){
-        int index = -1;
-        for (int i = 0; i < CategoryList.size(); i++) {
-            if (category == CategoryList.get(i)) {
+        int index=CategoryList.indexOf(category);
+        /*for (int i = 0; i < CategoryList.size(); i++) {  //한글 비교 불가
+            *//*if (category == CategoryList.get(i)) {
                 index = i;
-            }
-        }
+            }*//*
+            index=CategoryList.indexOf(category);
+        }*/
+
         if (index < 0) {
             return 0;
         }
