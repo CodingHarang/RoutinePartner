@@ -101,6 +101,9 @@ public class ActInfoListActivity extends AppCompatActivity {
                 for(int i = 0; i < ActInfoList.size(); i++) {
                     MAdapter.addItem(ActInfoItemList.get(i));
                 }
+//                for(int i = 0; i < ActInfoList.size(); i++) {
+//                    MRecyclerView.getLayoutManager().findViewByPosition(i).setBackgroundResource(R.drawable.round_square1);
+//                }
                 MAdapter.notifyDataSetChanged();
             }
         });

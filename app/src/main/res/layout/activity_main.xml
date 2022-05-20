@@ -26,8 +26,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
             android:textAllCaps="false"
-            android:background="@drawable/round_square"
-            android:textColor="#BDBDBD" />
+            android:background="@drawable/button_square"
+            android:textColor="#898989" />
 
         <ImageButton
             android:id="@+id/BtnChart"
@@ -139,32 +139,32 @@
         <Button
             android:id="@+id/btnAddTestData"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:text="MakeData"
             android:textAllCaps="false"
-            android:background="@drawable/round_square"
-            android:textColor="#BDBDBD" />
+            android:background="@drawable/button_square"
+            android:textColor="#898989" />
         <Button
             android:id="@+id/btnDeleteAll"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:text="DeleteAll"
             android:textAllCaps="false"
-            android:background="@drawable/round_square"
-            android:textColor="#BDBDBD" />
+            android:background="@drawable/button_square"
+            android:textColor="#898989" />
         <Button
             android:id="@+id/btnShowPieChart"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_margin="5dp"
             android:text="ShowPieChart"
             android:textAllCaps="false"
-            android:background="@drawable/round_square"
-            android:textColor="#BDBDBD" />
+            android:background="@drawable/button_square"
+            android:textColor="#898989" />
     </LinearLayout>
     <!--<TextView
         android:id="@+id/txtTime"
@@ -177,51 +177,58 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/btnEat"
+            android:id="@+id/btn1"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Eat"
             android:textAllCaps="false"
-            android:background="@drawable/round_square"
-            android:textColor="#BDBDBD"
+            android:background="@drawable/button_square"
+            android:textColor="#898989"
             android:textSize="20dp"/>
 
         <Button
-            android:id="@+id/btnStudy"
+            android:id="@+id/btn2"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Study"
             android:textAllCaps="false"
-            android:background="@drawable/round_square"
-            android:textColor="#BDBDBD"
+            android:background="@drawable/button_square"
+            android:textColor="#898989"
             android:textSize="20dp"  />
 
         <Button
-            android:id="@+id/btnSleep"
+            android:id="@+id/btn3"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Sleep"
             android:textAllCaps="false"
-            android:background="@drawable/round_square"
-            android:textColor="#BDBDBD"
+            android:background="@drawable/button_square"
+            android:textColor="#898989"
             android:textSize="20dp"  />
 
         <Button
-            android:id="@+id/btnEtc"
+            android:id="@+id/btn4"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Etc."
             android:textAllCaps="false"
-            android:background="@drawable/round_square"
-            android:textColor="#BDBDBD"
+            android:background="@drawable/button_square"
+            android:textColor="#898989"
+            android:textSize="20dp"  />
+
+        <Button
+            android:id="@+id/btn5"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:background="@drawable/button_square"
+            android:textColor="#898989"
             android:textSize="20dp"  />
     </LinearLayout>
 </LinearLayout>

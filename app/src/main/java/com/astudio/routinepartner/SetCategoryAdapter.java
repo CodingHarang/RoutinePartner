@@ -58,6 +58,7 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
 
     public void addItem(CategoryInfo C){
         CategoryItem.add(C);
+        notifyItemInserted(CategoryItem.size());
         notifyDataSetChanged();
     }
 
@@ -116,12 +117,14 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
 
         public void setItem(CategoryInfo Item){
             CategoryButton.setText(Item.getName()+" "+Item.getStat()+" "+Item.getColor()+" "+Item.getGoalType()+" "+Item.getGoal());
+            Log.v("t", ""+Item.getName());
             CategoryButton.setBackgroundColor(Color.parseColor(Item.getColor()));
         }
     }
     public void delItem(int position) {
         CategoryItem.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeRemoved(position, CategoryItem.size());
     }
 
 }

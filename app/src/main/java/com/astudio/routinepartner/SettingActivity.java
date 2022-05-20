@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ public class SettingActivity extends AppCompatActivity {
 
     static int TimeInterval = 3;
 
+    Button Testbtn;
     TextView TimeIntervalText;
     ImageButton PlusInterval, MinusInterval, CategoryAddBtn;
 
@@ -46,6 +48,13 @@ public class SettingActivity extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent intent = result.getData();
+                            String Name = intent.getStringExtra("Name");
+                            String Color = intent.getStringExtra("Color");
+                            String Stat = intent.getStringExtra("Stat");
+                            String GoalType = intent.getStringExtra("GoalType");
+                            int Goal = intent.getIntExtra("Goal", 0);
+                            Log.v("getExtra", ""+Name+" "+Color+" "+Stat+" "+GoalType+" "+Goal);
+                            adapter.addItem(new CategoryInfo(Name, Color, Stat, GoalType, Goal));
                             adapter.notifyItemInserted(SetCategoryAdapter.CategoryItem.size());
                         }
                     }
@@ -58,6 +67,7 @@ public class SettingActivity extends AppCompatActivity {
         PlusInterval = findViewById(R.id.PlusInterval);
         MinusInterval = findViewById(R.id.MinusInterval);
         CategoryAddBtn = findViewById(R.id.CategoryAddBtn);
+        Testbtn = findViewById(R.id.testbtn);
 
 //        if(SetCategoryAdapter.CategoryItem.size()>=5){
 //            CategoryAddBtn.setEnabled(false);
@@ -77,6 +87,13 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View v, int position) {
                 Intent intent = new Intent(getApplicationContext(), SetCategoryActivity.class);
+
+                intent.putExtra("CurName", SetCategoryAdapter.CategoryItem.get(position).getName());
+                intent.putExtra("CurColor", SetCategoryAdapter.CategoryItem.get(position).getColor());
+                intent.putExtra("CurStat", SetCategoryAdapter.CategoryItem.get(position).getStat());
+                intent.putExtra("CurGoalType", SetCategoryAdapter.CategoryItem.get(position).getGoalType());
+                intent.putExtra("CurGoal", SetCategoryAdapter.CategoryItem.get(position).getGoal());
+
                 startActivityResult.launch(intent);
             }
         });
@@ -86,6 +103,13 @@ public class SettingActivity extends AppCompatActivity {
             public void onItemLongClick(View v, int pos) {
                 Toast.makeText(getApplicationContext(),"롱클릭 성공" + pos, Toast.LENGTH_SHORT).show();
                 adapter.delItem(pos);
+            }
+        });
+
+        Testbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.addItem(new CategoryInfo("a", "#ffff00", "지능", "횟수", 3));
             }
         });
 

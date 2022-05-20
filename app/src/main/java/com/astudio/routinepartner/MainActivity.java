@@ -1,11 +1,13 @@
 package com.astudio.routinepartner;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.github.mikephil.charting.charts.RadarChart;
@@ -46,9 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
     AlertDialog Dialog;
     NumberPicker[] NumPickers = new NumberPicker[10];
-    Button BtnEat, BtnStudy, BtnSleep, BtnEtc, BtnOK, BtnCancel, BtnShowList, BtnAddTestData, BtnDeleteAll, BtnShowPieChart;
+    Button Btn1, Btn2, Btn3, Btn4, Btn5, BtnOK, BtnCancel, BtnShowList, BtnAddTestData, BtnDeleteAll, BtnShowPieChart;
     EditText EdtCategory;
     TextView TxtTime;
+    int CategoryNum;
 
     PieChartView PieChart;
     ArrayList<Integer> TimeList = new ArrayList<Integer>();
@@ -70,19 +74,36 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> LableList=new ArrayList<>();
 
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //<--------------------------------------------------------------------YJS
         //<--------------------------------------------------------------------YJS
+        GradientDrawable RS1 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square1);
+        GradientDrawable RS2 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square2);
+        GradientDrawable RS3 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square3);
+        GradientDrawable RS4 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square4);
+        GradientDrawable RS5 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square5);
+        RS1.setColor(SavedSettings.ColorList.get(0).intValue());
+        RS2.setColor(SavedSettings.ColorList.get(1).intValue());
+        RS3.setColor(SavedSettings.ColorList.get(2).intValue());
+        RS4.setColor(SavedSettings.ColorList.get(3).intValue());
+        RS5.setColor(SavedSettings.ColorList.get(4).intValue());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-//        TxtTime = findViewById(R.id.txtTime);
-        BtnEat = findViewById(R.id.btnEat);
-        BtnStudy = findViewById(R.id.btnStudy);
-        BtnSleep = findViewById(R.id.btnSleep);
-        BtnEtc = findViewById(R.id.btnEtc);
+        CategoryNum = SavedSettings.CategoryList.size();
+        Btn1 = findViewById(R.id.btn1);
+        Btn2 = findViewById(R.id.btn2);
+        Btn3 = findViewById(R.id.btn3);
+        Btn4 = findViewById(R.id.btn4);
+        Btn5 = findViewById(R.id.btn5);
+        Btn1.setVisibility(View.GONE);
+        Btn2.setVisibility(View.GONE);
+        Btn3.setVisibility(View.GONE);
+        Btn4.setVisibility(View.GONE);
+        Btn5.setVisibility(View.GONE);
         BtnShowList = findViewById(R.id.btnShowList);
         BtnAddTestData = findViewById(R.id.btnAddTestData);
         BtnDeleteAll = findViewById(R.id.btnDeleteAll);
@@ -97,34 +118,74 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(dialogView);
         Dialog = builder.create();
 
-        BtnEat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialog();
-                EdtCategory.setText("Eat");
+
+        for(int i = 0; i < CategoryNum; i++){
+            if(i == 0) {
+                Btn1.setVisibility(View.VISIBLE);
+                Btn1.setText(SavedSettings.CategoryList.get(0));
+                Btn1.setBackgroundResource(R.drawable.round_square1);
+                Btn1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(0));
+                    }
+                });
             }
-        });
-        BtnStudy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialog();
-                EdtCategory.setText("Study");
+            if(i == 1) {
+                Btn2.setVisibility(View.VISIBLE);
+                Btn2.setText(SavedSettings.CategoryList.get(1));
+                Btn2.setBackgroundResource(R.drawable.round_square2);
+                Btn2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(1));
+                    }
+                });
             }
-        });
-        BtnSleep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialog();
-                EdtCategory.setText("Sleep");
+            if(i == 2) {
+                Btn3.setVisibility(View.VISIBLE);
+                Btn3.setText(SavedSettings.CategoryList.get(2));
+                Btn3.setBackgroundResource(R.drawable.round_square3);
+                Btn3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(2));
+                    }
+                });
             }
-        });
-        BtnEtc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialog();
-                EdtCategory.setText("Edit Here");
+            if(i == 3) {
+                Btn4.setVisibility(View.VISIBLE);
+                Btn4.setText(SavedSettings.CategoryList.get(3));
+                Btn4.setBackgroundResource(R.drawable.round_square4);
+                Btn4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(3));
+                    }
+                });
             }
-        });
+            if(i == 4) {
+                Btn5.setVisibility(View.VISIBLE);
+                Btn5.setText(SavedSettings.CategoryList.get(4));
+                Btn5.setBackgroundResource(R.drawable.round_square5);
+                Btn5.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(4));
+                    }
+                });
+            }
+        }
+
+
+
+
+
 
         BtnOK.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +221,11 @@ public class MainActivity extends AppCompatActivity {
                     ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
                     ActInfoDAO mActInfoDao = db.actInfoDao();
                     mActInfoDao.deleteAll();
+                });
+                SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                    SettingsDAO mSettingsDao = db.settingDao();
+                    mSettingsDao.deleteAll();
                 });
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
             }
@@ -348,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
         Eminute = NumPickers[5].getValue();
 //        TxtTime.setText(CategoryName + "\n" + Year + "-" + Month + "-" + Date + "  " + SAMPM + " " + Shour + ":" + Sminute + " ~ " + EAMPM + " " + Ehour + ":" + Eminute);
 
-        addToDB(CategoryName, Year, Month, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
+        addToActDB(CategoryName, Year, Month, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
 
         Action=CategoryName;  //[PSY] 추가코드
         setRadarData();       //[PSY] 추가코드
@@ -366,28 +432,32 @@ public class MainActivity extends AppCompatActivity {
 
     public void makeTestData() {
         for(int i = 1; i < 31; i++) {
-            addToDB("Sleep", 2022, 4, i, 0, 0, 7, 0);
-            addToDB("Etc", 2022, 4, i, 8, 0, 9, 0);
-            addToDB("Study", 2022, 4, i, 9, 0, 13, 0);
-            addToDB("Eat", 2022, 4, i, 13, 0, 17, 0);
-            addToDB("Etc", 2022, 4, i, 17 , 0, 18, 0);
-            addToDB("Study", 2022, 4, i, 18, 0, 21, 0);
-            addToDB("Eat", 2022, 4, i, 21, 0, 22, 0);
-            addToDB("Sleep", 2022, 4, i, 22, 0, 24, 0);
+            addToActDB("취침", 2022, 4, i, 0, 0, 6, 0);
+            addToActDB("식사", 2022, 4, i, 8, 0, 9, 0);
+            addToActDB("공부", 2022, 4, i, 10, 0, 12, 0);
+            addToActDB("식사", 2022, 4, i, 13, 0, 14, 0);
+            addToActDB("운동", 2022, 4, i, 16 , 0, 18, 0);
+            addToActDB("식사", 2022, 4, i, 18, 0, 19, 0);
+            addToActDB("게임", 2022, 4, i, 20, 0, 22, 0);
+            addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
         }
         for(int i = 1; i < 32; i++) {
-            addToDB("Sleep", 2022, 5, i, 0, 0, 7, 0);
-            addToDB("Etc", 2022, 5, i, 8, 0, 9, 0);
-            addToDB("Study", 2022, 5, i, 9, 0, 13, 0);
-            addToDB("Eat", 2022, 5, i, 13, 0, 17, 0);
-            addToDB("Etc", 2022, 5, i, 17 , 0, 18, 0);
-            addToDB("Study", 2022, 5, i, 18, 0, 21, 0);
-            addToDB("Eat", 2022, 5, i, 21, 0, 22, 0);
-            addToDB("Sleep", 2022, 5, i, 22, 0, 24, 0);
+            addToActDB("취침", 2022, 5, i, 0, 0, 6, 0);
+            addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
+            addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
+            addToActDB("식사", 2022, 5, i, 13, 0, 14, 0);
+            addToActDB("운동", 2022, 5, i, 16 , 0, 18, 0);
+            addToActDB("식사", 2022, 5, i, 18, 0, 19, 0);
+            addToActDB("게임", 2022, 5, i, 20, 0, 22, 0);
+            addToActDB("취침", 2022, 5, i, 22, 0, 24, 0);
+        }
+        for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
+            addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
+            Log.i("11111", "--" + SavedSettings.CategoryList.get(i)+ "  -  " + SavedSettings.ColorList.get(i)+ " " + SavedSettings.GoalType.get(i)+ SavedSettings.Goal.get(i)+ SavedSettings.AffectingStat.get(i)+ SavedSettings.Order.get(i));
         }
     }
 
-    public void addToDB(String Category, int Year, int Month, int Date, int Shour, int Sminute, int Ehour, int Eminute) {
+    public void addToActDB(String Category, int Year, int Month, int Date, int Shour, int Sminute, int Ehour, int Eminute) {
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDAO mActInfoDao = db.actInfoDao();
@@ -402,6 +472,23 @@ public class MainActivity extends AppCompatActivity {
             actInfo.setEndMinute(Eminute);
             mActInfoDao.insert(actInfo);
         });
+    }
+
+    public void addToSettingsDB(String Category, long Color, int GoalType, int Goal, int AffectingStat, int Order) {
+
+        SettingsDB.DatabaseWriteExecutor.execute(() -> {
+            SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+            SettingsDAO mSettingsDao = db.settingDao();
+            Settings settings = new Settings();
+            settings.setCategory(Category);
+            settings.setColor(Color);
+            settings.setGoalType(GoalType);
+            settings.setGoal(Goal);
+            settings.setAffectingStat(AffectingStat);
+            settings.setOrder(Order);
+            mSettingsDao.insert(settings);
+        });
+
     }
 
     //-------------------------------------------------------------------->YJS

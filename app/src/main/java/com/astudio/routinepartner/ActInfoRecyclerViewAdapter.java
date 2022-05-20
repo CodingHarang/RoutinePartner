@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
             super(view);
             BtnEdit = view.findViewById(R.id.btnEditItem);
             BtnDelete = view.findViewById(R.id.btnDeleteItem);
-
             BtnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -91,6 +91,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                             alertDialog.dismiss();
                         }
                     });
+
                     BtnCancel.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -98,6 +99,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         }
                     });
                 }
+
             });
             BtnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -112,13 +114,51 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                     delItem(Index);
                 }
             });
+
         }
 
-        public void setItem(ActInfoItem item, int position) {
+        public void setItem(ActInfoItem item, int position, ViewHolder viewHolder) {
             Index = position;
             ContainingItem = item;
             BtnEdit.setText(item.Category + "   id : " + Integer.toString(item.ItemId) + "\n" + Integer.toString(item.Year) + " - " + Integer.toString(item.Month) + " - " + Integer.toString(item.Date) + "\n" + Integer.toString(item.StartHour) + " : " + Integer.toString(item.StartMinute) + " ~ " + Integer.toString(item.EndHour) + " : " + Integer.toString(item.EndMinute));
-
+            int CategoryNum = SavedSettings.CategoryList.size();
+            for(int i = 0; i < 5; i++) {
+                if(i == 0 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(0))) {
+                        BtnEdit.setBackgroundResource(R.drawable.round_square1);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square1);
+                    }
+                }
+                if(i == 1 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(1)) && CategoryNum > 1) {
+                        BtnEdit.setBackgroundResource(R.drawable.round_square2);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square2);
+                    }
+                }
+                if(i == 2 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(2)) && CategoryNum > 2) {
+                        BtnEdit.setBackgroundResource(R.drawable.round_square3);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square3);
+                    }
+                }
+                if(i == 3 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(3)) && CategoryNum > 3){
+                        BtnEdit.setBackgroundResource(R.drawable.round_square4);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square4);
+                    }
+                }
+                if(i == 4 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(4)) && CategoryNum > 4){
+                        BtnEdit.setBackgroundResource(R.drawable.round_square5);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square5);
+                    }
+                }
+            }
         }
     }
 
@@ -133,7 +173,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         ActInfoItem item = ActInfoList.get(position);
-        viewHolder.setItem(item, position);
+        viewHolder.setItem(item, position, viewHolder);
     }
 
     public void addItem(ActInfoItem item) {

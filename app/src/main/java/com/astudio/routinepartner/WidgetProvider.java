@@ -51,8 +51,8 @@ public class WidgetProvider extends AppWidgetProvider {
                 if(j < CategoryNum) {
                     views.setInt(CategoryBtnId.get(j), "setVisibility", View.VISIBLE);
                     views.setTextViewText(CategoryBtnId.get(j), SavedSettings.CategoryList.get(j));
-                    views.setInt(CategoryBtnId.get(j), "setBackgroundColor", SavedSettings.ColorList.get(j));
-                    views.setTextViewTextSize(CategoryBtnId.get(j), 0, 100f);
+                    views.setInt(CategoryBtnId.get(j), "setBackgroundColor", SavedSettings.ColorList.get(j).intValue());
+                    views.setTextViewTextSize(CategoryBtnId.get(j), 0, 75f);
                     if(j == 0) views.setOnClickPendingIntent(CategoryBtnId.get(j), pendingIntent1);
                     else if(j == 1) views.setOnClickPendingIntent(CategoryBtnId.get(j), pendingIntent2);
                     else if(j == 2) views.setOnClickPendingIntent(CategoryBtnId.get(j), pendingIntent3);
