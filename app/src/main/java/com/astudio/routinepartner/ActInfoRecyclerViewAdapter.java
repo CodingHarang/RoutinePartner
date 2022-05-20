@@ -121,23 +121,44 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
             Index = position;
             ContainingItem = item;
             BtnEdit.setText(item.Category + "   id : " + Integer.toString(item.ItemId) + "\n" + Integer.toString(item.Year) + " - " + Integer.toString(item.Month) + " - " + Integer.toString(item.Date) + "\n" + Integer.toString(item.StartHour) + " : " + Integer.toString(item.StartMinute) + " ~ " + Integer.toString(item.EndHour) + " : " + Integer.toString(item.EndMinute));
-            if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(0))){
-                BtnEdit.setBackgroundResource(R.drawable.round_square1);
-                BtnDelete.setBackgroundResource(R.drawable.round_square1);
-            } else if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(1))){
-                BtnEdit.setBackgroundResource(R.drawable.round_square2);
-                BtnDelete.setBackgroundResource(R.drawable.round_square2);
-            } else if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(2))){
-                BtnEdit.setBackgroundResource(R.drawable.round_square3);
-                BtnDelete.setBackgroundResource(R.drawable.round_square3);
-            } else if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(3))){
-                BtnEdit.setBackgroundResource(R.drawable.round_square4);
-                BtnDelete.setBackgroundResource(R.drawable.round_square4);
-            } else if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(4))){
-                BtnEdit.setBackgroundResource(R.drawable.round_square5);
-                BtnDelete.setBackgroundResource(R.drawable.round_square5);
+            int CategoryNum = SavedSettings.CategoryList.size();
+            for(int i = 0; i < 5; i++) {
+                if(i == 0 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(0))) {
+                        BtnEdit.setBackgroundResource(R.drawable.round_square1);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square1);
+                    }
+                }
+                if(i == 1 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(1)) && CategoryNum > 1) {
+                        BtnEdit.setBackgroundResource(R.drawable.round_square2);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square2);
+                    }
+                }
+                if(i == 2 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(2)) && CategoryNum > 2) {
+                        BtnEdit.setBackgroundResource(R.drawable.round_square3);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square3);
+                    }
+                }
+                if(i == 3 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(3)) && CategoryNum > 3){
+                        BtnEdit.setBackgroundResource(R.drawable.round_square4);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square4);
+                    }
+                }
+                if(i == 4 && i < CategoryNum) {
+                    if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(4)) && CategoryNum > 4){
+                        BtnEdit.setBackgroundResource(R.drawable.round_square5);
+                        BtnEdit.setTextColor(0XFF000000);
+                        BtnDelete.setBackgroundResource(R.drawable.round_square5);
+                    }
+                }
             }
-
         }
     }
 

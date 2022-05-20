@@ -221,6 +221,11 @@ public class MainActivity extends AppCompatActivity {
                     ActInfoDAO mActInfoDao = db.actInfoDao();
                     mActInfoDao.deleteAll();
                 });
+                SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                    SettingsDAO mSettingsDao = db.settingDao();
+                    //mSettingsDao.deleteAll();
+                });
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
             }
         });
@@ -396,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
         Eminute = NumPickers[5].getValue();
 //        TxtTime.setText(CategoryName + "\n" + Year + "-" + Month + "-" + Date + "  " + SAMPM + " " + Shour + ":" + Sminute + " ~ " + EAMPM + " " + Ehour + ":" + Eminute);
 
-        addToDB(CategoryName, Year, Month, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
+        addToActDB(CategoryName, Year, Month, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
 
         Action=CategoryName;  //[PSY] 추가코드
         setRadarData();       //[PSY] 추가코드
@@ -414,28 +419,32 @@ public class MainActivity extends AppCompatActivity {
 
     public void makeTestData() {
         for(int i = 1; i < 31; i++) {
-            addToDB("취침", 2022, 4, i, 0, 0, 6, 0);
-            addToDB("식사", 2022, 4, i, 8, 0, 9, 0);
-            addToDB("공부", 2022, 4, i, 10, 0, 12, 0);
-            addToDB("식사", 2022, 4, i, 13, 0, 14, 0);
-            addToDB("운동", 2022, 4, i, 16 , 0, 18, 0);
-            addToDB("식사", 2022, 4, i, 18, 0, 19, 0);
-            addToDB("게임", 2022, 4, i, 20, 0, 22, 0);
-            addToDB("취침", 2022, 4, i, 22, 0, 24, 0);
+            addToActDB("취침", 2022, 4, i, 0, 0, 6, 0);
+            addToActDB("식사", 2022, 4, i, 8, 0, 9, 0);
+            addToActDB("공부", 2022, 4, i, 10, 0, 12, 0);
+            addToActDB("식사", 2022, 4, i, 13, 0, 14, 0);
+            addToActDB("운동", 2022, 4, i, 16 , 0, 18, 0);
+            addToActDB("식사", 2022, 4, i, 18, 0, 19, 0);
+            addToActDB("게임", 2022, 4, i, 20, 0, 22, 0);
+            addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
         }
         for(int i = 1; i < 32; i++) {
-            addToDB("취침", 2022, 5, i, 0, 0, 6, 0);
-            addToDB("식사", 2022, 5, i, 8, 0, 9, 0);
-            addToDB("공부", 2022, 5, i, 10, 0, 12, 0);
-            addToDB("식사", 2022, 5, i, 13, 0, 14, 0);
-            addToDB("운동", 2022, 5, i, 16 , 0, 18, 0);
-            addToDB("식사", 2022, 5, i, 18, 0, 19, 0);
-            addToDB("게임", 2022, 5, i, 20, 0, 22, 0);
-            addToDB("취침", 2022, 5, i, 22, 0, 24, 0);
+            addToActDB("취침", 2022, 5, i, 0, 0, 6, 0);
+            addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
+            addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
+            addToActDB("식사", 2022, 5, i, 13, 0, 14, 0);
+            addToActDB("운동", 2022, 5, i, 16 , 0, 18, 0);
+            addToActDB("식사", 2022, 5, i, 18, 0, 19, 0);
+            addToActDB("게임", 2022, 5, i, 20, 0, 22, 0);
+            addToActDB("취침", 2022, 5, i, 22, 0, 24, 0);
+        }
+        for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
+            addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i).toString(), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
+            Log.i("11111", "--" + SavedSettings.CategoryList.get(i)+ "  -  " + SavedSettings.ColorList.get(i).toString()+ " " + SavedSettings.GoalType.get(i)+ SavedSettings.Goal.get(i)+ SavedSettings.AffectingStat.get(i)+ SavedSettings.Order.get(i));
         }
     }
 
-    public void addToDB(String Category, int Year, int Month, int Date, int Shour, int Sminute, int Ehour, int Eminute) {
+    public void addToActDB(String Category, int Year, int Month, int Date, int Shour, int Sminute, int Ehour, int Eminute) {
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDAO mActInfoDao = db.actInfoDao();
@@ -450,6 +459,23 @@ public class MainActivity extends AppCompatActivity {
             actInfo.setEndMinute(Eminute);
             mActInfoDao.insert(actInfo);
         });
+    }
+
+    public void addToSettingsDB(String Category, String Color, int GoalType, int Goal, int AffectingStat, int Order) {
+
+        SettingsDB.DatabaseWriteExecutor.execute(() -> {
+            SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+            SettingsDAO mSettingsDao = db.settingDao();
+            Settings settings = new Settings();
+            settings.setCategory(Category);
+            settings.setColor(Color);
+            settings.setGoalType(GoalType);
+            settings.setGoal(Goal);
+            settings.setAffectingStat(AffectingStat);
+            settings.setOrder(Order);
+            //mSettingsDao.insert(settings);
+        });
+
     }
 
     //-------------------------------------------------------------------->YJS
