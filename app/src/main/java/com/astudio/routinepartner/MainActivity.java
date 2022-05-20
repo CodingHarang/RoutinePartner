@@ -279,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
         //<--------------------------------------------------------------------PSY
 
 
-
         MainContext=this;
         text_PetName=PreferenceManage.getString(MainContext,"rebuild");
         if(text_PetName.isEmpty()){
@@ -618,10 +617,31 @@ public class MainActivity extends AppCompatActivity {
     public void setRadarDataFirst(){ //데이터 추가하는 데에는 문제없음(처음 시작하나 이미 사용중이나 상관없음)
 
         ArrayList<RadarEntry> visitors=new ArrayList<>();
+        ArrayList<Float> GoalSuccessCheck=new ArrayList<>();
         PSY BeforeDataManage=new PSY();
 
+        for(int i=0;i<CategoryList.size();i++){
+            float GoalSuccessCheckValue=PreferenceManage.getFloat(MainContext,"CategoryValue"+i);
+            GoalSuccessCheck.add(GoalSuccessCheckValue);
+            //visitors.add(new RadarEntry(PreferenceManage.getFloat(MainContext,"Value"+i)));
+        }
+
+        for(int i=0;i<CategoryList.size();i++){
+            if(BeforeDataManage.isGoalAchieved(GoalSuccessCheck).get(i)){
+                GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)+10);
+            }else{
+                GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)-10);
+            }
+        }
+
         for(int i=0;i<LableList.size();i++){
-            visitors.add(new RadarEntry(PreferenceManage.getFloat(MainContext,"Value"+i)));
+            ArrayList<Float> RadarStatDataList=new ArrayList<>();
+            for(int j=0;j<CategoryStat.size();j++){
+                if(LableList.get(i)==CategoryStat.get(j)){
+                    RadarStatDataList.add(i, GoalSuccessCheck.get(j));
+                }
+            }
+            visitors.add(new RadarEntry(RadarStatDataList.get(i)));
         }
 
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
@@ -646,8 +666,11 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Float> TotalCategoryDataList=new ArrayList<>();
         ArrayList<Float> TotalStatDataList=new ArrayList<>();
 
-        for(int i=0;i<CategoryList.size();i++){
+        /*for(int i=0;i<CategoryList.size();i++){
             RadarCategoryDataList.set(i,new ArrayList<>(Arrays.asList(0f)));
+        }*/
+        for(int i=0;i<CategoryList.size();i++){
+            RadarCategoryDataList.add(new ArrayList<>());
         }
 
         PSY PetStateManage=new PSY();
@@ -690,17 +713,30 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
         lables={"포만감", "체력", "지능"}*/
 
-
+        if(!TotalCategoryDataList.isEmpty()){
+            TotalCategoryDataList.clear();
+        }
+        if(!TotalStatDataList.isEmpty()){
+            TotalStatDataList.clear();
+        }
         for(int i=0;i<LableList.size();i++){
             for(int j=0;j<CategoryList.size();j++){
                 float value=PetStateManage.calCategoryData(RadarCategoryDataList.get(j));
-                TotalCategoryDataList.add(value);
+                TotalCategoryDataList.add(value);  //각 카테고리별로 시간이 들어감
+                PreferenceManage.setFloat(MainContext,"CategoryValue"+j,TotalCategoryDataList.get(j));
                 if(LableList.get(i)==CategoryStat.get(j)){
                     TotalStatDataList.add(i,value);
                 }
             }
-            visitors.add(new RadarEntry(TotalStatDataList.get(i)));
-            PreferenceManage.setFloat(MainContext,"Value"+i,TotalStatDataList.get(i));
+
+            float VisitorsData=TotalStatDataList.get(i);
+            if(VisitorsData>=6){
+                VisitorsData=VisitorsData/3*20;
+            }else{
+                VisitorsData=VisitorsData/2*20;
+            }
+            visitors.add(new RadarEntry(VisitorsData));
+            PreferenceManage.setFloat(MainContext,"Value"+i,VisitorsData);
         }
 
         RadarCategoryDataList.clear();

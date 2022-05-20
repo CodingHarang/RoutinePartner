@@ -35,15 +35,15 @@ public class PSY {
                     TimeData = (EH - SH) + (EM - SM) / 60;
                 }
 
-                if (TimeData >= 6) {  //6시간 이상일 때와 아닐 때의 칸수 조절(안하면 한쪽만 너무 크게 증가)
+                /*if (TimeData >= 6) {  //6시간 이상일 때와 아닐 때의 칸수 조절(안하면 한쪽만 너무 크게 증가)
                     TimeData = (TimeData / 3) * 20;
                 } else {
                     TimeData = (TimeData / 2) * 20;
-                }
+                }*/
             }break;
 
             case 2:
-                TimeData = 20;
+                TimeData = 1;
                 break;
 
             default:
@@ -60,6 +60,31 @@ public class PSY {
             TotalData+=StateDataList.get(i);
         }
         return TotalData;
+    }
+
+    public ArrayList<Boolean> isGoalAchieved(ArrayList<Float> TotalTimeList){
+        ArrayList<Boolean> IsGoalAchieved=new ArrayList<>();
+        for(int i=0;i<TotalTimeList.size();i++){
+            switch(GoalType.get(i)){
+                case 1:{
+                    if(TotalTimeList.get(i)>=GoalList.get(i)){
+                        IsGoalAchieved.set(i,true);
+                    }else{
+                        IsGoalAchieved.set(i,false);
+                    }
+                }break;
+
+                case 2:{
+                    if(TotalTimeList.get(i)==GoalList.get(i).floatValue()){
+                        IsGoalAchieved.set(i,true);
+                    }else{
+                        IsGoalAchieved.set(i,false);
+                    }
+                }break;
+
+            }
+        }
+        return IsGoalAchieved;
     }
 
 
