@@ -15,7 +15,7 @@ public class Settings {
     private String Category;
 
     @ColumnInfo(name = "color")
-    private String Color;
+    private long Color;
 
     // 1이면 횟수 2면 시간
     @ColumnInfo(name = "goalType")
@@ -32,18 +32,18 @@ public class Settings {
     private int Order;
 
     public void setCategory(String category) {
-        this.Category = Category;
+        this.Category = category;
     }
 
     public String getCategory() {
         return this.Category;
     }
 
-    public void setColor(String color) {
+    public void setColor(long color) {
         this.Color = color;
     }
 
-    public String getColor() {
+    public long getColor() {
         return this.Color;
     }
 

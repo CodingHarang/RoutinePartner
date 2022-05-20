@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class SavedSettings {
     public static ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("취침", "식사", "공부", "게임", "운동"));
-    public static ArrayList<Integer> ColorList = new ArrayList<>(Arrays.asList(0XFFCCCCFF, 0xFFCCFFCC, 0XFFFFCC99, 0XFFFFCCFF, 0XFFCCFFFF));
+    public static ArrayList<Long> ColorList = new ArrayList<>(Arrays.asList(0XFFCCCCFFL, 0xFFCCFFCCL, 0XFFFFCC99L, 0XFFFFCCFFL, 0XFFCCFFFFL));
 
     // 1은 횟수, 2는 시간
     public static ArrayList<Integer> GoalType = new ArrayList<>(Arrays.asList(1, 1, 2, 1, 2));

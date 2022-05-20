@@ -85,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
         GradientDrawable RS3 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square3);
         GradientDrawable RS4 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square4);
         GradientDrawable RS5 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square5);
-        RS1.setColor(SavedSettings.ColorList.get(0));
-        RS2.setColor(SavedSettings.ColorList.get(1));
-        RS3.setColor(SavedSettings.ColorList.get(2));
-        RS4.setColor(SavedSettings.ColorList.get(3));
-        RS5.setColor(SavedSettings.ColorList.get(4));
+        RS1.setColor(SavedSettings.ColorList.get(0).intValue());
+        RS2.setColor(SavedSettings.ColorList.get(1).intValue());
+        RS3.setColor(SavedSettings.ColorList.get(2).intValue());
+        RS4.setColor(SavedSettings.ColorList.get(3).intValue());
+        RS5.setColor(SavedSettings.ColorList.get(4).intValue());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         CategoryNum = SavedSettings.CategoryList.size();
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 SettingsDB.DatabaseWriteExecutor.execute(() -> {
                     SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
                     SettingsDAO mSettingsDao = db.settingDao();
-                    //mSettingsDao.deleteAll();
+                    mSettingsDao.deleteAll();
                 });
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
             }
@@ -439,8 +439,8 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("취침", 2022, 5, i, 22, 0, 24, 0);
         }
         for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
-            addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i).toString(), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
-            Log.i("11111", "--" + SavedSettings.CategoryList.get(i)+ "  -  " + SavedSettings.ColorList.get(i).toString()+ " " + SavedSettings.GoalType.get(i)+ SavedSettings.Goal.get(i)+ SavedSettings.AffectingStat.get(i)+ SavedSettings.Order.get(i));
+            addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
+            Log.i("11111", "--" + SavedSettings.CategoryList.get(i)+ "  -  " + SavedSettings.ColorList.get(i)+ " " + SavedSettings.GoalType.get(i)+ SavedSettings.Goal.get(i)+ SavedSettings.AffectingStat.get(i)+ SavedSettings.Order.get(i));
         }
     }
 
@@ -461,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void addToSettingsDB(String Category, String Color, int GoalType, int Goal, int AffectingStat, int Order) {
+    public void addToSettingsDB(String Category, long Color, int GoalType, int Goal, int AffectingStat, int Order) {
 
         SettingsDB.DatabaseWriteExecutor.execute(() -> {
             SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
@@ -473,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
             settings.setGoal(Goal);
             settings.setAffectingStat(AffectingStat);
             settings.setOrder(Order);
-            //mSettingsDao.insert(settings);
+            mSettingsDao.insert(settings);
         });
 
     }
