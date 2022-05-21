@@ -268,6 +268,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        //앱이 켜질때 저장되어있던 카테고리 값 셋팅
+
+        SetCategoryAdapter.CategoryItem.clear();
+        for(int i = 0; i < SavedSettings.CategoryList.size(); i++){
+            SetCategoryAdapter.CategoryItem.add(new CategoryInfo(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i),
+                    SavedSettings.AffectingStat.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i)));
+        }
+
+
+
         //-------------------------------------------------------------------->LSY
         //-------------------------------------------------------------------->LSY
 

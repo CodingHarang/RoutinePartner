@@ -29,12 +29,12 @@ public class SettingActivity extends AppCompatActivity {
     SetCategoryAdapter adapter;
     ArrayList<CategoryInfo> CategoryList;
     CategoryInfo Category;
+    int CurPositon;
 
     static int TimeInterval = 3;
 
-    Button Testbtn;
+    Button CategoryAddBtn, PlusInterval, MinusInterval;
     TextView TimeIntervalText;
-    ImageButton PlusInterval, MinusInterval, CategoryAddBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +49,51 @@ public class SettingActivity extends AppCompatActivity {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent intent = result.getData();
                             String Name = intent.getStringExtra("Name");
-                            String Color = intent.getStringExtra("Color");
-                            String Stat = intent.getStringExtra("Stat");
-                            String GoalType = intent.getStringExtra("GoalType");
+                            long Color = intent.getLongExtra("Color", 0xffffffff);
+                            int Stat = intent.getIntExtra("Stat", 1);
+                            int GoalType = intent.getIntExtra("GoalType", 1);
                             int Goal = intent.getIntExtra("Goal", 0);
+                            int ActivitySet = intent.getIntExtra("ActivityType", 0);
+                            int Order = SavedSettings.Order.get(SavedSettings.Order.size()-1)+1;
                             Log.v("getExtra", ""+Name+" "+Color+" "+Stat+" "+GoalType+" "+Goal);
-                            adapter.addItem(new CategoryInfo(Name, Color, Stat, GoalType, Goal));
-                            adapter.notifyItemInserted(SetCategoryAdapter.CategoryItem.size());
+                            if(ActivitySet == 0){
+                                adapter.addItem(new CategoryInfo(Name, Color, Stat, GoalType, Goal, Order));
+                                adapter.notifyItemInserted(SetCategoryAdapter.CategoryItem.size());
+
+                                Order = SavedSettings.Order.get(SavedSettings.Order.size()-1)+1;
+
+                                SavedSettings.CategoryList.add(Name);
+                                SavedSettings.ColorList.add(Color);
+                                SavedSettings.AffectingStat.add(Stat);
+                                SavedSettings.GoalType.add(GoalType);
+                                SavedSettings.Goal.add(Goal);
+                                SavedSettings.Order.add(Order);
+
+                                if(SetCategoryAdapter.CategoryItem.size()>=5){
+                                    CategoryAddBtn.setEnabled(false);
+                                }
+
+                                Log.v("현재 리스트 이름", ""+SavedSettings.CategoryList);
+                                Log.v("현재 리스트 색", ""+SavedSettings.ColorList);
+                                Log.v("현재 리스트 순서", ""+SavedSettings.Order);
+
+                            }else{
+                                CategoryInfo editCategory = new CategoryInfo(Name, Color, Stat, GoalType, Goal, Order);
+                                adapter.editItem(CurPositon, editCategory);
+                                recyclerViewRefresh();
+                                Log.v("수정 값", ""+Name);
+                                SavedSettings.CategoryList.set(CurPositon, Name);
+                                SavedSettings.ColorList.set(CurPositon, Color);
+                                SavedSettings.AffectingStat.set(CurPositon, Stat);
+                                SavedSettings.GoalType.set(CurPositon, GoalType);
+                                SavedSettings.Goal.set(CurPositon, Goal);
+//                                SavedSettings.Order.set(CurPositon,Order);
+
+                                Log.v("현재 리스트 이름", ""+SavedSettings.CategoryList);
+                                Log.v("현재 리스트 색", ""+SavedSettings.ColorList);
+                                Log.v("현재 리스트 순서", ""+SavedSettings.Order);
+                            }
+
                         }
                     }
                 });
@@ -67,13 +105,6 @@ public class SettingActivity extends AppCompatActivity {
         PlusInterval = findViewById(R.id.PlusInterval);
         MinusInterval = findViewById(R.id.MinusInterval);
         CategoryAddBtn = findViewById(R.id.CategoryAddBtn);
-        Testbtn = findViewById(R.id.testbtn);
-
-//        if(SetCategoryAdapter.CategoryItem.size()>=5){
-//            CategoryAddBtn.setEnabled(false);
-//        }else{
-//            CategoryAddBtn.setEnabled(true);
-//        }
 
         recyclerView = findViewById(R.id.CategoryList);
 
@@ -86,7 +117,15 @@ public class SettingActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new SetCategoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
+                CurPositon = position;
+
                 Intent intent = new Intent(getApplicationContext(), SetCategoryActivity.class);
+
+//                intent.putExtra("CurName", SetCategoryAdapter.CategoryItem.get(position).getName());
+//                intent.putExtra("CurColor", SetCategoryAdapter.CategoryItem.get(position).getColor());
+//                intent.putExtra("CurStat", SetCategoryAdapter.CategoryItem.get(position).getStat());
+//                intent.putExtra("CurGoalType", SetCategoryAdapter.CategoryItem.get(position).getGoalType());
+//                intent.putExtra("CurGoal", SetCategoryAdapter.CategoryItem.get(position).getGoal());
 
                 intent.putExtra("CurName", SetCategoryAdapter.CategoryItem.get(position).getName());
                 intent.putExtra("CurColor", SetCategoryAdapter.CategoryItem.get(position).getColor());
@@ -103,26 +142,46 @@ public class SettingActivity extends AppCompatActivity {
             public void onItemLongClick(View v, int pos) {
                 Toast.makeText(getApplicationContext(),"롱클릭 성공" + pos, Toast.LENGTH_SHORT).show();
                 adapter.delItem(pos);
+                recyclerViewRefresh();
+                SavedSettings.CategoryList.remove(pos);
+                SavedSettings.ColorList.remove(pos);
+                SavedSettings.AffectingStat.remove(pos);
+                SavedSettings.GoalType.remove(pos);
+                SavedSettings.Goal.remove(pos);
+                SavedSettings.Order.remove(pos);
+
+                if(SetCategoryAdapter.CategoryItem.size() < 5){
+                    CategoryAddBtn.setEnabled(true);
+                }
             }
         });
 
-        Testbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapter.addItem(new CategoryInfo("a", "#ffff00", "지능", "횟수", 3));
-            }
-        });
+        if(SetCategoryAdapter.CategoryItem.size()>=5){
+            CategoryAddBtn.setEnabled(false);
+        }else{
+            CategoryAddBtn.setEnabled(true);
+        }
 
 
         //시간 간격 설정
+
+        if(TimeInterval >= 3){
+            PlusInterval.setEnabled(false);
+        }else if(TimeInterval <= 1){
+            MinusInterval.setEnabled(false);
+        }
 
         PlusInterval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(TimeInterval < 3){
                     TimeInterval++;
+                    MinusInterval.setEnabled(true);
                     TimeIntervalText.setText(Integer.toString(TimeInterval));
                     PieChartView.TimeInterval = TimeInterval;
+                    if(TimeInterval == 3){
+                        PlusInterval.setEnabled(false);
+                    }
                 }
             }
         });
@@ -132,8 +191,12 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(TimeInterval > 1){
                     TimeInterval--;
+                    PlusInterval.setEnabled(true);
                     TimeIntervalText.setText(Integer.toString(TimeInterval));
                     PieChartView.TimeInterval = TimeInterval;
+                    if(TimeInterval == 1){
+                        MinusInterval.setEnabled(false);
+                    }
                 }
             }
         });
@@ -150,6 +213,11 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void recyclerViewRefresh(){
+        recyclerView.removeAllViewsInLayout();
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
