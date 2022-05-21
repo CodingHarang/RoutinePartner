@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
     AlertDialog Dialog;
     NumberPicker[] NumPickers = new NumberPicker[10];
-    Button Btn1, Btn2, Btn3, Btn4, Btn5, BtnOK, BtnCancel, BtnShowList, BtnAddTestData, BtnDeleteAll, BtnShowPieChart;
+    Button Btn1, Btn2, Btn3, Btn4, Btn5, BtnOK, BtnCancel, BtnAddTestData, BtnDeleteAll, BtnShowPieChart;
+    ImageButton BtnShowList;
     EditText EdtCategory;
     TextView TxtTime;
     int CategoryNum;
@@ -81,7 +82,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //<--------------------------------------------------------------------YJS
         //<--------------------------------------------------------------------YJS
-        GradientDrawable RS1 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square1);
+        SettingsDB.DatabaseWriteExecutor.execute(() -> {
+            SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+            SettingsDAO mSettingsDao = db.settingDao();
+            int CategoryNum = mSettingsDao.getAll().length;
+            for(int i = 0; i < CategoryNum; i++) {
+
+            }
+            SavedSettings.CategoryList.set(0, mSettingsDao.getAll()[0].getCategory());
+        });
+        /*GradientDrawable RS1 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square1);
         GradientDrawable RS2 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square2);
         GradientDrawable RS3 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square3);
         GradientDrawable RS4 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square4);
@@ -90,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         RS2.setColor(SavedSettings.ColorList.get(1).intValue());
         RS3.setColor(SavedSettings.ColorList.get(2).intValue());
         RS4.setColor(SavedSettings.ColorList.get(3).intValue());
-        RS5.setColor(SavedSettings.ColorList.get(4).intValue());
+        RS5.setColor(SavedSettings.ColorList.get(4).intValue());*/
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         CategoryNum = SavedSettings.CategoryList.size();

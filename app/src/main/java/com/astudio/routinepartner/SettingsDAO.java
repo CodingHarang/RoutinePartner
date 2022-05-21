@@ -15,6 +15,11 @@ public interface SettingsDAO {
     @Query("DELETE FROM settings")
     void deleteAll();
 
+    @Query("SELECT * FROM settings")
+    Settings[] getAll();
+
+    @Query("DELETE FROM settings WHERE :order = settings.`order`")
+    void deleteByOrder(int order);
     /*@Query("DELETE FROM actInfo WHERE :id = actInfo.id")
     void deleteByActId(int id);
 
