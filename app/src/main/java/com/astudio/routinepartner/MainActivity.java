@@ -21,6 +21,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntegerRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -69,10 +70,12 @@ public class MainActivity extends AppCompatActivity {
     LottieAnimationView PetView;
     TextView PetName;
     String Action ="";
+    int ActionInt;
     Context MainContext;
     String text_PetName="";
     RadarChart PetStateChart;
     ArrayList<String> LableList=new ArrayList<>();
+    ArrayList<Integer> LableListInt=new ArrayList<>();
 
 
     @SuppressLint("ResourceType")
@@ -314,15 +317,15 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationStart(Animator animator) {
                 ImageView img=(ImageView) findViewById(R.id.imageView);
                 switch(Action){
-                    case "Eat":
-                        img.setImageResource(R.drawable.foodbowl);
+                    case "4":
+                        //img.setImageResource(R.drawable.foodbowl);
+                        //FadeAnimation.fadeOutImage(img);
+                        break;
+                    case "3":
+                        img.setImageResource(R.drawable.dogbed_brown);
                         FadeAnimation.fadeOutImage(img);
                         break;
-                    case "Sleep":
-                        img.setImageResource(R.drawable.dogbed);
-                        FadeAnimation.fadeOutImage(img);
-                        break;
-                    case "Study":
+                    case "1":
                         img.setImageResource(R.drawable.book);
                         FadeAnimation.fadeOutImage(img);
                         break;
@@ -342,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
                 PetView.setOnLongClickListener((view) -> {
                     Action ="interaction";
                     ImageView HeartImage=findViewById(R.id.HeartImage);
-                    HeartImage.setImageResource(R.drawable.heart);
+                    HeartImage.setImageResource(R.drawable.petheart);
                     FadeAnimation.fadeInImage(HeartImage);
                     PetView.setRepeatCount(1);
                     PetView.playAnimation();
@@ -362,25 +365,70 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<String> CategoryStat=new ArrayList<>(Arrays.asList("포만감","체력","지능","체력"));
+
+
+        /*ArrayList<String> CategoryStat=new ArrayList<>(Arrays.asList("포만감","체력","지능","체력"));
         //ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "수면", "공부", "운동"));
         ArrayList<Integer> Order=new ArrayList<>(Arrays.asList(1,2,3,4));
-        ArrayList<String> StatList = new ArrayList<>(Arrays.asList("지능", "재미", "체력", "포만감", "잔고", "자아실현"));
+        ArrayList<String> StatList = SavedSettings.StatList;
+        ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;
 
         PetStateChart=findViewById(R.id.RadarChart);
 
-        for(String stat:CategoryStat){
-            if(!LableList.contains(stat))
-                LableList.add(stat);
+        for(int stat:AffectingStat){
+            if(!LableListInt.contains(stat))
+                LableListInt.add(stat);  //4 2 1
         }
         setRadarDataFirst();
 
-        String[] labels=new String[LableList.size()];
+        String[] labels=new String[LableListInt.size()];
+        int size=0;
+        for(int item:LableListInt){
+            labels[size]=item;
+            size++;
+        }*/
+        ArrayList<String> CategoryStat=new ArrayList<>(Arrays.asList("포만감","체력","지능","체력"));
+        //ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "수면", "공부", "운동"));
+        ArrayList<Integer> Order=new ArrayList<>(Arrays.asList(1,2,3,4));
+        ArrayList<String> StatList = SavedSettings.StatList;
+        //ArrayList<String> StatList = SavedSettings.StatList;
+        ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;  //4, 2, 4, 1, 2
+        ArrayList<String> CategoryList=SavedSettings.CategoryList;  //"취침", "식사", "공부", "게임", "운동"
+
+
+        PetStateChart=findViewById(R.id.RadarChart);
+
+        /*for(String stat:CategoryStat){
+            if(!LableList.contains(stat))
+                LableList.add(stat);
+        }*/
+
+        for(int stat:AffectingStat){
+            if(!LableListInt.contains(stat))
+                LableListInt.add(stat);  //4 2 1
+        }
+
+        String[] labels=new String[LableListInt.size()];
+        for(int i=0;i<LableListInt.size();i++){
+            switch(LableListInt.get(i)){
+                case 1: labels[i]="지능"; LableList.add(labels[i]); break;
+                case 2: labels[i]="재미"; LableList.add(labels[i]); break;
+                case 3: labels[i]="체력"; LableList.add(labels[i]); break;
+                case 4: labels[i]="포만감"; LableList.add(labels[i]); break;
+                case 5: labels[i]="잔고"; LableList.add(labels[i]); break;
+                case 6: labels[i]="자아실현"; LableList.add(labels[i]); break;
+
+            }
+        }
+
+        setRadarDataFirst();
+
+        /*String[] labels=new String[LableList.size()];
         int size=0;
         for(String item:LableList){
             labels[size]=item;
             size++;
-        }
+        }*/
 
         XAxis xAxis=PetStateChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
@@ -401,6 +449,11 @@ public class MainActivity extends AppCompatActivity {
             set.setDrawValues(!set.isDrawValuesEnabled());
         }
         PetStateChart.invalidate();
+
+
+        ((ImageView)findViewById(R.id.Restart)).setOnClickListener(view -> {
+            setRadarData();
+        });
 
         //-------------------------------------------------------------------->PSY
         //-------------------------------------------------------------------->PSY
@@ -431,8 +484,22 @@ public class MainActivity extends AppCompatActivity {
 
         addToActDB(CategoryName, Year, Month, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
 
-        Action=CategoryName;  //[PSY] 추가코드
-        setRadarData();       //[PSY] 추가코드
+
+        ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;
+        //Action=CategoryName;  //[PSY] 추가코드
+        ActionInt=CategoryList.indexOf(CategoryName);  //취침은 CategoryList에서 0번째 위치->0번째 위치한 AffectingStat 이 무엇인지
+        if(ActionInt>=0){
+          int AffectingStatIndex=AffectingStat.indexOf(ActionInt);
+          switch(AffectingStatIndex){  //"지능", "재미", "체력", "포만감", "잔고", "자아실현"
+              case 1: Action="1"; break;
+              case 2: Action="2"; break;
+              case 3: Action="3"; break;
+              case 4: Action="4"; break;
+              case 5: Action="5"; break;
+              case 6: Action="6"; break;
+          }
+        }
+        //setRadarData();       //[PSY] 추가코드
 
         Toast.makeText(getApplicationContext(), "Data Added", Toast.LENGTH_SHORT).show();
         Dialog.dismiss();
@@ -628,12 +695,14 @@ public class MainActivity extends AppCompatActivity {
 
     //<--------------------------------------------------------------------PSY
     //<--------------------------------------------------------------------PSY
-    ArrayList<String> CategoryList=new ArrayList<>(Arrays.asList("식사","수면","공부","운동"));
-    ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
-    ArrayList<Integer> CategoryStatInt=new ArrayList<>(Arrays.asList(3,2,0,2));
+    //ArrayList<String> CategoryList=new ArrayList<>(Arrays.asList("식사","취침","공부","운동"));
+    ArrayList<String> CategoryList=SavedSettings.CategoryList;
+    ArrayList<String> CategoryStat =SavedSettings.StatList;
+    //ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
+    ArrayList<Integer> CategoryStatInt=SavedSettings.AffectingStat;
     ArrayList<Integer> Order=new ArrayList<>(Arrays.asList(1,2,3,4));
 
-    public void setRadarDataFirst(){ //데이터 추가하는 데에는 문제없음(처음 시작하나 이미 사용중이나 상관없음)
+    public void setRadarDataFirst(){
 
         ArrayList<RadarEntry> visitors=new ArrayList<>();
         ArrayList<Float> GoalSuccessCheck=new ArrayList<>();
@@ -650,20 +719,41 @@ public class MainActivity extends AppCompatActivity {
             TestArray.add(0f);
         }
 
-        if(!GoalSuccessCheck.containsAll(TestArray)){
+        /*for(int i=0;i<CategoryList.size();i++){
+
+            if(BeforeDataManage.isGoalAchieved(GoalSuccessCheck).get(i)){
+                GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)+10);
+            }else{
+                GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)*0.5f);
+            }
+        }
+
+        for(int i=0;i<LableList.size();i++){
+            ArrayList<Float> RadarStatDataList=new ArrayList<>();
+            for(int j=0;j<CategoryStat.size();j++){
+                int index=LableList.indexOf(CategoryStat.get(j));
+                if(index>=0){
+                    RadarStatDataList.add(i, GoalSuccessCheck.get(j));
+                }
+            }
+            visitors.add(new RadarEntry(RadarStatDataList.get(i)));
+        }*/
+
+        /*if(!GoalSuccessCheck.containsAll(TestArray)){
             for(int i=0;i<CategoryList.size();i++){
 
                 if(BeforeDataManage.isGoalAchieved(GoalSuccessCheck).get(i)){
                     GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)+10);
                 }else{
-                    GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)-10);
+                    GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)*0.5f);
                 }
             }
 
             for(int i=0;i<LableList.size();i++){
                 ArrayList<Float> RadarStatDataList=new ArrayList<>();
                 for(int j=0;j<CategoryStat.size();j++){
-                    if(LableList.get(i)==CategoryStat.get(j)){
+                    int index=LableList.indexOf(CategoryStat.get(j));
+                    if(index>=0){
                         RadarStatDataList.add(i, GoalSuccessCheck.get(j));
                     }
                 }
@@ -673,8 +763,11 @@ public class MainActivity extends AppCompatActivity {
             for(int i=0;i<LableList.size();i++){
                 visitors.add(new RadarEntry(0));
             }
-        }
+        }*/
 
+        for(int i=0;i<LableList.size();i++){
+            visitors.add(new RadarEntry(0));
+        }
 
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
         set1.setColor(Color.BLUE);
@@ -760,9 +853,13 @@ public class MainActivity extends AppCompatActivity {
                 float value=PetStateManage.calCategoryData(RadarCategoryDataList.get(j));
                 TotalCategoryDataList.add(value);  //각 카테고리별로 시간이 들어감
                 PreferenceManage.setFloat(MainContext,"CategoryValue"+j,TotalCategoryDataList.get(j));
-                if(LableList.get(i)==CategoryStat.get(j)){
-                    TotalStatDataList.add(i,value);
+                int index=LableList.indexOf(CategoryStat.get(j));
+                if(index>=0){
+                    TotalStatDataList.add(index,value);
                 }
+                /*if(LableList.get(i)==CategoryStat.get(j)){
+                    TotalStatDataList.add(i,value);
+                }*/
             }
 
             float VisitorsData=TotalStatDataList.get(i);
