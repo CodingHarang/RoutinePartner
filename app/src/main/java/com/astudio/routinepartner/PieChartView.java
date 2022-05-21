@@ -50,11 +50,11 @@ public class PieChartView extends View {
 
         PieColor.addAll(SavedSettings.ColorList);
 
-        ppaint.setColor(Color.parseColor("#35475B"));
+        ppaint.setColor(Color.parseColor("#D2D2D2"));
         ppaint.setStyle(Paint.Style.STROKE);
-        ppaint.setStrokeWidth(5.0f);
+        ppaint.setStrokeWidth(3.0f);
         paint.setColor(Color.parseColor("#FFFFFF"));
-        TextPaint.setColor(Color.parseColor("#000000"));
+        TextPaint.setColor(Color.parseColor("#898989"));
         TextPaint.setTextSize(40);
         RectF rect = new RectF();
 //        rect.set((getWidth()/10), getHeight()/10, (getWidth()/10)*9, getHeight()/10*9);

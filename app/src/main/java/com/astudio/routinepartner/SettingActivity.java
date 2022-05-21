@@ -54,13 +54,16 @@ public class SettingActivity extends AppCompatActivity {
                             int GoalType = intent.getIntExtra("GoalType", 1);
                             int Goal = intent.getIntExtra("Goal", 0);
                             int ActivitySet = intent.getIntExtra("ActivityType", 0);
-                            int Order = SavedSettings.Order.get(SavedSettings.Order.size()-1)+1;
+                            int Order;
+                            if(SavedSettings.Order.size()>0){
+                                Order = SavedSettings.Order.get(SavedSettings.Order.size()-1)+1;
+                            }else
+                                Order = 1;
+
                             Log.v("getExtra", ""+Name+" "+Color+" "+Stat+" "+GoalType+" "+Goal);
                             if(ActivitySet == 0){
                                 adapter.addItem(new CategoryInfo(Name, Color, Stat, GoalType, Goal, Order));
                                 adapter.notifyItemInserted(SetCategoryAdapter.CategoryItem.size());
-
-                                Order = SavedSettings.Order.get(SavedSettings.Order.size()-1)+1;
 
                                 SavedSettings.CategoryList.add(Name);
                                 SavedSettings.ColorList.add(Color);
@@ -76,6 +79,7 @@ public class SettingActivity extends AppCompatActivity {
                                 Log.v("현재 리스트 이름", ""+SavedSettings.CategoryList);
                                 Log.v("현재 리스트 색", ""+SavedSettings.ColorList);
                                 Log.v("현재 리스트 순서", ""+SavedSettings.Order);
+                                Log.v("현재 리스트 스탯", ""+SavedSettings.AffectingStat);
 
                             }else{
                                 CategoryInfo editCategory = new CategoryInfo(Name, Color, Stat, GoalType, Goal, Order);
@@ -87,7 +91,6 @@ public class SettingActivity extends AppCompatActivity {
                                 SavedSettings.AffectingStat.set(CurPositon, Stat);
                                 SavedSettings.GoalType.set(CurPositon, GoalType);
                                 SavedSettings.Goal.set(CurPositon, Goal);
-//                                SavedSettings.Order.set(CurPositon,Order);
 
                                 Log.v("현재 리스트 이름", ""+SavedSettings.CategoryList);
                                 Log.v("현재 리스트 색", ""+SavedSettings.ColorList);

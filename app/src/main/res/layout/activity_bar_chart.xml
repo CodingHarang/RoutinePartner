@@ -85,7 +85,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         android:background="@drawable/button_square"
-        android:textColor="#BDBDBD" />
+        android:textColor="#898989" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
