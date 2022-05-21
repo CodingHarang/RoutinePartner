@@ -3,6 +3,7 @@ package com.astudio.routinepartner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -49,6 +50,7 @@ public class BarChartActivity extends AppCompatActivity {
     ArrayList<Float> TimeList = new ArrayList<>();
     Spinner ChartSpinner;
     Button BtnMakeChart;
+    ArrayList<String> CatetoryList = new ArrayList<>(Arrays.asList("선택"));
 
     int Syear, Smonth, Sday, Eyear, Emonth, Eday, Chartdata = 7;
 
@@ -78,47 +80,57 @@ public class BarChartActivity extends AppCompatActivity {
 //        bringDataFromTest();
 
 
+        CatetoryList.addAll(SavedSettings.CategoryList);
+
         //스피너에 관한 부분
 
-        ArrayAdapter<String> ChartAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ActItems);
+        ArrayAdapter<String> ChartAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CatetoryList);
 
         ChartAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         ChartSpinner.setAdapter(ChartAdapter);
         ChartSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                switch(i){
-                    case 0:
-                        CategoryValue = false;
-                        CurrentCategory = ActItems[i];
-                        DayList.clear();
-                        TimeList.clear();
-                        break;
-                    case 1:
-                        CategoryValue = true;
-                        DayList.clear();
-                        TimeList.clear();
-                        CurrentCategory = ActItems[i];
-                        break;
-                    case 2:
-                        CategoryValue = true;
-                        DayList.clear();
-                        TimeList.clear();
-                        CurrentCategory = ActItems[i];
-                        break;
-                    case 3:
-                        CategoryValue = true;
-                        DayList.clear();
-                        TimeList.clear();
-                        CurrentCategory = ActItems[i];
-                        break;
-                    case 4:
-                        CategoryValue = true;
-                        DayList.clear();
-                        TimeList.clear();
-                        CurrentCategory = ActItems[i];
-                        break;
-                }
+                CurrentCategory = CatetoryList.get(i);
+//                DayList.clear();
+//                TimeList.clear();
+                if(i == 0){
+                    CategoryValue = false;
+                }else
+                    CategoryValue = true;
+
+//                switch(i){
+//                    case 0:
+//                        CategoryValue = false;
+//                        CurrentCategory = ActItems[i];
+//                        DayList.clear();
+//                        TimeList.clear();
+//                        break;
+//                    case 1:
+//                        CategoryValue = true;
+//                        DayList.clear();
+//                        TimeList.clear();
+//                        CurrentCategory = ActItems[i];
+//                        break;
+//                    case 2:
+//                        CategoryValue = true;
+//                        DayList.clear();
+//                        TimeList.clear();
+//                        CurrentCategory = ActItems[i];
+//                        break;
+//                    case 3:
+//                        CategoryValue = true;
+//                        DayList.clear();
+//                        TimeList.clear();
+//                        CurrentCategory = ActItems[i];
+//                        break;
+//                    case 4:
+//                        CategoryValue = true;
+//                        DayList.clear();
+//                        TimeList.clear();
+//                        CurrentCategory = ActItems[i];
+//                        break;
+//                }
             }
 
             @Override
@@ -267,7 +279,7 @@ public class BarChartActivity extends AppCompatActivity {
 
             BarData data = new BarData(barDataSet);
 
-            data.setBarWidth(0.8f);
+            data.setBarWidth(0.4f);
 
             //그래프 위치 설정
             for (int d = 0; d < Chartdata; d++) {
@@ -285,7 +297,7 @@ public class BarChartActivity extends AppCompatActivity {
 
             Bar_Chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(daylist));
 
-            barDataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+            barDataSet.setColors(Color.parseColor("#AEDDEF"));
 
             Bar_Chart.setData(data);
             Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정

@@ -24,18 +24,21 @@ import com.github.dhaval2404.colorpicker.model.ColorShape;
 import com.github.dhaval2404.colorpicker.model.ColorSwatch;
 
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class SetCategoryActivity extends AppCompatActivity {
 
+    TextView Title;
     EditText SetCategoryName, GoalData;
     TextView GoalText;
     Spinner SetStat;
     Button SetColor, CheckButton;
     RadioGroup RadioGroup;
-    String NameSet, ColorSet, StatSet, GoalTypeSet;
-    int ColorInt, GoalSet;
+    String NameSet, ColorSet = "#ffffff", StatSet, GoalTypeSet;
+    int ColorInt = 0xffffff, GoalSet, ParseColor, ActivityValue = 0, SpinnerSelect, GoalKey;
+    Long ColorLong = 0xffffffffL;
     static ArrayList<CategoryInfo> CategoryInfoList;
 
     @Override
@@ -52,6 +55,43 @@ public class SetCategoryActivity extends AppCompatActivity {
         CheckButton = findViewById(R.id.CheckBtn);
         GoalData.setVisibility(View.GONE);
         GoalText.setVisibility(View.GONE);
+        Title = findViewById(R.id.Category);
+        
+        
+        Title.setText("카테고리 생성");
+        
+
+        Intent GetIntent = getIntent();
+
+        String CurName = GetIntent.getStringExtra("CurName");
+        Long CurColor = GetIntent.getLongExtra("CurColor", 0);
+        int CurStat = GetIntent.getIntExtra("CurStat", 2);
+        int CurGoalType = GetIntent.getIntExtra("CurGoalType",0);
+        int CurGoal = GetIntent.getIntExtra("CurGoal", 0);
+
+        if(CurName != null){
+            ActivityValue = 1;
+            CheckButton.setText("저장");
+            Title.setText("카테고리 수정");
+            SetCategoryName.setText(CurName);
+            SetColor.setBackgroundColor(CurColor.intValue());
+            ColorLong = CurColor;
+            SpinnerSelect = CurStat;
+            GoalKey = CurGoalType;
+            if(GoalKey == 1){
+                RadioGroup.check(R.id.RbuttonNum);
+                GoalText.setText("번");
+            }else{
+                RadioGroup.check(R.id.RbuttonTime);
+                GoalText.setText("시간");
+            }
+
+            GoalData.setVisibility(View.VISIBLE);
+            GoalText.setVisibility(View.VISIBLE);
+            GoalData.setText(Integer.toString(CurGoal));
+        }
+
+        //스탯, 라디오버튼, 라디오버튼 값 기본값 넣어줘야함.
 
         
         //스탯 설정
@@ -59,10 +99,12 @@ public class SetCategoryActivity extends AppCompatActivity {
         ArrayAdapter<String> StatAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, SavedSettings.StatList);
         StatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         SetStat.setAdapter(StatAdapter);
+        SetStat.setSelection(SpinnerSelect-1);
         SetStat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 StatSet = SavedSettings.StatList.get(i);
+                SpinnerSelect = i+1;
             }
 
             @Override
@@ -73,10 +115,12 @@ public class SetCategoryActivity extends AppCompatActivity {
 
         //색상 선택
 
-//        String[] colorArray = new String[]{"#f6e58d", "#ffbe76", "#ff7979",
-//                "#badc58", "#dff9fb", "#7ed6df", "#e056fd", "#686de0", "#30336b", "#95afc0","#f6e58d", "#ffbe76", "#ff7979",
-//                "#badc58", "#dff9fb", "#7ed6df", "#e056fd", "#686de0", "#30336b", "#95afc0","#f6e58d", "#ffbe76", "#ff7979",
-//                "#badc58", "#dff9fb", "#7ed6df", "#e056fd", "#686de0", "#30336b", "#95afc0"};
+        //다이얼로그에 보여지는 색 리스트
+
+        String[] colorArray = new String[]{"#FF5675", "#FF88A7", "#FF9E9B",
+                "#FFA500", "#FFCD00", "#FFDC46", "#FFF064", "#B2FA5C", "#9EF048", "#80E12A","#40A940", "#28B4B4", "#41CDCD",
+                "#9DF0E1", "#32F1FF", "#00D7FF", "#93DAFF", "#00BFFF", "#00AFFF", "#BECDFF","#90AFFF", "#6495ED", "#148CFF",
+                "#E19B50", "#CD853F", "#D27D32"};
 
         //Hue
 
@@ -108,16 +152,22 @@ public class SetCategoryActivity extends AppCompatActivity {
                 new MaterialColorPickerDialog
                         .Builder(SetCategoryActivity.this)
                         .setTitle("색 선택")
-//                        .setColors(colorArray)
+                        .setColors(colorArray)
                         .setColorShape(ColorShape.CIRCLE)
                         .setColorSwatch(ColorSwatch._300)
-                        .setDefaultColor(Color.parseColor("#ffffff"))
+//                        .setDefaultColor(Color.parseColor(ColorSet))
+                        .setDefaultColor(ColorLong.intValue())
                         .setColorListener(new ColorListener() {
                             @Override
                             public void onColorSelected(int color, @NotNull String colorHex) {
                                 SetColor.setBackgroundColor(color);
                                 ColorSet = colorHex;
                                 ColorInt = color;
+                                ColorLong = Long.valueOf(color);
+                                ParseColor = Color.parseColor(colorHex);
+                                Log.v("colorset", ""+ColorSet);
+                                Log.v("Colorint", ""+ColorInt);
+                                Log.v("컬러", ""+ParseColor+"  "+ColorSet);
                             }
                         })
                         .show();
@@ -137,10 +187,12 @@ public class SetCategoryActivity extends AppCompatActivity {
                     case R.id.RbuttonNum:
                         GoalText.setText("번");
                         GoalTypeSet = "횟수";
+                        GoalKey = 1;
                         break;
                     case R.id.RbuttonTime:
                         GoalText.setText("시간");
                         GoalTypeSet = "시간";
+                        GoalKey = 2;
                         break;
                 }
             }
@@ -153,16 +205,26 @@ public class SetCategoryActivity extends AppCompatActivity {
         CheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(SetCategoryName.getText().length() == 0 || ColorSet == null || StatSet == null || GoalTypeSet == null || GoalData.getText().length() == 0){
+                if(SetCategoryName.getText().length() == 0 || ColorLong == 0 || StatSet == null || GoalKey == 0 || GoalData.getText().length() == 0){
                     Toast.makeText(getApplicationContext(), "설정을 모두 완료해주세요", Toast.LENGTH_SHORT).show();
                 }else{
                     NameSet = SetCategoryName.getText().toString();
                     GoalSet = Integer.parseInt(GoalData.getText().toString());
-                    //SetCategoryAdapter.addItem(new CategoryInfo(NameSet, ColorSet, StatSet, GoalTypeSet, GoalSet));
                     for(int i = 0; i < SetCategoryAdapter.CategoryItem.size(); i++){
                         Log.v("어레이", ""+SetCategoryAdapter.CategoryItem.get(i).getName());
                     }
                     Intent Cheak = new Intent(getApplicationContext(), SettingActivity.class);
+                    Cheak.putExtra("Name", NameSet);
+//                    Cheak.putExtra("Color", ColorSet);
+//                    Cheak.putExtra("GoalType", GoalTypeSet);
+//                    Cheak.putExtra("Goal", GoalSet);
+//                    Cheak.putExtra("Stat", StatSet);
+//                    Cheak.putExtra("Stat", StatSet);
+                    Cheak.putExtra("Color", ColorLong);
+                    Cheak.putExtra("GoalType", GoalKey);
+                    Cheak.putExtra("Goal", GoalSet);
+                    Cheak.putExtra("Stat", SpinnerSelect);
+                    Cheak.putExtra("ActivityType", ActivityValue);
                     setResult(Activity.RESULT_OK, Cheak);
                     finish();
                 }

@@ -28,11 +28,15 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
     }
 
     static ArrayList<CategoryInfo> CategoryItem = new ArrayList<CategoryInfo>(
-//            Arrays.asList(new CategoryInfo(SavedSettings.CategoryList.get(0), SavedSettings.ColorList.get(0), SavedSettings.CategoryStatList.get(0), SavedSettings.GoalType.get(0), SavedSettings.GoalList.get(0)),
-//                    new CategoryInfo(SavedSettings.CategoryList.get(1), SavedSettings.ColorList.get(1), SavedSettings.CategoryStatList.get(1), SavedSettings.GoalType.get(1), SavedSettings.GoalList.get(1))));
-    );
-    ArrayList<String> test = new ArrayList<>();
+            Arrays.asList(
+                    //new CategoryInfo(SavedSettings.CategoryList.get(0), SavedSettings.ColorList.get(0), SavedSettings.CategoryStatList.get(0), SavedSettings.GoalType.get(0), SavedSettings.GoalList.get(0)),
+                    //new CategoryInfo(SavedSettings.CategoryList.get(1), SavedSettings.ColorList.get(1), SavedSettings.CategoryStatList.get(1), SavedSettings.GoalType.get(1), SavedSettings.GoalList.get(1))));
+            ));
+
     Button CategoryButton;
+
+    int DeleteNum = 0;
+    int EditNum = 0;
 
 
     private OnItemClickListener mListener = null;
@@ -83,11 +87,14 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
         return CategoryItem.size();
     }
 
+
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         public ViewHolder(View itemview){
             super(itemview);
             CategoryButton = itemview.findViewById(R.id.CategoryInfoBtn);
+
 
             CategoryButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,7 +125,7 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
         public void setItem(CategoryInfo Item){
             CategoryButton.setText(Item.getName()+" "+Item.getStat()+" "+Item.getColor()+" "+Item.getGoalType()+" "+Item.getGoal());
             Log.v("t", ""+Item.getName());
-            CategoryButton.setBackgroundColor(Color.parseColor(Item.getColor()));
+            CategoryButton.setBackgroundColor(Item.getColor().intValue());
         }
     }
     public void delItem(int position) {
@@ -127,4 +134,13 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
         notifyItemRangeRemoved(position, CategoryItem.size());
     }
 
+    public void editItem(int position, CategoryInfo C){
+        CategoryItem.set(position, C);
+        notifyItemChanged(position);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }

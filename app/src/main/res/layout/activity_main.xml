@@ -58,7 +58,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/setting_button" />
+            app:srcCompat="@drawable/ic_baseline_settings_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
