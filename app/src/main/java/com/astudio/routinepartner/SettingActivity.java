@@ -168,7 +168,7 @@ public class SettingActivity extends AppCompatActivity {
         adapter.setOnItemLongClickListener(new SetCategoryAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View v, int pos) {
-                Toast.makeText(getApplicationContext(),"롱클릭 성공" + pos, Toast.LENGTH_SHORT).show();
+
                 SettingsDB.DatabaseWriteExecutor.execute(() -> {
                     SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
                     SettingsDAO mSettingsDao = db.settingDao();
@@ -177,13 +177,22 @@ public class SettingActivity extends AppCompatActivity {
                 adapter.delItem(pos);
                 recyclerViewRefresh();
 
-
                 SavedSettings.CategoryList.remove(pos);
                 SavedSettings.ColorList.remove(pos);
                 SavedSettings.AffectingStat.remove(pos);
                 SavedSettings.GoalType.remove(pos);
                 SavedSettings.Goal.remove(pos);
                 SavedSettings.Order.remove(pos);
+
+                for(int i = pos; i < SavedSettings.Order.size(); i++){
+                    SavedSettings.Order.set(i, SavedSettings.Order.get(i)-1);
+                }
+
+                SetCategoryAdapter.CategoryItem.clear();
+                for(int i = 0; i < SavedSettings.CategoryList.size(); i++){
+                    SetCategoryAdapter.CategoryItem.add(new CategoryInfo(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i),
+                            SavedSettings.AffectingStat.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i)));
+                }
 
                 if(SetCategoryAdapter.CategoryItem.size() < 5){
                     CategoryAddBtn.setEnabled(true);

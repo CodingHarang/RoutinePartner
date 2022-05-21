@@ -29,7 +29,9 @@ public class SavedSettings {
     // 1은 지능, 2는 재미
     public static ArrayList<Integer> AffectingStat = new ArrayList<>();
 
-    public static ArrayList<String> StatList = new ArrayList<>();
+//    public static ArrayList<String> StatList = new ArrayList<>();
 
     public static ArrayList<Integer> Order = new ArrayList<>();
+
+    public static ArrayList<String> StatList = new ArrayList<>(Arrays.asList("지능", "재미", "체력", "포만감", "잔고", "자아실현"));
 }

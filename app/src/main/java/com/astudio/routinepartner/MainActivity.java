@@ -3,6 +3,7 @@ package com.astudio.routinepartner;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -36,6 +38,7 @@ import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -44,17 +47,19 @@ import android.util.Log;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends AppCompatActivity {
 
     AlertDialog Dialog;
     NumberPicker[] NumPickers = new NumberPicker[10];
-    Button Btn1, Btn2, Btn3, Btn4, Btn5, BtnOK, BtnCancel, BtnAddTestData, BtnDeleteAll, BtnShowPieChart;
+    Button Btn1, Btn2, Btn3, Btn4, Btn5, BtnOK, BtnCancel, BtnAddTestData, BtnDeleteAll, BtnShowPieChart,BtnSelectDay;
     ImageButton BtnShowList;
     EditText EdtCategory;
     TextView TxtTime;
     int CategoryNum;
+    Calendar PieCalendar = Calendar.getInstance();
 
     PieChartView PieChart;
     ArrayList<Integer> TimeList = new ArrayList<Integer>();
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0; i < CategoryNum; i++) {
 
             }
-            SavedSettings.CategoryList.set(0, mSettingsDao.getAll()[0].getCategory());
+//            SavedSettings.CategoryList.set(0, mSettingsDao.getAll()[0].getCategory());
         });
         /*GradientDrawable RS1 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square1);
         GradientDrawable RS2 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square2);
@@ -249,6 +254,9 @@ public class MainActivity extends AppCompatActivity {
         BtnShowPieChart = findViewById(R.id.btnShowPieChart);
         ImageButton BtnChart = (ImageButton) findViewById(R.id.BtnChart);
         ImageButton SettingButton = findViewById(R.id.SettingBtn);
+        BtnSelectDay = findViewById(R.id.SelectDayBtn);
+        updateDate();
+
 
         PieChart = (PieChartView) findViewById(R.id.PieChartView);
         BtnShowPieChart.setOnClickListener(new View.OnClickListener() {
@@ -277,6 +285,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent SettingIntent = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(SettingIntent);
+            }
+        });
+        
+        
+        //원형시간표 날짜 선택 버튼
+
+        DatePickerDialog.OnDateSetListener PieDatePicker = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                PieCalendar.set(Calendar.YEAR, year);
+                PieCalendar.set(Calendar.MONTH, month);
+                PieCalendar.set(Calendar.DAY_OF_MONTH, day);
+                updateDate();
+            }
+        };
+
+        BtnSelectDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(MainActivity.this, PieDatePicker, PieCalendar.get(Calendar.YEAR),
+                        PieCalendar.get(Calendar.MONTH), PieCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -687,6 +716,17 @@ public class MainActivity extends AppCompatActivity {
             YesterDayAngleList.add(StartAngle);
             YesterDayAngleList.add(DrawAngle);
         }
+    }
+
+    public void updateDate(){
+        String Format = "yyyy/MM/dd";
+        SimpleDateFormat SDF = new SimpleDateFormat(Format, Locale.KOREA);
+
+        BtnSelectDay.setText(SDF.format(PieCalendar.getTime()));
+//        Syear = PieCalendar.get(Calendar.YEAR);
+//        Smonth = PieCalendar.get(Calendar.MONTH) + 1;
+//        Sday = PieCalendar.get(Calendar.DAY_OF_MONTH);
+//
     }
 
     //-------------------------------------------------------------------->LSY
