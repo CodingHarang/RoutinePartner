@@ -99,12 +99,12 @@ public class SetCategoryActivity extends AppCompatActivity {
         ArrayAdapter<String> StatAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, SavedSettings.StatList);
         StatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         SetStat.setAdapter(StatAdapter);
-        SetStat.setSelection(SpinnerSelect);
+        SetStat.setSelection(SpinnerSelect-1);
         SetStat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 StatSet = SavedSettings.StatList.get(i);
-                SpinnerSelect = i;
+                SpinnerSelect = i+1;
             }
 
             @Override
