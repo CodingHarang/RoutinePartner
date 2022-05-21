@@ -11,11 +11,16 @@ public class PSY {
     private float TimeData = 0;
     private float CategoryData = 0;
 
-    ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "수면", "공부", "운동"));
-    ArrayList<Integer> GoalList = new ArrayList<>(Arrays.asList(2, 7, 4, 1));
-    ArrayList<Integer> GoalType = new ArrayList<>(Arrays.asList(2, 1, 1, 1));
+    //ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "취침", "공부", "운동"));
+    ArrayList<String> CategoryList=SavedSettings.CategoryList;
+    ArrayList<String> CategoryStat =SavedSettings.StatList;
+    ArrayList<Integer> GoalList=SavedSettings.Goal;
+    ArrayList<Integer> GoalType =SavedSettings.GoalType;
+    /*ArrayList<Integer> GoalList = new ArrayList<>(Arrays.asList(2, 7, 4, 1));
+    ArrayList<Integer> GoalType = new ArrayList<>(Arrays.asList(2, 1, 1, 1));*/
     ArrayList<String> StatList = new ArrayList<>(Arrays.asList("지능", "재미", "체력", "포만감", "잔고", "자아실현"));
-    ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
+    //ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
+    //public static ArrayList<Integer> AffectingStat = new ArrayList<>(Arrays.asList(4, 2, 4, 1, 2));
     ArrayList<Integer> CategoryStatInt=new ArrayList<>(Arrays.asList(3,2,0,2));
     ArrayList<Integer> Order=new ArrayList<>(Arrays.asList(1,2,3,4));
 
@@ -68,6 +73,9 @@ public class PSY {
 
     public ArrayList<Boolean> isGoalAchieved(ArrayList<Float> TotalTimeList){
         ArrayList<Boolean> IsGoalAchieved=new ArrayList<>();
+        /*for(int i=0;i<TotalTimeList.size();i++){
+            IsGoalAchieved.add(false);
+        }*/
         for(int i=0;i<TotalTimeList.size();i++){
             switch(GoalType.get(i)){
                 case 1:{
