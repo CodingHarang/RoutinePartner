@@ -93,7 +93,26 @@ public class SettingActivity extends AppCompatActivity {
                                 Log.v("현재 리스트 색", ""+SavedSettings.ColorList);
                                 Log.v("현재 리스트 순서", ""+SavedSettings.Order);
                             }
-
+                            for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
+                                String category = SavedSettings.CategoryList.get(i);
+                                long color = SavedSettings.ColorList.get(i);
+                                int goalType = SavedSettings.GoalType.get(i);
+                                int goal = SavedSettings.Goal.get(i);
+                                int affectingStat = SavedSettings.AffectingStat.get(i);
+                                int order = SavedSettings.Order.get(i);
+                                SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                                    SettingsDAO mSettingsDao = db.settingDao();
+                                    Settings settings = new Settings();
+                                    settings.setCategory(category);
+                                    settings.setColor(color);
+                                    settings.setGoalType(goalType);
+                                    settings.setGoal(goal);
+                                    settings.setAffectingStat(affectingStat);
+                                    settings.setOrder(order);
+                                    mSettingsDao.insert(settings);
+                                });
+                            }
                         }
                     }
                 });
@@ -135,6 +154,7 @@ public class SettingActivity extends AppCompatActivity {
 
                 startActivityResult.launch(intent);
             }
+
         });
 
         adapter.setOnItemLongClickListener(new SetCategoryAdapter.OnItemLongClickListener() {
@@ -152,6 +172,26 @@ public class SettingActivity extends AppCompatActivity {
 
                 if(SetCategoryAdapter.CategoryItem.size() < 5){
                     CategoryAddBtn.setEnabled(true);
+                }
+                for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
+                    String category = SavedSettings.CategoryList.get(i);
+                    long color = SavedSettings.ColorList.get(i);
+                    int goalType = SavedSettings.GoalType.get(i);
+                    int goal = SavedSettings.Goal.get(i);
+                    int affectingStat = SavedSettings.AffectingStat.get(i);
+                    int order = SavedSettings.Order.get(i);
+                    SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                        SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                        SettingsDAO mSettingsDao = db.settingDao();
+                        Settings settings = new Settings();
+                        settings.setCategory(category);
+                        settings.setColor(color);
+                        settings.setGoalType(goalType);
+                        settings.setGoal(goal);
+                        settings.setAffectingStat(affectingStat);
+                        settings.setOrder(order);
+                        mSettingsDao.insert(settings);
+                    });
                 }
             }
         });
