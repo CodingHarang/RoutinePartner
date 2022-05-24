@@ -57,7 +57,7 @@ public class WidgetService extends Service {
     @Override // startService()로 서비스를 시작할 때 호출
     public int onStartCommand(Intent intent, int flags, int startId) {
         CategoryNum = WidgetSettings.ClickedWidgetButton;
-        Log.i("InWidgetService", "Service " + CategoryNum + " Started");
+        //Log.i("InWidgetService", "Service " + CategoryNum + " Started");
         //Log.i("SavedSettings", SavedSettings.CategoryName.get(1));
         Toast.makeText(getApplicationContext(), "Service Started", Toast.LENGTH_SHORT).show();
 
@@ -83,7 +83,7 @@ public class WidgetService extends Service {
 
     @Override // 서비스가 소멸될 때 호출
     public void onDestroy() {
-        Log.i("End Setvice", "End service and notification");
+        //Log.i("End Service", "End service and notification");
         Calendar cal = Calendar.getInstance();
         EYear = cal.get(Calendar.YEAR);
         EMonth = cal.get(Calendar.MONTH) + 1;

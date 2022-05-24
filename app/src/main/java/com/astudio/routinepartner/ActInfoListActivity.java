@@ -3,6 +3,7 @@ package com.astudio.routinepartner;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -105,6 +106,7 @@ public class ActInfoListActivity extends AppCompatActivity {
 //                    MRecyclerView.getLayoutManager().findViewByPosition(i).setBackgroundResource(R.drawable.round_square1);
 //                }
                 MAdapter.notifyDataSetChanged();
+                Log.i("----", "" + ActInfoItemList);
             }
         });
 
@@ -121,14 +123,14 @@ public class ActInfoListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Btndate = BtnSdate;
-                new DatePickerDialog(getContext(), DatePickerDiag, Syear, Smonth - 1, Sdate).show();
+                new DatePickerDialog(getContext(), R.style.MyDatePickerStyle, DatePickerDiag, Syear, Smonth - 1, Sdate).show();
             }
         });
         BtnEdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Btndate = BtnEdate;
-                new DatePickerDialog(getContext(), DatePickerDiag, Eyear, Emonth - 1, Edate).show();
+                new DatePickerDialog(getContext(), R.style.MyDatePickerStyle, DatePickerDiag, Eyear, Emonth - 1, Edate).show();
             }
         });
     }

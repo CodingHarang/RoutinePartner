@@ -18,13 +18,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
 
 public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         final int N = appWidgetIds.length;
 
-        Log.i("in onUpdate", "Widget Updated");
+        //Log.i("in onUpdate", "Widget Updated");
         for (int i=0; i<N; i++) {
             int MyAppWidgetId = appWidgetIds[i];
             Intent intent1 = new Intent(context, getClass());
@@ -72,33 +73,78 @@ public class WidgetProvider extends AppWidgetProvider {
                 }
             }
             appWidgetManager.updateAppWidget(MyAppWidgetId, views);
+            WidgetSettings.AppWidgetId = MyAppWidgetId;
+
+            Log.i("in WidgetProvider", "" + WidgetSettings.AppWidgetId);
         }
     }
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         Log.i("in onReceive actionName : ", intent.getAction());
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
-        if (intent.getAction() == "CONTROL_SERVICE1" || intent.getAction() == "CONTROL_SERVICE2" || intent.getAction() == "CONTROL_SERVICE3" || intent.getAction() == "CONTROL_SERVICE4" || intent.getAction() == "CONTROL_SERVICE5") {
-            if(intent.getAction() == "CONTROL_SERVICE1")
-                WidgetSettings.ClickedWidgetButton = 1;
-            if(intent.getAction() == "CONTROL_SERVICE2")
-                WidgetSettings.ClickedWidgetButton = 2;
-            if(intent.getAction() == "CONTROL_SERVICE3")
-                WidgetSettings.ClickedWidgetButton = 3;
-            if(intent.getAction() == "CONTROL_SERVICE4")
-                WidgetSettings.ClickedWidgetButton = 4;
-            if(intent.getAction() == "CONTROL_SERVICE5")
-                WidgetSettings.ClickedWidgetButton = 5;
 
-            if (WidgetSettings.IsServiceRunning == false) {
-                context.startForegroundService(new Intent(context, WidgetService.class));
-                WidgetSettings.IsServiceRunning = true;
-            } else {
-                context.stopService(new Intent(context, WidgetService.class));
-                WidgetSettings.IsServiceRunning = false;
+        CountDownLatch CDL = new CountDownLatch(1);
+        SettingsDB.DatabaseWriteExecutor.execute(() -> {
+            SettingsDB db = SettingsDB.getDatabase(context);
+            SettingsDAO mSettingsDao = db.settingDao();
+            //Log.i("CategoryNum", "" + mSettingsDao.getAll().length);
+            int CategoryNum = mSettingsDao.getAll().length;
+            if(CategoryNum == 0) {
+                Settings settings = new Settings();
+                settings.setCategory("취침");
+                settings.setColor(0xFFCCCCFFL);
+                settings.setGoalType(2);
+                settings.setGoal(7);
+                settings.setAffectingStat(3);
+                settings.setOrder(1);
+                mSettingsDao.insert(settings);
             }
-            WidgetSettings.IsWidgetUpdated = false;
+            SavedSettings.CategoryList.clear();
+            SavedSettings.ColorList.clear();
+            SavedSettings.GoalType.clear();
+            SavedSettings.Goal.clear();
+            SavedSettings.AffectingStat.clear();
+            SavedSettings.Order.clear();
+            for(int i = 0; i < CategoryNum; i++) {
+                SavedSettings.CategoryList.add(mSettingsDao.getAll()[i].getCategory());
+                SavedSettings.ColorList.add(mSettingsDao.getAll()[i].getColor());
+                SavedSettings.GoalType.add(mSettingsDao.getAll()[i].getGoalType());
+                SavedSettings.Goal.add(mSettingsDao.getAll()[i].getGoal());
+                SavedSettings.AffectingStat.add(mSettingsDao.getAll()[i].getAffectingStat());
+                SavedSettings.Order.add(mSettingsDao.getAll()[i].getOrder());
+            }
+            CDL.countDown();
+            //Log.i("in Widget", "DB transaction End");
+        });
+        try {
+            CDL.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //Log.i("in Widget", "Next");
+        if (intent.getAction() == "CONTROL_SERVICE1" || intent.getAction() == "CONTROL_SERVICE2" || intent.getAction() == "CONTROL_SERVICE3" || intent.getAction() == "CONTROL_SERVICE4" || intent.getAction() == "CONTROL_SERVICE5" || intent.getAction() == "SETTINGS_CHANGED") {
+            if(intent.getAction() != "SETTINGS_CHANGED")
+            {
+                if(intent.getAction() == "CONTROL_SERVICE1")
+                    WidgetSettings.ClickedWidgetButton = 1;
+                if(intent.getAction() == "CONTROL_SERVICE2")
+                    WidgetSettings.ClickedWidgetButton = 2;
+                if(intent.getAction() == "CONTROL_SERVICE3")
+                    WidgetSettings.ClickedWidgetButton = 3;
+                if(intent.getAction() == "CONTROL_SERVICE4")
+                    WidgetSettings.ClickedWidgetButton = 4;
+                if(intent.getAction() == "CONTROL_SERVICE5")
+                    WidgetSettings.ClickedWidgetButton = 5;
+
+                if (WidgetSettings.IsServiceRunning == false) {
+                    context.startForegroundService(new Intent(context, WidgetService.class));
+                    WidgetSettings.IsServiceRunning = true;
+                } else {
+                    context.stopService(new Intent(context, WidgetService.class));
+                    WidgetSettings.IsServiceRunning = false;
+                }
+            }
+            //WidgetSettings.IsWidgetUpdated = false;
             this.onUpdate(context, AppWidgetManager.getInstance(context), AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, getClass())));
         }
     }

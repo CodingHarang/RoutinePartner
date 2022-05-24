@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     ImageButton BtnShowList;
     EditText EdtCategory;
     TextView TxtTime;
-    int CategoryNum;
     Calendar PieCalendar = Calendar.getInstance();
 
     PieChartView PieChart;
@@ -82,6 +84,120 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> LableList=new ArrayList<>();
     ArrayList<Integer> LableListInt=new ArrayList<>();
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(SavedSettings.isRefreshed == false) {
+            refreshSettings();
+        }
+//        SettingsDB.DatabaseWriteExecutor.execute(() -> {
+//                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+//                    SettingsDAO mSettingsDao = db.settingDao();
+//                    mSettingsDao.deleteAll();
+//                });
+        int CategoryNum = SavedSettings.CategoryList.size();
+        Log.i("onStart", "" + CategoryNum);
+        for(int i = 0; i < CategoryNum; i++) {
+            if (i == 0) {
+                GradientDrawable RS1 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square1);
+                RS1.setColor(SavedSettings.ColorList.get(0).intValue());
+                Btn1.setVisibility(View.VISIBLE);
+                Btn1.setText(SavedSettings.CategoryList.get(0));
+                Btn1.setBackgroundResource(R.drawable.round_square1);
+                Btn1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(0));
+                    }
+                });
+            }
+            if (i == 1) {
+                GradientDrawable RS2 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square2);
+                RS2.setColor(SavedSettings.ColorList.get(1).intValue());
+                Btn2.setVisibility(View.VISIBLE);
+                Btn2.setText(SavedSettings.CategoryList.get(1));
+                Btn2.setBackgroundResource(R.drawable.round_square2);
+                Btn2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(1));
+                    }
+                });
+            }
+            if (i == 2) {
+                GradientDrawable RS3 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square3);
+                RS3.setColor(SavedSettings.ColorList.get(2).intValue());
+                Btn3.setVisibility(View.VISIBLE);
+                Btn3.setText(SavedSettings.CategoryList.get(2));
+                Btn3.setBackgroundResource(R.drawable.round_square3);
+                Btn3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(2));
+                    }
+                });
+            }
+            if (i == 3) {
+                GradientDrawable RS4 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square4);
+                RS4.setColor(SavedSettings.ColorList.get(3).intValue());
+                Btn4.setVisibility(View.VISIBLE);
+                Btn4.setText(SavedSettings.CategoryList.get(3));
+                Btn4.setBackgroundResource(R.drawable.round_square4);
+                Btn4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(3));
+                    }
+                });
+            }
+            if (i == 4) {
+                GradientDrawable RS5 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square5);
+                RS5.setColor(SavedSettings.ColorList.get(4).intValue());
+                Btn5.setVisibility(View.VISIBLE);
+                Btn5.setText(SavedSettings.CategoryList.get(4));
+                Btn5.setBackgroundResource(R.drawable.round_square5);
+                Btn5.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog();
+                        EdtCategory.setText(SavedSettings.CategoryList.get(4));
+                    }
+                });
+            }
+        }
+        if(SavedSettings.isRefreshed == false) {
+            RemoteViews views = new RemoteViews(getApplicationContext().getPackageName(), R.layout.widget);
+
+            ArrayList<Integer> CategoryBtnId = new ArrayList<Integer>(Arrays.asList(R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5));
+            for(int j = 0; j < 5; j++) {
+                if (j < CategoryNum) {
+                    views.setInt(CategoryBtnId.get(j), "setVisibility", View.VISIBLE);
+                    views.setTextViewText(CategoryBtnId.get(j), SavedSettings.CategoryList.get(j));
+                    views.setInt(CategoryBtnId.get(j), "setBackgroundColor", SavedSettings.ColorList.get(j).intValue());
+                    views.setTextViewTextSize(CategoryBtnId.get(j), 0, 75f);
+                } else {
+                    views.setInt(CategoryBtnId.get(j), "setVisibility", View.GONE);
+                }
+            }
+            Log.i("aaa", "" + CategoryNum);
+            //AppWidgetManager.getInstance(getApplicationContext()).updateAppWidget(AppWidgetManager.getInstance(getApplicationContext()).getAppWidgetIds(new ComponentName(this.getPackageName(), WidgetProvider.class.getName())), views);
+            //AppWidgetManager.getInstance(getApplicationContext()).updateAppWidget(new ComponentName(this.getPackageName(), WidgetProvider.class.getName()), views);
+            finish();
+            startActivity(getIntent());
+
+
+        }
+        Intent intent = new Intent(this, WidgetProvider.class);
+        intent.setAction("SETTINGS_CHANGED");
+        this.sendBroadcast(intent);
+        //Log.i("WidgetId", "" + intent.getAction());
+        SavedSettings.isRefreshed = true;
+        //Log.i("in StartActivity", "" + AppWidgetManager.getInstance(getApplicationContext()).getAppWidgetIds(new ComponentName(this.getPackageName(), WidgetProvider.class.getName()))[0]);
+    }
 
     @SuppressLint("ResourceType")
     @Override
@@ -90,28 +206,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //<--------------------------------------------------------------------YJS
         //<--------------------------------------------------------------------YJS
-        SettingsDB.DatabaseWriteExecutor.execute(() -> {
-            SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-            SettingsDAO mSettingsDao = db.settingDao();
-            int CategoryNum = mSettingsDao.getAll().length;
-            for(int i = 0; i < CategoryNum; i++) {
-
-            }
-//            SavedSettings.CategoryList.set(0, mSettingsDao.getAll()[0].getCategory());
-        });
-        /*GradientDrawable RS1 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square1);
-        GradientDrawable RS2 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square2);
-        GradientDrawable RS3 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square3);
-        GradientDrawable RS4 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square4);
-        GradientDrawable RS5 = (GradientDrawable) ContextCompat.getDrawable(this, R.drawable.round_square5);
-        RS1.setColor(SavedSettings.ColorList.get(0).intValue());
-        RS2.setColor(SavedSettings.ColorList.get(1).intValue());
-        RS3.setColor(SavedSettings.ColorList.get(2).intValue());
-        RS4.setColor(SavedSettings.ColorList.get(3).intValue());
-        RS5.setColor(SavedSettings.ColorList.get(4).intValue());*/
+        if(SavedSettings.isRefreshed == false) {
+            refreshSettings();
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        CategoryNum = SavedSettings.CategoryList.size();
         Btn1 = findViewById(R.id.btn1);
         Btn2 = findViewById(R.id.btn2);
         Btn3 = findViewById(R.id.btn3);
@@ -135,71 +234,6 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setView(dialogView);
         Dialog = builder.create();
-
-
-        for(int i = 0; i < CategoryNum; i++){
-            if(i == 0) {
-                Btn1.setVisibility(View.VISIBLE);
-                Btn1.setText(SavedSettings.CategoryList.get(0));
-                Btn1.setBackgroundResource(R.drawable.round_square1);
-                Btn1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openDialog();
-                        EdtCategory.setText(SavedSettings.CategoryList.get(0));
-                    }
-                });
-            }
-            if(i == 1) {
-                Btn2.setVisibility(View.VISIBLE);
-                Btn2.setText(SavedSettings.CategoryList.get(1));
-                Btn2.setBackgroundResource(R.drawable.round_square2);
-                Btn2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openDialog();
-                        EdtCategory.setText(SavedSettings.CategoryList.get(1));
-                    }
-                });
-            }
-            if(i == 2) {
-                Btn3.setVisibility(View.VISIBLE);
-                Btn3.setText(SavedSettings.CategoryList.get(2));
-                Btn3.setBackgroundResource(R.drawable.round_square3);
-                Btn3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openDialog();
-                        EdtCategory.setText(SavedSettings.CategoryList.get(2));
-                    }
-                });
-            }
-            if(i == 3) {
-                Btn4.setVisibility(View.VISIBLE);
-                Btn4.setText(SavedSettings.CategoryList.get(3));
-                Btn4.setBackgroundResource(R.drawable.round_square4);
-                Btn4.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openDialog();
-                        EdtCategory.setText(SavedSettings.CategoryList.get(3));
-                    }
-                });
-            }
-            if(i == 4) {
-                Btn5.setVisibility(View.VISIBLE);
-                Btn5.setText(SavedSettings.CategoryList.get(4));
-                Btn5.setBackgroundResource(R.drawable.round_square5);
-                Btn5.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openDialog();
-                        EdtCategory.setText(SavedSettings.CategoryList.get(4));
-                    }
-                });
-            }
-        }
-
 
         BtnOK.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -490,6 +524,53 @@ public class MainActivity extends AppCompatActivity {
 
     //<--------------------------------------------------------------------YJS
     //<--------------------------------------------------------------------YJS
+    public void refreshSettings() {
+        CountDownLatch CDL = new CountDownLatch(1);
+        SettingsDB.DatabaseWriteExecutor.execute(() -> {
+            SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+            SettingsDAO mSettingsDao = db.settingDao();
+            //Log.i("CategoryNum", "" + mSettingsDao.getAll().length);
+            int CategoryNum = mSettingsDao.getAll().length;
+            //Log.i("in Main", "" + CategoryNum);
+            if(CategoryNum == 0) {
+                Settings settings = new Settings();
+                settings.setCategory("취침");
+                settings.setColor(0xFFCCCCFFL);
+                settings.setGoalType(2);
+                settings.setGoal(7);
+                settings.setAffectingStat(3);
+                settings.setOrder(1);
+                mSettingsDao.insert(settings);
+            }
+            SavedSettings.CategoryList.clear();
+            SavedSettings.ColorList.clear();
+            SavedSettings.GoalType.clear();
+            SavedSettings.Goal.clear();
+            SavedSettings.AffectingStat.clear();
+            SavedSettings.Order.clear();
+            for(int i = 0; i < mSettingsDao.getAll().length; i++) {
+                SavedSettings.CategoryList.add(mSettingsDao.getAll()[i].getCategory());
+                SavedSettings.ColorList.add(mSettingsDao.getAll()[i].getColor());
+                SavedSettings.GoalType.add(mSettingsDao.getAll()[i].getGoalType());
+                SavedSettings.Goal.add(mSettingsDao.getAll()[i].getGoal());
+                SavedSettings.AffectingStat.add(mSettingsDao.getAll()[i].getAffectingStat());
+                SavedSettings.Order.add(mSettingsDao.getAll()[i].getOrder());
+            }
+            CDL.countDown();
+            //Log.i("initializing","" + mSettingsDao.getAll().length);
+        });
+        try {
+            CDL.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //Log.i("initializing Done","");
+        SavedSettings.isRefreshed = true;
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(getIntent());
+        overridePendingTransition(0, 0);
+    }
     public void showList() {
         Intent intent = new Intent(this, ActInfoListActivity.class);
         startActivity(intent);
@@ -563,7 +644,7 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("취침", 2022, 5, i, 22, 0, 24, 0);
         }
         for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
-            addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
+            //addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
             Log.i("11111", "--" + SavedSettings.CategoryList.get(i)+ "  -  " + SavedSettings.ColorList.get(i)+ " " + SavedSettings.GoalType.get(i)+ SavedSettings.Goal.get(i)+ SavedSettings.AffectingStat.get(i)+ SavedSettings.Order.get(i));
         }
     }
