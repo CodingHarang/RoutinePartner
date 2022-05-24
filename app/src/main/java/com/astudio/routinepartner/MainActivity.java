@@ -31,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton BtnShowList;
     EditText EdtCategory;
     TextView TxtTime;
+    int CategoryNum, PieYear, PieMonth, PieDay;
     Calendar PieCalendar = Calendar.getInstance();
 
     PieChartView PieChart;
@@ -322,7 +324,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         
-        
         //원형시간표 날짜 선택 버튼
 
         DatePickerDialog.OnDateSetListener PieDatePicker = new DatePickerDialog.OnDateSetListener() {
@@ -332,6 +333,15 @@ public class MainActivity extends AppCompatActivity {
                 PieCalendar.set(Calendar.MONTH, month);
                 PieCalendar.set(Calendar.DAY_OF_MONTH, day);
                 updateDate();
+
+                PieYear = year;
+                PieMonth = month;
+                PieDay = day;
+
+                timeToAngle(PieYear, PieMonth, PieDay);
+                timeToAngleYesterday(PieYear, PieMonth, PieDay);
+                sendDataToPieChart();
+                PieChart.update();
             }
         };
 
@@ -349,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
         SetCategoryAdapter.CategoryItem.clear();
         for(int i = 0; i < SavedSettings.CategoryList.size(); i++){
             SetCategoryAdapter.CategoryItem.add(new CategoryInfo(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i),
-                    SavedSettings.AffectingStat.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i)));
+                    SavedSettings.AffectingStat.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.Order.get(i)));
         }
 
 
@@ -747,8 +757,48 @@ public class MainActivity extends AppCompatActivity {
             Log.v("카테고리", ""+ActInfoItemList.get(i).Category);
         }
 
-
     }
+
+
+    public void timeToAngle(int year, int month, int day) {
+        Calendar cal = Calendar.getInstance();
+        CountDownLatch CDL = new CountDownLatch(1);
+
+        AngleList.clear();
+        PieCategoryList.clear();
+        ActInfoItemList.clear();
+        AngleList.clear();
+        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+            ActInfoDAO mActInfoDao = db.actInfoDao();
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month + 1, day, year, month + 1, day)));
+            CDL.countDown();
+        });
+        try {
+            CDL.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < ActInfoList.size(); i++) {
+            ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+        }
+        Collections.sort(ActInfoItemList, new Comparator<ActInfoItem>() {
+            public int compare(ActInfoItem o1, ActInfoItem o2) {
+                if (o1.StartHour == o2.StartHour) {
+                    if (o1.StartMinute == o2.StartMinute) return 0;
+                    return o1.StartMinute < o2.StartMinute ? -1 : 1;
+                }
+                return o1.StartHour < o2.StartHour ? -1 : 1;
+            }
+        });
+        for (int i = 0; i < ActInfoItemList.size(); i++) {
+            AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
+            AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
+            PieCategoryList.add(ActInfoItemList.get(i).Category);
+            Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
+        }
+    }
+
 
     public void timeToAngleYesterday(){
         int BeforeTime, AfterTime;
@@ -783,6 +833,56 @@ public class MainActivity extends AppCompatActivity {
         int YdSize = ActInfoList.size()-1;
         if((YdSize > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 24)
         && (AngleList.get(0) == 270)){
+            ActInfoYesterdayItemList.add(new ActInfoItem(ActInfoList.get(YdSize).getId(), ActInfoList.get(YdSize).getCategory(), ActInfoList.get(YdSize).getYear(), ActInfoList.get(YdSize).getMonth(), ActInfoList.get(YdSize).getDate(), ActInfoList.get(YdSize).getStartHour(), ActInfoList.get(YdSize).getStartMinute(), ActInfoList.get(YdSize).getEndHour(), ActInfoList.get(YdSize).getEndMinute()));
+            BeforeTime = ActInfoYesterdayItemList.get(0).StartHour*60 + ActInfoYesterdayItemList.get(0).StartMinute;
+            AfterTime = ActInfoYesterdayItemList.get(0).EndHour*60 + ActInfoYesterdayItemList.get(0).EndMinute;
+
+            if(AfterTime == 0){
+                AfterTime = 1440;
+            }
+
+            StartAngle = BeforeTime * 0.25f - 90;
+            DrawAngle = (AfterTime - BeforeTime) * 0.25f;
+
+            YesterDayAngleList.add(StartAngle);
+            YesterDayAngleList.add(DrawAngle);
+        }
+    }
+
+
+    public void timeToAngleYesterday(int year, int month, int day){
+        int BeforeTime, AfterTime;
+        float StartAngle, DrawAngle;
+
+        YesterDayAngleList.clear();
+
+        Calendar cal = Calendar.getInstance();
+        CountDownLatch CDL = new CountDownLatch(1);
+        ActInfoYesterdayItemList.clear();
+        YesterDayAngleList.clear();
+        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+            ActInfoDAO mActInfoDao = db.actInfoDao();
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month + 1, day-1, year, month + 1, day-1)));
+            CDL.countDown();
+        });
+        try {
+            CDL.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Collections.sort(ActInfoList, new Comparator<ActInfo>(){
+            public int compare(ActInfo o1, ActInfo o2) {
+                if(o1.getStartHour() == o2.getStartHour()) {
+                    if(o1.getStartMinute() == o2.getStartMinute()) return 0;
+                    return o1.getStartMinute() < o2.getStartMinute() ? -1 : 1;
+                }
+                return o1.getStartHour() < o2.getStartHour() ? -1 : 1;
+            }
+        });
+        int YdSize = ActInfoList.size()-1;
+        if((YdSize > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 24)
+                && (AngleList.get(0) == 270)){
             ActInfoYesterdayItemList.add(new ActInfoItem(ActInfoList.get(YdSize).getId(), ActInfoList.get(YdSize).getCategory(), ActInfoList.get(YdSize).getYear(), ActInfoList.get(YdSize).getMonth(), ActInfoList.get(YdSize).getDate(), ActInfoList.get(YdSize).getStartHour(), ActInfoList.get(YdSize).getStartMinute(), ActInfoList.get(YdSize).getEndHour(), ActInfoList.get(YdSize).getEndMinute()));
             BeforeTime = ActInfoYesterdayItemList.get(0).StartHour*60 + ActInfoYesterdayItemList.get(0).StartMinute;
             AfterTime = ActInfoYesterdayItemList.get(0).EndHour*60 + ActInfoYesterdayItemList.get(0).EndMinute;

@@ -13,7 +13,9 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -32,6 +34,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -40,6 +44,7 @@ import java.util.concurrent.CountDownLatch;
 public class BarChartActivity extends AppCompatActivity {
     protected ArrayList<ActInfo> ActInfoList;
     protected ArrayList<ActInfoItem> ActInfoItemList = new ArrayList<ActInfoItem>();
+    protected ArrayList<ActInfoItem> ActInfoItemListTemp = new ArrayList<ActInfoItem>();
     BarChart Bar_Chart;
     Calendar ChartCalender = Calendar.getInstance();
     EditText DateWhen, EditStart, EditEnd;
@@ -50,9 +55,11 @@ public class BarChartActivity extends AppCompatActivity {
     ArrayList<Float> TimeList = new ArrayList<>();
     Spinner ChartSpinner;
     Button BtnMakeChart;
+    TextView PercnetText, ProgressDataText;
+    ProgressBar CircularProgressBar;
     ArrayList<String> CatetoryList = new ArrayList<>(Arrays.asList("선택"));
 
-    int Syear, Smonth, Sday, Eyear, Emonth, Eday, Chartdata = 7;
+    int Syear, Smonth, Sday, Eyear, Emonth, Eday, SDate, EDate, Chartdata = 7;
 
 
     DatePickerDialog.OnDateSetListener ChartDatePicker = new DatePickerDialog.OnDateSetListener() {
@@ -76,10 +83,13 @@ public class BarChartActivity extends AppCompatActivity {
         EditEnd = (EditText) findViewById(R.id.EditEnd);
         ChartSpinner = (Spinner) findViewById(R.id.ChartSpinner);
         BtnMakeChart = (Button) findViewById(R.id.BtnMakeChart);
+        PercnetText = findViewById(R.id.ProgressPercent);
+        CircularProgressBar = findViewById(R.id.CirCularprogressBar);
+        ProgressDataText = findViewById(R.id.ProgressDataText);
 
 //        bringDataFromTest();
-
-
+        CircularProgressBar.setMax(100);
+        CircularProgressBar.setProgress(100, true);
         CatetoryList.addAll(SavedSettings.CategoryList);
 
         //스피너에 관한 부분
@@ -92,45 +102,12 @@ public class BarChartActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 CurrentCategory = CatetoryList.get(i);
+                CategoryValue = true;
 //                DayList.clear();
 //                TimeList.clear();
                 if(i == 0){
                     CategoryValue = false;
-                }else
-                    CategoryValue = true;
-
-//                switch(i){
-//                    case 0:
-//                        CategoryValue = false;
-//                        CurrentCategory = ActItems[i];
-//                        DayList.clear();
-//                        TimeList.clear();
-//                        break;
-//                    case 1:
-//                        CategoryValue = true;
-//                        DayList.clear();
-//                        TimeList.clear();
-//                        CurrentCategory = ActItems[i];
-//                        break;
-//                    case 2:
-//                        CategoryValue = true;
-//                        DayList.clear();
-//                        TimeList.clear();
-//                        CurrentCategory = ActItems[i];
-//                        break;
-//                    case 3:
-//                        CategoryValue = true;
-//                        DayList.clear();
-//                        TimeList.clear();
-//                        CurrentCategory = ActItems[i];
-//                        break;
-//                    case 4:
-//                        CategoryValue = true;
-//                        DayList.clear();
-//                        TimeList.clear();
-//                        CurrentCategory = ActItems[i];
-//                        break;
-//                }
+                }
             }
 
             @Override
@@ -178,12 +155,14 @@ public class BarChartActivity extends AppCompatActivity {
                 }else if(!CategoryValue){
                     Toast.makeText(getApplicationContext(), "카테고리를 선택해주세요", Toast.LENGTH_SHORT).show();
                 }else{
+                    CircularProgressBar.setProgress(0);
                     DayList.clear();
                     TimeList.clear();
                     Bar_Chart.clear();
                     getData();
                     getCategory();
                     drawBarChart(DayList, TimeList);
+                    GoalPercent();
                 }
             }
         });
@@ -202,6 +181,7 @@ public class BarChartActivity extends AppCompatActivity {
             Syear = ChartCalender.get(Calendar.YEAR);
             Smonth = ChartCalender.get(Calendar.MONTH) + 1;
             Sday = ChartCalender.get(Calendar.DAY_OF_MONTH);
+            SDate = ChartCalender.get(Calendar.DATE);
 //
             Log.v("값 확인", ""+Syear+"  "+Smonth+"  "+Sday);
 
@@ -210,6 +190,7 @@ public class BarChartActivity extends AppCompatActivity {
             Eyear = ChartCalender.get(Calendar.YEAR);
             Emonth = ChartCalender.get(Calendar.MONTH) + 1;
             Eday = ChartCalender.get(Calendar.DAY_OF_MONTH);
+            EDate = ChartCalender.get(Calendar.DATE);
 //
             Log.v("값 확인", ""+Eyear+"  "+Emonth+"  "+Eday);
 
@@ -319,6 +300,7 @@ public class BarChartActivity extends AppCompatActivity {
     private void getData(){
         CountDownLatch CDL = new CountDownLatch(1);
         ActInfoItemList.clear();
+        ActInfoItemListTemp.clear();
         AllDayList.clear();
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
@@ -326,7 +308,6 @@ public class BarChartActivity extends AppCompatActivity {
             ActInfoList = new ArrayList<>(Arrays.asList(mActInfoDao.getItemByDate(Syear, Smonth, Sday, Eyear, Emonth, Eday)));
             ArrayList<ActInfo> ActDayList = new ArrayList<>();
 
-            Log.v("리스트 사이즈", ""+ ActInfoList.size());
             CDL.countDown();
         });
         try {
@@ -334,23 +315,56 @@ public class BarChartActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        for(int i = 0; i < ActInfoList.size(); i++) {
-            if((i>0) && ((ActInfoList.get(i).getYear() != ActInfoList.get(i-1).getYear() || ActInfoList.get(i).getMonth() != ActInfoList.get(i-1).getMonth()) || ActInfoList.get(i).getDate() != ActInfoList.get(i-1).getDate())){
+
+        for(int i = 0; i < ActInfoList.size(); i++){
+            ActInfoItemListTemp.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(),
+                    ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(),
+                    ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+        }
+
+        Collections.sort(ActInfoItemListTemp, new Comparator<ActInfoItem>(){
+            public int compare(ActInfoItem o1, ActInfoItem o2) {
+                if (o1.Year == o2.Year) {
+                    if (o1.Month == o2.Month) {
+                        if (o1.Date == o2.Date) return 0;
+                        return o1.Date < o2.Date ? -1 : 1;
+                    }return o1.Month < o2.Month ? -1 : 1;
+                }
+                    return o1.Year < o2.Year ? -1 : 1;
+            }
+        });
+
+        for(int i = 0; i < ActInfoItemListTemp.size(); i++){
+            //만약 날이 바뀌면 기존 리스트 AllDayList에 추가하고 새로운 ActInfoItemList 생성
+            if((i>0)&&((ActInfoItemListTemp.get(i).Year != ActInfoItemListTemp.get(i-1).Year || ActInfoItemListTemp.get(i).Month != ActInfoItemListTemp.get(i-1).Month)
+                    || ActInfoItemListTemp.get(i).Date != ActInfoItemListTemp.get(i-1).Date)){
                 AllDayList.add(ActInfoItemList);
                 ActInfoItemList = new ArrayList<>();
-                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(),
-                        ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(),
-                        ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
-            }else{
-                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(),
-                        ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(),
-                        ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+                ActInfoItemList.add(ActInfoItemListTemp.get(i));
+            } //아니면 기존 리스트에 추가
+            else{
+                ActInfoItemList.add(ActInfoItemListTemp.get(i));
             }
-
-
-            Log.v("데이터", " "+ ActInfoList.get(i).getCategory());
         }
         AllDayList.add(ActInfoItemList);
+
+//        for(int i = 0; i < ActInfoList.size(); i++) {
+//            //만약 날이 바뀌면 기존 리스트 AllDayList에 추가하고 새로운 ActInfoItemList 생성
+//            if((i>0) && ((ActInfoList.get(i).getYear() != ActInfoList.get(i-1).getYear() || ActInfoList.get(i).getMonth() != ActInfoList.get(i-1).getMonth()) || ActInfoList.get(i).getDate() != ActInfoList.get(i-1).getDate())){
+//                AllDayList.add(ActInfoItemList);
+//                ActInfoItemList = new ArrayList<>();
+//                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(),
+//                        ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(),
+//                        ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+//            }else{
+//                //아니면 기존리스트에 데이터 추가
+//                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(),
+//                        ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(),
+//                        ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+//            }
+//        }
+//        //AllDayList는 날짜별로 묶인 데이터가 들어가있는 리스트
+//        AllDayList.add(ActInfoItemList);
     }
 
 
@@ -361,7 +375,6 @@ public class BarChartActivity extends AppCompatActivity {
         String CurrentDay;
         //그 안에서 선택된 카테고리의 값만 가져오기
         for(int i = 0; i < AllDayList.size(); i++) {
-            Log.v("리스트 값", ""+AllDayList.get(i).size());
             if (AllDayList.get(i).size() != 0) {
                 CurrentDay = Integer.toString(AllDayList.get(i).get(0).Month) + "/" + Integer.toString(AllDayList.get(i).get(0).Date);
                 DayList.add(CurrentDay);
@@ -383,7 +396,61 @@ public class BarChartActivity extends AppCompatActivity {
             }
             TimeList.add(CategoryTime);
         }
-        Log.v("카테고리 사이즈", ""+DayList.size());
+    }
+
+
+    //목표달성률
+
+    private void GoalPercent(){
+        int i = 0;
+        int index, CurGoalType, Curgoal, SuccessGoal = 0, SizeOfData = AllDayList.size();
+
+        index = SavedSettings.CategoryList.indexOf(CurrentCategory);
+        CurGoalType = SavedSettings.GoalType.get(index);
+        Curgoal = SavedSettings.Goal.get(index);
+        if(CurGoalType == 1){
+            float CategoryNum;
+            for(int  k= 0; k < AllDayList.size(); k++) {
+                CategoryNum = 0;
+                for (int j = 0; j < AllDayList.get(k).size(); j++) {
+                    if (AllDayList.get(k).get(j).Category.equals(CurrentCategory)) {
+                        CategoryNum++;
+                    }
+                }
+                if(CategoryNum >= Curgoal){
+                    SuccessGoal++;
+                }
+            }
+
+        }else{
+            float CategoryTime;
+            for(int  k= 0; k < AllDayList.size(); k++) {
+                CategoryTime = 0;
+                for (int j = 0; j < AllDayList.get(k).size(); j++) {
+                    if (AllDayList.get(k).get(j).Category.equals(CurrentCategory)) {
+                        float time;
+                        float CalSTime = AllDayList.get(k).get(j).StartHour, CalETime = AllDayList.get(k).get(j).EndHour,
+                                CalSMin = AllDayList.get(k).get(j).StartMinute, CalEMin = AllDayList.get(k).get(j).EndMinute;
+
+                        if (CalETime == 0) {
+                            CalETime = 24;
+                        }
+
+                        time = ((CalETime * 60 + CalEMin) - (CalSTime * 60 + CalSMin)) / 60;
+                        CategoryTime += time;
+                    }
+                }
+                if(CategoryTime >= Curgoal){
+                    SuccessGoal++;
+                }
+            }
+        }
+
+        CircularProgressBar.setMax(SizeOfData);
+        CircularProgressBar.setProgress(SuccessGoal, true);
+        PercnetText.setText(""+(Math.round((double)SuccessGoal/(double)SizeOfData*100))+"%");
+        ProgressDataText.setText("총 "+(EDate-SDate+1)+"일 동안 "+SuccessGoal+"번 목표를 달성했습니다.");
+
     }
 
 }

@@ -11,13 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="카테고리 설정"
-        android:textSize="26sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintHorizontal_bias="0.077"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.041" />
+        app:layout_constraintVertical_bias="0.049" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/CategoryList"
@@ -36,13 +36,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="시간표 시간 간격 설정"
-        android:textSize="26sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.159"
+        app:layout_constraintHorizontal_bias="0.103"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CategoryList"
-        app:layout_constraintVertical_bias="0.079" />
+        app:layout_constraintVertical_bias="0.08" />
 
     <TextView
         android:id="@+id/CurrentTimeInterval"
@@ -63,7 +63,7 @@
         android:layout_height="44dp"
         android:layout_marginTop="28dp"
         android:text="추가"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.102"
         app:layout_constraintStart_toEndOf="@+id/CategorySetting"

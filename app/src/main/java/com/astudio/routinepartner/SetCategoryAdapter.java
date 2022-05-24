@@ -3,6 +3,7 @@ package com.astudio.routinepartner;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,7 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
     static ArrayList<CategoryInfo> CategoryItem = new ArrayList<CategoryInfo>(
             Arrays.asList(
                     //new CategoryInfo(SavedSettings.CategoryList.get(0), SavedSettings.ColorList.get(0), SavedSettings.CategoryStatList.get(0), SavedSettings.GoalType.get(0), SavedSettings.GoalList.get(0)),
-                    //new CategoryInfo(SavedSettings.CategoryList.get(1), SavedSettings.ColorList.get(1), SavedSettings.CategoryStatList.get(1), SavedSettings.GoalType.get(1), SavedSettings.GoalList.get(1))));
+                    //00new CategoryInfo(SavedSettings.CategoryList.get(1), SavedSettings.ColorList.get(1), SavedSettings.CategoryStatList.get(1), SavedSettings.GoalType.get(1), SavedSettings.GoalList.get(1))));
             ));
 
     Button CategoryButton;
@@ -123,7 +124,19 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
         }
 
         public void setItem(CategoryInfo Item){
-            CategoryButton.setText(Item.getName()+" "+Item.getStat()+" "+Item.getColor()+" "+Item.getGoalType()+" "+Item.getGoal());
+            String styledText;
+            if(Item.getGoalType() == 1){
+                styledText = "<big>"
+                        + Item.getName() + "</big>" + "<br />"
+                        + "<small>" + SavedSettings.StatList.get(Item.getStat()-1) + " / 목표: " + Item.getGoal()+ "번" + "</small>";
+            }else{
+                styledText = "<big>"
+                        + Item.getName() + "</big>" + "<br />"
+                        + "<small>" + SavedSettings.StatList.get(Item.getStat()-1) + " / 목표: " + Item.getGoal()+"시간" + "</small>";
+            }
+
+            CategoryButton.setText(Html.fromHtml(styledText));
+//            CategoryButton.setText(Item.getName()+" "+Item.getStat()+" "+Item.getColor()+" "+Item.getGoalType()+" "+Item.getGoal());
             Log.v("t", ""+Item.getName());
             CategoryButton.setBackgroundColor(Item.getColor().intValue());
         }

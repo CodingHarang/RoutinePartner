@@ -6,12 +6,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -177,24 +179,45 @@ public class SettingActivity extends AppCompatActivity {
                     SettingsDAO mSettingsDao = db.settingDao();
                     mSettingsDao.deleteByOrder(SavedSettings.Order.get(pos));
                 });
-                adapter.delItem(pos);
-                recyclerViewRefresh();
 
-                SavedSettings.CategoryList.remove(pos);
-                SavedSettings.ColorList.remove(pos);
-                SavedSettings.AffectingStat.remove(pos);
-                SavedSettings.GoalType.remove(pos);
-                SavedSettings.Goal.remove(pos);
-                SavedSettings.Order.remove(pos);
+                if(SavedSettings.CategoryList.size()==1){
+                    Toast.makeText(getApplicationContext(), "카테고리는 1개 이상 있어야해요",Toast.LENGTH_SHORT).show();
 
-                for(int i = pos; i < SavedSettings.Order.size(); i++){
-                    SavedSettings.Order.set(i, SavedSettings.Order.get(i)-1);
-                }
+                }else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
 
-                SetCategoryAdapter.CategoryItem.clear();
-                for(int i = 0; i < SavedSettings.CategoryList.size(); i++){
-                    SetCategoryAdapter.CategoryItem.add(new CategoryInfo(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i),
-                            SavedSettings.AffectingStat.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i)));
+                    builder.setTitle("정말 삭제하시겠습니까?");
+                    builder.setMessage("카테고리를 삭제하면 저장되어있던 해당 카테고리의 모든 기록이 삭제됩니다.");
+                    builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            adapter.delItem(pos);
+                            recyclerViewRefresh();
+
+                            SavedSettings.CategoryList.remove(pos);
+                            SavedSettings.ColorList.remove(pos);
+                            SavedSettings.AffectingStat.remove(pos);
+                            SavedSettings.GoalType.remove(pos);
+                            SavedSettings.Goal.remove(pos);
+                            SavedSettings.Order.remove(pos);
+
+                            for(int k = pos; k < SavedSettings.Order.size(); k++){
+                                SavedSettings.Order.set(k, SavedSettings.Order.get(k)-1);
+                            }
+
+                            SetCategoryAdapter.CategoryItem.clear();
+                            for(int k = 0; k < SavedSettings.CategoryList.size(); k++){
+                                SetCategoryAdapter.CategoryItem.add(new CategoryInfo(SavedSettings.CategoryList.get(k), SavedSettings.ColorList.get(k),
+                                        SavedSettings.AffectingStat.get(k), SavedSettings.GoalType.get(k), SavedSettings.Goal.get(k), SavedSettings.Order.get(k)));
+                            }
+
+                            Toast.makeText(SettingActivity.this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    builder.setNegativeButton("취소", null);
+                    builder.show();
                 }
 
                 if(SetCategoryAdapter.CategoryItem.size() < 5){

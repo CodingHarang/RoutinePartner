@@ -8,14 +8,6 @@ public class CategoryInfo {
     private int Goal;
     private int Order;
 
-    public CategoryInfo(String name, Long color, int stat, int goalType, int goal) {
-        Name = name;
-        Color = color;
-        Stat = stat;
-        GoalType = goalType;
-        Goal = goal;
-    }
-
     public CategoryInfo(String name, Long color, int stat, int goalType, int goal, int order) {
         Name = name;
         Color = color;
