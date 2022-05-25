@@ -38,11 +38,12 @@
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE1"/>
-                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE2"/>
-                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE3"/>
-                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE4"/>
-                <action android:name="com.cookandroid.widgetplusnotification.CONTROL_SERVICE5"/>
+                <action android:name="com.astudio.routinepartner.CONTROL_SERVICE1"/>
+                <action android:name="com.astudio.routinepartner.CONTROL_SERVICE2"/>
+                <action android:name="com.astudio.routinepartner.CONTROL_SERVICE3"/>
+                <action android:name="com.astudio.routinepartner.CONTROL_SERVICE4"/>
+                <action android:name="com.astudio.routinepartner.CONTROL_SERVICE5"/>
+                <action android:name="com.astudio.routinepartner.SETTINGS_CHANGED"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

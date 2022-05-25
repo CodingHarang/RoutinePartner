@@ -117,17 +117,19 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
 
         }
 
-        public void setItem(ActInfoItem item, int position, ViewHolder viewHolder) {
+        public void setItem(ActInfoItem item, int position) {
             Index = position;
             ContainingItem = item;
             BtnEdit.setText(item.Category + "   id : " + Integer.toString(item.ItemId) + "\n" + Integer.toString(item.Year) + " - " + Integer.toString(item.Month) + " - " + Integer.toString(item.Date) + "\n" + Integer.toString(item.StartHour) + " : " + Integer.toString(item.StartMinute) + " ~ " + Integer.toString(item.EndHour) + " : " + Integer.toString(item.EndMinute));
             int CategoryNum = SavedSettings.CategoryList.size();
+
             for(int i = 0; i < 5; i++) {
                 if(i == 0 && i < CategoryNum) {
                     if(ContainingItem.Category.equals(SavedSettings.CategoryList.get(0))) {
                         BtnEdit.setBackgroundResource(R.drawable.round_square1);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square1);
+                        Log.i("ContainingItem.Category", "" + SavedSettings.CategoryList + "   " + position);
                     }
                 }
                 if(i == 1 && i < CategoryNum) {
@@ -135,6 +137,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         BtnEdit.setBackgroundResource(R.drawable.round_square2);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square2);
+                        Log.i("ContainingItem.Category", "" + ContainingItem.Category);
                     }
                 }
                 if(i == 2 && i < CategoryNum) {
@@ -142,6 +145,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         BtnEdit.setBackgroundResource(R.drawable.round_square3);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square3);
+                        Log.i("ContainingItem.Category", "" + ContainingItem.Category);
                     }
                 }
                 if(i == 3 && i < CategoryNum) {
@@ -149,6 +153,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         BtnEdit.setBackgroundResource(R.drawable.round_square4);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square4);
+                        Log.i("ContainingItem.Category", "" + ContainingItem.Category);
                     }
                 }
                 if(i == 4 && i < CategoryNum) {
@@ -156,6 +161,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         BtnEdit.setBackgroundResource(R.drawable.round_square5);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square5);
+                        Log.i("ContainingItem.Category", "" + ContainingItem.Category);
                     }
                 }
             }
@@ -173,7 +179,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         ActInfoItem item = ActInfoList.get(position);
-        viewHolder.setItem(item, position, viewHolder);
+        viewHolder.setItem(item, position);
     }
 
     public void addItem(ActInfoItem item) {

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.RoutinePartner" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.RoutinePartner" parent="Theme.AppCompat.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#343434</item>
         <item name="colorPrimaryVariant">#343434</item>
@@ -17,12 +17,12 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="numberPickerCustom" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="numberPickerCustom" parent="Theme.AppCompat.DayNight">
         <item name="android:editTextColor">#BDBDBD</item>
         <item name="android:colorControlNormal">#BDBDBD</item>
     </style>
 
-    <style name="textColor" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="textColor" parent="Theme.AppCompat.DayNight">
         <item name="android:textColor">#BDBDBD</item>
     </style>
 </resources>
