@@ -450,7 +450,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        setRadarDataFirst();
+        setRadarData();
 
         /*String[] labels=new String[LableList.size()];
         int size=0;
@@ -542,7 +542,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void makeTestData() {
-        for(int i = 1; i < 31; i++) {
+        /*for(int i = 1; i < 31; i++) {
             addToActDB("취침", 2022, 4, i, 0, 0, 6, 0);
             addToActDB("식사", 2022, 4, i, 8, 0, 9, 0);
             addToActDB("공부", 2022, 4, i, 10, 0, 12, 0);
@@ -551,8 +551,8 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("식사", 2022, 4, i, 18, 0, 19, 0);
             addToActDB("게임", 2022, 4, i, 20, 0, 22, 0);
             addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
-        }
-        for(int i = 1; i < 32; i++) {
+        }*/
+        for(int i = 1; i < 12; i++) {
             addToActDB("취침", 2022, 5, i, 0, 0, 6, 0);
             addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
             addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
@@ -566,6 +566,7 @@ public class MainActivity extends AppCompatActivity {
             addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
             Log.i("11111", "--" + SavedSettings.CategoryList.get(i)+ "  -  " + SavedSettings.ColorList.get(i)+ " " + SavedSettings.GoalType.get(i)+ SavedSettings.Goal.get(i)+ SavedSettings.AffectingStat.get(i)+ SavedSettings.Order.get(i));
         }
+        //setRadarData(); //[PSY] 추가 코드
     }
 
     public void addToActDB(String Category, int Year, int Month, int Date, int Shour, int Sminute, int Ehour, int Eminute) {
@@ -736,116 +737,30 @@ public class MainActivity extends AppCompatActivity {
     //<--------------------------------------------------------------------PSY
     //<--------------------------------------------------------------------PSY
     //ArrayList<String> CategoryList=new ArrayList<>(Arrays.asList("식사","취침","공부","운동"));
-    ArrayList<String> CategoryList=SavedSettings.CategoryList;
-    ArrayList<String> CategoryStat =SavedSettings.StatList;
+    ArrayList<String> CategoryList=SavedSettings.CategoryList;  //"식사","취침","공부","운동","게임"
+    ArrayList<String> CategoryStat =SavedSettings.StatList;  // "지능", "재미", "체력", "포만감", "잔고", "자아실현"
+    ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;
+    ArrayList<Integer> GoalType=SavedSettings.GoalType;
     //ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
-    ArrayList<Integer> CategoryStatInt=SavedSettings.AffectingStat;
-    ArrayList<Integer> Order=new ArrayList<>(Arrays.asList(1,2,3,4));
-
-    public void setRadarDataFirst(){
-
-        ArrayList<RadarEntry> visitors=new ArrayList<>();
-        ArrayList<Float> GoalSuccessCheck=new ArrayList<>();
-        PSY BeforeDataManage=new PSY();
-        ArrayList<Float> TestArray=new ArrayList<>();
-
-        for(int i=0;i<CategoryList.size();i++){
-            float GoalSuccessCheckValue=PreferenceManage.getFloat(MainContext,"CategoryValue"+i);
-            GoalSuccessCheck.add(GoalSuccessCheckValue);
-            //visitors.add(new RadarEntry(PreferenceManage.getFloat(MainContext,"Value"+i)));
-        }
-
-        for(int i=0;i<GoalSuccessCheck.size();i++){
-            TestArray.add(0f);
-        }
-
-        /*for(int i=0;i<CategoryList.size();i++){
-
-            if(BeforeDataManage.isGoalAchieved(GoalSuccessCheck).get(i)){
-                GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)+10);
-            }else{
-                GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)*0.5f);
-            }
-        }
-
-        for(int i=0;i<LableList.size();i++){
-            ArrayList<Float> RadarStatDataList=new ArrayList<>();
-            for(int j=0;j<CategoryStat.size();j++){
-                int index=LableList.indexOf(CategoryStat.get(j));
-                if(index>=0){
-                    RadarStatDataList.add(i, GoalSuccessCheck.get(j));
-                }
-            }
-            visitors.add(new RadarEntry(RadarStatDataList.get(i)));
-        }*/
-
-        /*if(!GoalSuccessCheck.containsAll(TestArray)){
-            for(int i=0;i<CategoryList.size();i++){
-
-                if(BeforeDataManage.isGoalAchieved(GoalSuccessCheck).get(i)){
-                    GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)+10);
-                }else{
-                    GoalSuccessCheck.set(i, GoalSuccessCheck.get(i)*0.5f);
-                }
-            }
-
-            for(int i=0;i<LableList.size();i++){
-                ArrayList<Float> RadarStatDataList=new ArrayList<>();
-                for(int j=0;j<CategoryStat.size();j++){
-                    int index=LableList.indexOf(CategoryStat.get(j));
-                    if(index>=0){
-                        RadarStatDataList.add(i, GoalSuccessCheck.get(j));
-                    }
-                }
-                visitors.add(new RadarEntry(RadarStatDataList.get(i)));
-            }
-        }else{
-            for(int i=0;i<LableList.size();i++){
-                visitors.add(new RadarEntry(0));
-            }
-        }*/
-
-        for(int i=0;i<LableList.size();i++){
-            visitors.add(new RadarEntry(0));
-        }
-
-        RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
-        set1.setColor(Color.BLUE);
-        set1.setLineWidth(0.5f);
-        set1.setValueTextSize(3f);
-        set1.setDrawHighlightIndicators(false);
-        set1.setDrawHighlightCircleEnabled(true);
-
-        RadarData data=new RadarData();
-        data.addDataSet(set1);
-
-        PetStateChart.setData(data);
-        PetStateChart.invalidate();
-    }
 
     public void setRadarData(){
         ArrayList<RadarEntry> visitors=new ArrayList<>();
-        Calendar cal = Calendar.getInstance();
 
-        ArrayList<ArrayList<Float>> RadarCategoryDataList=new ArrayList<>(); //각 카테고리별로 총합 시간(횟수) 데이터 저장
+        ArrayList<ArrayList<Float>> ByDateCategoryDataList=new ArrayList<>(); //하루의 모든 기록 속에 들어있는 데이터를 카테고리별로 분류해서 넣어놓는 용도
         ArrayList<Float> TotalCategoryDataList=new ArrayList<>();
         ArrayList<Float> TotalStatDataList=new ArrayList<>();
-
-        /*for(int i=0;i<CategoryList.size();i++){
-            RadarCategoryDataList.set(i,new ArrayList<>(Arrays.asList(0f)));
-        }*/
-        for(int i=0;i<CategoryList.size();i++){
-            RadarCategoryDataList.add(new ArrayList<>());
-        }
+        ArrayList<ArrayList<ActInfoItem>> DayList=new ArrayList<>();  //ArrayList<ActInfoItem>->하루 기록 리스트->그거의 리스트: 날짜별 기록을 가지는 리스트
 
         PSY PetStateManage=new PSY();
 
         CountDownLatch CDL = new CountDownLatch(1);
         ActInfoItemList.clear();
+        DayList.clear();
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))));
+            //ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))));
+            ActInfoList=new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
             CDL.countDown();
         });
         try {
@@ -854,74 +769,70 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        for(int i = 0; i < ActInfoList.size(); i++) {
-            ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
-        }
-
-        for(int i = 0; i < ActInfoItemList.size(); i++) {
-            float TimeData=PetStateManage.calTimeValue(ActInfoItemList.get(i).Category,ActInfoItemList.get(i).StartHour,ActInfoItemList.get(i).StartMinute,ActInfoItemList.get(i).EndHour,ActInfoItemList.get(i).EndMinute);
-            int index=CategoryList.indexOf(ActInfoItemList.get(i).Category);
-            /*for(int j=0;i<CategoryList.size();j++){
-                if(ActInfoItemList.get(i).Category==CategoryList.get(j)){
-                    index=j;
-                }
-            }*/
-            if(index>=0){
-                RadarCategoryDataList.get(index).add(TimeData);
+        for(int i=0;i<ActInfoList.size();i++){
+            //Log.i("TEST",""+ActInfoList.get(i).getCategory()+" "+ActInfoList.get(i).getStartHour()+"~"+ActInfoList.get(i).getEndHour());
+            if((i>=1) && ((ActInfoList.get(i).getYear() != ActInfoList.get(i-1).getYear() || ActInfoList.get(i).getMonth() != ActInfoList.get(i-1).getMonth()) || ActInfoList.get(i).getDate() != ActInfoList.get(i-1).getDate())){
+                DayList.add(ActInfoItemList);
+                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
             }else{
-                for(int k=0;k<CategoryList.size();k++){
-                    RadarCategoryDataList.get(k).add(0f);
-                }
+                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
             }
         }
+        DayList.add(ActInfoItemList);
 
-        /* ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "수면", "공부", "운동"));
-        ArrayList<Integer> GoalList = new ArrayList<>(Arrays.asList(2, 7, 4, 1));
-        ArrayList<Integer> GoalType = new ArrayList<>(Arrays.asList(2, 1, 1, 1));
-        ArrayList<String> StatList = new ArrayList<>(Arrays.asList("지능", "재미", "체력", "포만감", "잔고", "자아실현"));
-        ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
-        lables={"포만감", "체력", "지능"}*/
+        //한 카테고리 내 여러 시간 기록이 있을테니 arraylist에 저장
+        //어레이리스트 속의 총합 시간 계산
+        //총합 시간이 목표와 부합하는지 체크
+        //부합하면 +점수 부합하지 않으면 -점수
+        for(int i=0;i<LableListInt.size();i++){  //AffectingStat: 3 4 3 1 2 /LableListInt: 3 4 1 2
+            TotalStatDataList.add(0f);
+        }
 
-        if(!TotalCategoryDataList.isEmpty()){
-            TotalCategoryDataList.clear();
+        for(int i=0;i<CategoryList.size();i++){
+            ByDateCategoryDataList.add(new ArrayList<>());//카테고리별로 기록 넣어둘 공간 할당
         }
-        if(!TotalStatDataList.isEmpty()){
-            TotalStatDataList.clear();
-        }
-        for(int i=0;i<LableList.size();i++){
-            for(int j=0;j<CategoryList.size();j++){
-                float value=PetStateManage.calCategoryData(RadarCategoryDataList.get(j));
-                TotalCategoryDataList.add(value);  //각 카테고리별로 시간이 들어감
-                PreferenceManage.setFloat(MainContext,"CategoryValue"+j,TotalCategoryDataList.get(j));
-                int index=LableList.indexOf(CategoryStat.get(j));
+
+        for(int i=0;i<DayList.size();i++){  //DayList.get(i) 가 하나의 날짜를 나타냄 ex) 5/20의 모든 시간 기록 담고있음
+            //한 날짜의 모든 시간 기록을 카테고리별로 분류  ex) 수면, 식사, 게임, 운동.....
+            for(int j=0;j<DayList.get(i).size();j++){  //ex) DayList.get(i): 5/20 DayList.get(i).get(j): 5/20 9~11 Study
+                int index=CategoryList.indexOf(DayList.get(i).get(j).Category);  //CategoryList(index) "식사(0)","취침(1)","공부(2)","운동(3)","게임(4)"
                 if(index>=0){
-                    TotalStatDataList.add(index,value);
+                    ByDateCategoryDataList.get(index).add(PetStateManage.calTimeValue(DayList.get(i).get(j).Category,DayList.get(i).get(j).StartHour,DayList.get(i).get(j).StartMinute,DayList.get(i).get(j).EndHour,DayList.get(i).get(j).EndMinute));
                 }
-                /*if(LableList.get(i)==CategoryStat.get(j)){
-                    TotalStatDataList.add(i,value);
+            }//이 for문에서는 하루 내의 기록들을 다룬다. 따라서 이 반복문이 끝나면 하루에 대한 데이터가 모두 카테고리별로 정리
+            for(int k=0;k<CategoryList.size();k++){
+                TotalCategoryDataList.add(PetStateManage.calCategoryData(ByDateCategoryDataList.get(k)));
+                TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k)));
+                //하루 기록들에서 카테고리 데이터의 총합을 계산해 목표 달성 여부에 따른 증감 값을 반영하여 설정
+                /* for(int l=0;l<LableListInt.size();l++){
+                if(LableListInt.get(l)==AffectingStat.get())
                 }*/
             }
-
-            float VisitorsData=TotalStatDataList.get(i);
-            if(VisitorsData>=6){
-                VisitorsData=VisitorsData/3*20;
-            }else{
-                VisitorsData=VisitorsData/2*20;
+            for(int l=0;l<LableListInt.size();l++){
+                for(int m=0;m< AffectingStat.size();m++){
+                    if(LableListInt.get(l)==AffectingStat.get(m)){
+                        TotalStatDataList.add(l,TotalCategoryDataList.get(m));
+                    }
+                }
             }
-            visitors.add(new RadarEntry(VisitorsData));
-            PreferenceManage.setFloat(MainContext,"Value"+i,VisitorsData);
+            ByDateCategoryDataList.clear();
+            TotalCategoryDataList.clear();
+
+        }//이 for문 내부에서는 i값 유지(계속 같은 날짜)
+
+        for(ArrayList<ActInfoItem> Day:DayList){
+            for(int i=0;i<Day.size();i++){
+                Log.i("DayListTest",""+Day.get(i).getDate()+" "+Day.get(i).Category);
+            }
         }
 
-        RadarCategoryDataList.clear();
-
-        /*for(int i=0;i<CategoryList.size();i++){
-            float value=PetStateManage.calCategoryData(RadarCategoryDataList.get(i));
-
-            TotalCategoryDataList.add(value);//카테고리는 4개지만 스텟이 3개  스탯이 같으면 같은 곳에
-            visitors.add(new RadarEntry(value));
-            PreferenceManage.setFloat(MainContext,"Value"+i,value);
-            RadarCategoryDataList.get(i).clear();
-        }*/
+        for(int i=0;i<LableListInt.size();i++){
+            if(!TotalStatDataList.isEmpty()){
+                visitors.add(new RadarEntry(TotalStatDataList.get(i)));
+            }else{
+                visitors.add(new RadarEntry(0f));
+            }
+        }
 
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
         set1.setColor(Color.BLUE);
