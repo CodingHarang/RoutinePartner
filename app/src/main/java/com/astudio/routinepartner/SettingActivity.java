@@ -40,10 +40,15 @@ public class SettingActivity extends AppCompatActivity {
     TextView TimeIntervalText;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        SavedSettings.isRefreshed = false;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        SavedSettings.isRefreshed = false;
         ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -124,6 +129,7 @@ public class SettingActivity extends AppCompatActivity {
                                     mSettingsDao.insert(settings);
                                 });
                             }
+                            Log.i("in SettingActivity", ""+ SavedSettings.Order);
                         }
                         Log.i("in SettingActivity", "" + WidgetSettings.AppWidgetId);
                         AppWidgetManager.getInstance(getApplicationContext()).notifyAppWidgetViewDataChanged(WidgetSettings.AppWidgetId, R.id.widgetLayout);
@@ -167,7 +173,6 @@ public class SettingActivity extends AppCompatActivity {
 
                 startActivityResult.launch(intent);
             }
-
         });
 
         adapter.setOnItemLongClickListener(new SetCategoryAdapter.OnItemLongClickListener() {
@@ -175,8 +180,11 @@ public class SettingActivity extends AppCompatActivity {
             public void onItemLongClick(View v, int pos) {
 
                 SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-                    SettingsDAO mSettingsDao = db.settingDao();
+                    ActInfoDB adb = ActInfoDB.getDatabase(getApplicationContext());
+                    ActInfoDAO mActInfoDao = adb.actInfoDao();
+                    //mActInfoDao.deleteByCategory();
+                    SettingsDB sdb = SettingsDB.getDatabase(getApplicationContext());
+                    SettingsDAO mSettingsDao = sdb.settingDao();
                     mSettingsDao.deleteByOrder(SavedSettings.Order.get(pos));
                 });
 

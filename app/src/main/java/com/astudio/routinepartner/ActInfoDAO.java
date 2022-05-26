@@ -32,4 +32,10 @@ public interface ActInfoDAO {
     // 데이터 수정
     @Query("UPDATE actInfo SET Category = :CCategory, Year = :CYear, Month = :CMonth, Date = :CDate, StartHour = :CShour, StartMinute = :CSminute, EndHour = :CEhour, EndMinute = :CEminute WHERE id = :id")
     void updateData(int id, String CCategory, int CYear, int CMonth, int CDate, int CShour, int CSminute, int CEhour, int CEminute);
+
+    @Query("UPDATE actInfo SET Category = :CCategory WHERE Category = :OCategory")
+    void updateCategoryName(String CCategory, String OCategory);
+
+    @Query("DELETE FROM actInfo WHERE Category = :DCategory")
+    void deleteByCategory(String DCategory);
 }
