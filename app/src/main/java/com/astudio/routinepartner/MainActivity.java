@@ -184,6 +184,12 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
+        timeToAngle();
+        timeToAngleYesterday();
+        Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
+        sendDataToPieChart();
+        PieChart.update();
+        setRadarData(); //[PSY] 추가코드
         if(SavedSettings.isRefreshed == false) {
             RemoteViews views = new RemoteViews(getApplicationContext().getPackageName(), R.layout.widget);
 
@@ -203,8 +209,6 @@ public class MainActivity extends AppCompatActivity {
             //AppWidgetManager.getInstance(getApplicationContext()).updateAppWidget(new ComponentName(this.getPackageName(), WidgetProvider.class.getName()), views);
             finish();
             startActivity(getIntent());
-
-
         }
         Intent intent = new Intent(this, WidgetProvider.class);
         intent.setAction("SETTINGS_CHANGED");
@@ -346,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
         BtnChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent BarIntent = new Intent(getApplicationContext(), BarChartActivity.class);
+                Intent  BarIntent = new Intent(getApplicationContext(), BarChartActivity.class);
                 startActivity(BarIntent);
             }
         });
@@ -553,12 +557,12 @@ public class MainActivity extends AppCompatActivity {
         Legend legend=PetStateChart.getLegend();
         legend.setTextColor(0xFFBDBDBD);
 
-        PetStateChart.getDescription().setEnabled(false);
+        /*PetStateChart.getDescription().setEnabled(false);
 
         for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
             set.setDrawValues(!set.isDrawValuesEnabled());
         }
-        PetStateChart.invalidate();
+        PetStateChart.invalidate();*/
 
 
         ((ImageView)findViewById(R.id.Restart)).setOnClickListener(view -> {
@@ -583,13 +587,21 @@ public class MainActivity extends AppCompatActivity {
             int CategoryNum = mSettingsDao.getAll().length;
             //Log.i("in Main", "" + CategoryNum);
             if(CategoryNum == 0) {
-                setRadarData();      Settings settings = new Settings();
-                settings.setCategory("sleep");
+                setRadarData();
+                Settings settings = new Settings();
+                settings.setCategory("수면");
                 settings.setColor(0xFFCCCCFFL);
                 settings.setGoalType(2);
                 settings.setGoal(7);
                 settings.setAffectingStat(3);
                 settings.setOrder(1);
+                mSettingsDao.insert(settings);
+                settings.setCategory("식사");
+                settings.setColor(0xFFCCFFFFL);
+                settings.setGoalType(1);
+                settings.setGoal(3);
+                settings.setAffectingStat(4);
+                settings.setOrder(2);
                 mSettingsDao.insert(settings);
             }
             SavedSettings.CategoryList.clear();
@@ -682,14 +694,14 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
         }*/
         for(int i = 1; i < 31; i++) {
-            addToActDB("취침", 2022, 5, i, 0, 0, 6, 0);
-            addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
-            addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
-            addToActDB("식사", 2022, 5, i, 13, 0, 14, 0);
-            addToActDB("운동", 2022, 5, i, 16 , 0, 18, 0);
-            addToActDB("식사", 2022, 5, i, 18, 0, 19, 0);
-            addToActDB("게임", 2022, 5, i, 20, 0, 22, 0);
-            addToActDB("취침", 2022, 5, i, 22, 0, 24, 0);
+            addToActDB("sleep", 2022, 5, i, 0, 0, 6, 0);
+            addToActDB("eat", 2022, 5, i, 8, 0, 9, 0);
+            addToActDB("study", 2022, 5, i, 10, 0, 12, 0);
+            addToActDB("eat", 2022, 5, i, 13, 0, 14, 0);
+            addToActDB("exercise", 2022, 5, i, 16 , 0, 18, 0);
+            addToActDB("eat", 2022, 5, i, 18, 0, 19, 0);
+            addToActDB("game", 2022, 5, i, 20, 0, 22, 0);
+            addToActDB("sleep", 2022, 5, i, 22, 0, 24, 0);
         }
         for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
             //addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
@@ -1073,8 +1085,8 @@ public class MainActivity extends AppCompatActivity {
         RadarData data=new RadarData();
         data.addDataSet(set1);
 
-        PetStateChart.setData(data);
-        PetStateChart.invalidate();
+        //PetStateChart.setData(data);
+        //PetStateChart.invalidate();
     }
 
 
