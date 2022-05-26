@@ -72,7 +72,11 @@ public class BarChartActivity extends AppCompatActivity {
         }
     };
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        CircularProgressBar.setProgress(0, true);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +93,6 @@ public class BarChartActivity extends AppCompatActivity {
 
 //        bringDataFromTest();
         CircularProgressBar.setMax(100);
-        CircularProgressBar.setProgress(100, true);
         CatetoryList.addAll(SavedSettings.CategoryList);
 
         //스피너에 관한 부분
