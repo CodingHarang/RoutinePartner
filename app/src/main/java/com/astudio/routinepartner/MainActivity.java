@@ -58,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
     AlertDialog Dialog;
     NumberPicker[] NumPickers = new NumberPicker[10];
-    Button Btn1, Btn2, Btn3, Btn4, Btn5, BtnOK, BtnCancel, BtnAddTestData, BtnDeleteAll, BtnShowPieChart,BtnSelectDay;
+    Button Btn1, Btn2, Btn3, Btn4, Btn5, BtnCalendar, BtnOK, BtnCancel, BtnAddTestData, BtnDeleteAll, BtnShowPieChart,BtnSelectDay;
+    SimpleDateFormat SDF = new SimpleDateFormat("yyyy/MM/dd", Locale.KOREA);
+    Calendar cal;
+    int Year, Month, Date;
     ImageButton BtnShowList;
     EditText EdtCategory;
     TextView TxtTime;
@@ -109,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 Btn1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(0));
                     }
@@ -123,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
                 Btn2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(1));
                     }
@@ -137,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
                 Btn3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(2));
                     }
@@ -151,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
                 Btn4.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(3));
                     }
@@ -165,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
                 Btn5.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(4));
                     }
@@ -230,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add, null);
 
         EdtCategory = dialogView.findViewById(R.id.edtCategory);
+        BtnCalendar = dialogView.findViewById(R.id.btnCalendar);
         BtnOK = dialogView.findViewById(R.id.btnOK);
         BtnCancel = dialogView.findViewById(R.id.btnCancel);
         YJS.numPickerSetting(dialogView, NumPickers);
@@ -237,12 +251,34 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(dialogView);
         Dialog = builder.create();
 
+        DatePickerDialog.OnDateSetListener DatePickerDiag = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                cal.set(Calendar.YEAR, year);
+                cal.set(Calendar.MONTH, month);
+                cal.set(Calendar.DAY_OF_MONTH, day);
+                BtnCalendar.setText(SDF.format(cal.getTime()));
+                Toast.makeText(getApplicationContext(), "" + cal.get(Calendar.YEAR) + " " + (cal.get(Calendar.MONTH) + 1) + " " + cal.get(Calendar.DATE), Toast.LENGTH_SHORT).show();
+            }
+        };
+        BtnCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Year = cal.get(Calendar.YEAR);
+                Month = cal.get(Calendar.MONTH);
+                Date = cal.get(Calendar.DATE);
+                new DatePickerDialog(getContext(), R.style.MyDatePickerStyle, DatePickerDiag, Year, Month, Date).show();
+            }
+        });
         BtnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Year = cal.get(Calendar.YEAR);
+                Month = cal.get(Calendar.MONTH);
+                Date = cal.get(Calendar.DATE);
                 makeData();
-                PetView.setRepeatCount(1);  //[PSY] 추가코드
-                PetView.playAnimation();    //[PSY] 추가코드
+                //PetView.setRepeatCount(1);  //[PSY] 추가코드
+                //PetView.playAnimation();    //[PSY] 추가코드
             }
         });
         BtnCancel.setOnClickListener(new View.OnClickListener() {
@@ -272,11 +308,11 @@ public class MainActivity extends AppCompatActivity {
                     ActInfoDAO mActInfoDao = db.actInfoDao();
                     mActInfoDao.deleteAll();
                 });
-                SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                /*SettingsDB.DatabaseWriteExecutor.execute(() -> {
                     SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
                     SettingsDAO mSettingsDao = db.settingDao();
                     mSettingsDao.deleteAll();
-                });
+                });*/
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
             }
         });
@@ -371,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
         //<--------------------------------------------------------------------PSY
 
 
-        MainContext=this;
+        /*MainContext=this;
         text_PetName=PreferenceManage.getString(MainContext,"rebuild");
         if(text_PetName.isEmpty()){
             text_PetName="";
@@ -436,7 +472,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationRepeat(Animator animator) {
 
             }
-        });
+        });*/
 
 
 
@@ -494,7 +530,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        setRadarData();
+        //setRadarData();
 
         /*String[] labels=new String[LableList.size()];
         int size=0;
@@ -518,14 +554,14 @@ public class MainActivity extends AppCompatActivity {
 
         PetStateChart.getDescription().setEnabled(false);
 
-        for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
+        /*for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
             set.setDrawValues(!set.isDrawValuesEnabled());
         }
-        PetStateChart.invalidate();
+        PetStateChart.invalidate();*/
 
 
         ((ImageView)findViewById(R.id.Restart)).setOnClickListener(view -> {
-            setRadarData();
+            //setRadarData();
         });
 
         //-------------------------------------------------------------------->PSY
@@ -534,6 +570,9 @@ public class MainActivity extends AppCompatActivity {
 
     //<--------------------------------------------------------------------YJS
     //<--------------------------------------------------------------------YJS
+    public Context getContext() {
+        return this;
+    }
     public void refreshSettings() {
         CountDownLatch CDL = new CountDownLatch(1);
         SettingsDB.DatabaseWriteExecutor.execute(() -> {
@@ -589,11 +628,9 @@ public class MainActivity extends AppCompatActivity {
     public void makeData() {
         Calendar cal = Calendar.getInstance();
         String CategoryName;
-        int Year, Month, Date, SAMPM, Shour, Sminute, EAMPM, Ehour, Eminute;
+        int SAMPM, Shour, Sminute, EAMPM, Ehour, Eminute;
         CategoryName = EdtCategory.getText().toString();
-        Year = cal.get(Calendar.YEAR);
-        Month = cal.get(Calendar.MONTH) + 1;
-        Date = cal.get(Calendar.DATE);
+
         SAMPM = NumPickers[0].getValue();
         Shour = NumPickers[2].getValue();
         Sminute = NumPickers[4].getValue();
@@ -602,7 +639,7 @@ public class MainActivity extends AppCompatActivity {
         Eminute = NumPickers[5].getValue();
 //        TxtTime.setText(CategoryName + "\n" + Year + "-" + Month + "-" + Date + "  " + SAMPM + " " + Shour + ":" + Sminute + " ~ " + EAMPM + " " + Ehour + ":" + Eminute);
 
-        addToActDB(CategoryName, Year, Month, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
+        addToActDB(CategoryName, Year, Month + 1, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
 
 
         ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;
@@ -924,7 +961,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Integer> GoalType=SavedSettings.GoalType;
     //ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
 
-    public void setRadarData(){
+    /*public void setRadarData(){
         ArrayList<RadarEntry> visitors=new ArrayList<>();
 
         ArrayList<ArrayList<Float>> ByDateCategoryDataList=new ArrayList<>(); //하루의 모든 기록 속에 들어있는 데이터를 카테고리별로 분류해서 넣어놓는 용도
@@ -987,7 +1024,7 @@ public class MainActivity extends AppCompatActivity {
                 //하루 기록들에서 카테고리 데이터의 총합을 계산해 목표 달성 여부에 따른 증감 값을 반영하여 설정
                 /* for(int l=0;l<LableListInt.size();l++){
                 if(LableListInt.get(l)==AffectingStat.get())
-                }*/
+                }
             }
             for(int l=0;l<LableListInt.size();l++){
                 for(int m=0;m< AffectingStat.size();m++){
@@ -1028,7 +1065,7 @@ public class MainActivity extends AppCompatActivity {
 
         PetStateChart.setData(data);
         PetStateChart.invalidate();
-    }
+    }*/
 
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -1037,7 +1074,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item){
+    /*public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.NameSet:{
                 AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
@@ -1068,7 +1105,7 @@ public class MainActivity extends AppCompatActivity {
             default:
         }
         return true;
-    }
+    }*/
 
 
 
