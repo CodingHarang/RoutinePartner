@@ -3,12 +3,8 @@ package com.astudio.routinepartner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.RectF;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,7 +18,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -32,13 +27,9 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.dataprovider.BarDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.renderer.BarChartRenderer;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,16 +50,14 @@ public class BarChartActivity extends AppCompatActivity {
     EditText DateWhen, EditStart, EditEnd;
     String[] ActItems = {"Select","Eat", "Sleep", "Study", "Etc"};
     String CurrentCategory, EditStartText, EditEndText;
-    Boolean CategoryValue = false, DateCompareValue = false, DefaultData = true;
+    Boolean CategoryValue = false, DateCompareValue = false;
     ArrayList<String> DayList = new ArrayList<>();
     ArrayList<Float> TimeList = new ArrayList<>();
-    ArrayList<ArrayList<Float>> WeekTimeList = new ArrayList<>();
     Spinner ChartSpinner;
     Button BtnMakeChart;
     TextView PercnetText, ProgressDataText;
     ProgressBar CircularProgressBar;
     ArrayList<String> CatetoryList = new ArrayList<>(Arrays.asList("선택"));
-    XAxis Xaxis;
 
     int Syear, Smonth, Sday, Eyear, Emonth, Eday, SDate, EDate, Chartdata = 7;
 
@@ -88,7 +77,6 @@ public class BarChartActivity extends AppCompatActivity {
         super.onStart();
         CircularProgressBar.setProgress(0, true);
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,43 +94,6 @@ public class BarChartActivity extends AppCompatActivity {
 //        bringDataFromTest();
         CircularProgressBar.setMax(100);
         CatetoryList.addAll(SavedSettings.CategoryList);
-
-        YAxis Yraxis, Ylaxis;
-
-        Yraxis = Bar_Chart.getAxisRight();
-        Yraxis.setDrawLabels(false);
-        Yraxis.setDrawAxisLine(false);
-        Yraxis.setDrawGridLines(false);
-
-        Ylaxis = Bar_Chart.getAxisLeft();
-        Ylaxis.setDrawLabels(false);
-        Ylaxis.setDrawAxisLine(false);
-        Ylaxis.setDrawGridLines(false);
-
-//        Ylaxis.setAxisMaximum(6);
-        Ylaxis.setAxisMinimum(0);
-//        Ylaxis.setLabelCount(5);
-
-        Xaxis = Bar_Chart.getXAxis();
-        Xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        Xaxis.setDrawAxisLine(false);
-        Xaxis.setDrawGridLines(false);
-        Xaxis.setCenterAxisLabels(false);
-        Xaxis.setTextColor(0xFFBDBDBD);
-
-        Bar_Chart.setHighlightPerTapEnabled(false); //그래프 각 항목 터치시 하이라이트 안되게 설정
-        Bar_Chart.setHighlightPerDragEnabled(false);
-        Bar_Chart.setTouchEnabled(true);
-        Bar_Chart.setDragEnabled(true);
-        Bar_Chart.setScaleEnabled(false);
-        Bar_Chart.setPinchZoom(false);
-        Bar_Chart.setDrawGridBackground(false);
-        Bar_Chart.setDrawValueAboveBar(true); //수치가 그래프 위에 표시
-        Bar_Chart.setDescription(null);
-        Bar_Chart.setNoDataText("데이터가 없습니다.");
-
-        weekChart();
-
 
         //스피너에 관한 부분
 
@@ -201,13 +152,12 @@ public class BarChartActivity extends AppCompatActivity {
                 compareDate();
 
                 if(!CategoryValue&&!DateCompareValue){
-                    Toast.makeText(getApplicationContext(), "카테고리 선택과 날짜 설정을 다시 해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "카테고리 선택과 날짜 설정을 다시 해주세요", Toast.LENGTH_SHORT).show();
                 }else if(!DateCompareValue){
-                    Toast.makeText(getApplicationContext(), "날짜 설정이 올바르지 않아요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "날짜 설정이 올바르지 않아요", Toast.LENGTH_SHORT).show();
                 }else if(!CategoryValue){
-                    Toast.makeText(getApplicationContext(), "카테고리를 선택해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "카테고리를 선택해주세요", Toast.LENGTH_SHORT).show();
                 }else{
-                    DefaultData = false;
                     CircularProgressBar.setProgress(0);
                     DayList.clear();
                     TimeList.clear();
@@ -266,19 +216,39 @@ public class BarChartActivity extends AppCompatActivity {
 
     //차트 설정에 관한 부분
 
-//    public class CustomBarChartRenderer extends BarChartRenderer {
-//        private int mradius;
-//        private RectF mBarShadowRectBuffer = new RectF();
-//
-//        CustomBarChartRenderer(BarDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler, int mRadius) {
-//            super(chart, animator, viewPortHandler);
-//            this.mradius = mRadius;
-//        }
-//    }
-
     private void drawBarChart(ArrayList<String> daylist, ArrayList<Float> timelist) {
 
         Bar_Chart.clear();
+
+        YAxis Yraxis, Ylaxis;
+
+        Yraxis = Bar_Chart.getAxisRight();
+        Yraxis.setDrawLabels(false);
+        Yraxis.setDrawAxisLine(false);
+        Yraxis.setDrawGridLines(false);
+
+        Ylaxis = Bar_Chart.getAxisLeft();
+        Ylaxis.setDrawLabels(false);
+        Ylaxis.setDrawAxisLine(false);
+        Ylaxis.setDrawGridLines(false);
+
+        XAxis Xaxis = Bar_Chart.getXAxis();
+        Xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        Xaxis.setDrawAxisLine(false);
+        Xaxis.setDrawGridLines(false);
+        Xaxis.setCenterAxisLabels(false);
+        Xaxis.setTextColor(0xFFBDBDBD);
+
+        Bar_Chart.setHighlightPerTapEnabled(false); //그래프 각 항목 터치시 하이라이트 안되게 설정
+        Bar_Chart.setHighlightPerDragEnabled(false);
+        Bar_Chart.setTouchEnabled(true);
+        Bar_Chart.setDragEnabled(true);
+        Bar_Chart.setScaleEnabled(false);
+        Bar_Chart.setPinchZoom(false);
+        Bar_Chart.setDrawGridBackground(false);
+        Bar_Chart.setDrawValueAboveBar(true); //수치가 그래프 위에 표시
+        Bar_Chart.setDescription(null);
+        Bar_Chart.setNoDataText("No chart data available.");
 
 
         ArrayList<BarEntry> entries = new ArrayList<>();
@@ -319,78 +289,6 @@ public class BarChartActivity extends AppCompatActivity {
             Bar_Chart.setVisibleXRange(0, Chartdata);
             Bar_Chart.getBarData().setValueTextColor(0xFFBDBDBD);
             Bar_Chart.animateXY(1000, 1000);
-            Bar_Chart.invalidate();
-        }
-    }
-
-    public void drawStackedBarChart(ArrayList<String> daylist, ArrayList<ArrayList<Float>> weektimelist){
-        Bar_Chart.clear();
-        ArrayList<Float> weekroutine = new ArrayList<>();
-        ArrayList<Long> ColorList = new ArrayList<>();
-        ColorList.addAll(SavedSettings.ColorList);
-        int[] ColorA = new int[ColorList.size()];
-        int num = 0;
-        for(Long color : ColorList){
-            ColorA[num] = color.intValue();
-            num++;
-        }
-
-        float[] week;
-
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        if (daylist.size() != 0 || weektimelist.size() != 0) {
-            for (int i = 0; i < daylist.size(); i++) {
-                for(int j = 0; j < weektimelist.size();j++){
-                    weekroutine.add(weektimelist.get(j).get(i));
-                }
-                week = new float[weekroutine.size()];
-                int n = 0;
-                for(float temp : weekroutine){
-                    week[n] = temp;
-                    n++;
-                }
-                Log.v("bdetw", ""+week.length);
-                entries.add(new BarEntry(i, week));
-                weekroutine.clear();
-            }
-
-            BarDataSet barDataSet = new BarDataSet(entries, "시간");
-            barDataSet.setColors(ColorA);
-            barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-            barDataSet.setValueTextSize(10f);
-
-            BarData data = new BarData(barDataSet);
-
-            data.setBarWidth(0.4f);
-
-            //그래프 위치 설정
-            for (int d = 0; d < Chartdata; d++) {
-                if (daylist.size() == d) {
-                    Xaxis.setAxisMinimum(barDataSet.getXMin() - 0.5f - (Chartdata - d) * 0.5f);
-                    Xaxis.setAxisMaximum(barDataSet.getXMax() + 0.5f + (Chartdata - d) * 0.5f);
-                    break;
-                } else {
-                    Xaxis.setAxisMinimum(barDataSet.getXMin() - 0.5f);
-                    Xaxis.setAxisMaximum(barDataSet.getXMax() + 0.5f);
-                }
-            }
-
-            Log.v("asdfsg", ""+entries);
-
-            Xaxis.setGranularity(1f);
-
-            Bar_Chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(daylist));
-
-            if(entries.size() == 0){
-                Bar_Chart.setNoDataText("일주일 간의 데이터가 없습니다.");
-            }else{
-                Bar_Chart.setData(data);
-                Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정
-                Bar_Chart.setVisibleXRange(0, Chartdata);
-                Bar_Chart.getBarData().setValueTextColor(0xFFBDBDBD);
-                Bar_Chart.animateXY(1000, 1000);
-            }
-
             Bar_Chart.invalidate();
         }
     }
@@ -452,7 +350,6 @@ public class BarChartActivity extends AppCompatActivity {
             }
         }
         AllDayList.add(ActInfoItemList);
-        Log.v("?????", ""+AllDayList);
 
 //        for(int i = 0; i < ActInfoList.size(); i++) {
 //            //만약 날이 바뀌면 기존 리스트 AllDayList에 추가하고 새로운 ActInfoItemList 생성
@@ -477,7 +374,6 @@ public class BarChartActivity extends AppCompatActivity {
     //카테고리에 따른 값 계산
 
     private void getCategory(){
-        Log.v("all", ""+AllDayList);
         float CategoryTime;
         String CurrentDay;
         //그 안에서 선택된 카테고리의 값만 가져오기
@@ -503,11 +399,7 @@ public class BarChartActivity extends AppCompatActivity {
             }
             TimeList.add(CategoryTime);
         }
-        Log.v("타임리스트", ""+ TimeList);
-        WeekTimeList.add(TimeList);
     }
-
-
 
 
     //목표달성률
@@ -562,28 +454,6 @@ public class BarChartActivity extends AppCompatActivity {
         PercnetText.setText(""+(Math.round((double)SuccessGoal/(double)SizeOfData*100))+"%");
         ProgressDataText.setText("총 "+(EDate-SDate+1)+"일 동안 "+SuccessGoal+"번 목표를 달성했습니다.");
 
-    }
-
-    public void weekChart(){
-        Syear = ChartCalender.get(Calendar.YEAR);
-        Smonth = ChartCalender.get(Calendar.MONTH)+1;
-        Sday = ChartCalender.get(Calendar.DATE)-6;
-        Eyear = ChartCalender.get(Calendar.YEAR);
-        Emonth = ChartCalender.get(Calendar.MONTH)+1;
-        Eday = ChartCalender.get(Calendar.DATE);
-        DefaultData = true;
-        WeekTimeList.clear();
-
-        getData();
-        Log.v("??", ""+AllDayList);
-
-        for(int i = 0; i < SavedSettings.CategoryList.size(); i++){
-            DayList.clear();
-            TimeList.clear();
-            CurrentCategory = SavedSettings.CategoryList.get(i);
-            getCategory();
-        }
-        drawStackedBarChart(DayList, WeekTimeList);
     }
 
 }
