@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 public class SettingActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -94,10 +95,12 @@ public class SettingActivity extends AppCompatActivity {
                                 adapter.editItem(CurPosition, editCategory);
                                 recyclerViewRefresh();
                                 Log.i("", "" +  SavedSettings.CategoryList.get(CurPosition) + " " + Name);
+                                String OName = SavedSettings.CategoryList.get(CurPosition);
+                                CountDownLatch CDL = new CountDownLatch(1);
                                 ActInfoDB.DatabaseWriteExecutor.execute(() -> {
                                     ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
                                     ActInfoDAO mActInfoDao = db.actInfoDao();
-                                    mActInfoDao.updateCategoryName(SavedSettings.CategoryList.get(CurPosition), Name);
+                                    mActInfoDao.updateCategoryName(OName, Name);
                                 });
                                 Log.v("수정 값", ""+Name);
                                 SavedSettings.CategoryList.set(CurPosition, Name);

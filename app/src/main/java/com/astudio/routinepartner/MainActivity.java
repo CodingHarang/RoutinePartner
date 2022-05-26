@@ -583,7 +583,7 @@ public class MainActivity extends AppCompatActivity {
             //Log.i("in Main", "" + CategoryNum);
             if(CategoryNum == 0) {
                 Settings settings = new Settings();
-                settings.setCategory("취침");
+                settings.setCategory("sleep");
                 settings.setColor(0xFFCCCCFFL);
                 settings.setGoalType(2);
                 settings.setGoal(7);
