@@ -37,21 +37,15 @@ public class PSY {
             return 0;
         }
         switch(GoalType.get(index)){
-            case 1:{
+            case 2:{  //GoalType 2: 시간
                 if (SH > EH) {
-                    TimeData = (24 - SH) + EH + ((60 - SM) + EM) / 60;
+                    TimeData = (24 - SH) + EH + ((60 - SM) + EM) / 60f;
                 } else {
-                    TimeData = (EH - SH) + (EM - SM) / 60;
+                    TimeData = (EH - SH) + (EM - SM) / 60f;
                 }
-
-                /*if (TimeData >= 6) {  //6시간 이상일 때와 아닐 때의 칸수 조절(안하면 한쪽만 너무 크게 증가)
-                    TimeData = (TimeData / 3) * 20;
-                } else {
-                    TimeData = (TimeData / 2) * 20;
-                }*/
             }break;
 
-            case 2:
+            case 1: //GoalType 1: 횟수
                 TimeData = 1;
                 break;
 
@@ -71,11 +65,37 @@ public class PSY {
         return TotalData;
     }
 
-    public ArrayList<Boolean> isGoalAchieved(ArrayList<Float> TotalTimeList){
+    public float applyGoal(float ByDateTotalTime, String category, int goaltype){
+        int index=CategoryList.indexOf(category);
+        float ReturnValue=ByDateTotalTime;
+        if(index<0){
+            return 0f;
+        }
+        switch(goaltype){
+            case 1: { //횟수
+                if(GoalList.get(index)==ByDateTotalTime){
+                    ReturnValue+=5;
+                }
+                else{
+                    ReturnValue-=5;
+                }
+            }break;
+            case 2: {
+                if(GoalList.get(index)<=ByDateTotalTime){
+                    ReturnValue+=5;
+                }else{
+                    ReturnValue-=5;
+                }
+            }break;
+        }
+        return ReturnValue;
+    }
+
+/*    public ArrayList<Boolean> isGoalAchieved(ArrayList<Float> TotalTimeList){
         ArrayList<Boolean> IsGoalAchieved=new ArrayList<>();
-        /*for(int i=0;i<TotalTimeList.size();i++){
+        *//*for(int i=0;i<TotalTimeList.size();i++){
             IsGoalAchieved.add(false);
-        }*/
+        }*//*
         for(int i=0;i<TotalTimeList.size();i++){
             switch(GoalType.get(i)){
                 case 1:{
@@ -97,7 +117,7 @@ public class PSY {
             }
         }
         return IsGoalAchieved;
-    }
+    }*/
 
 
 }
