@@ -391,18 +391,32 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationStart(Animator animator) {
                 ImageView img=(ImageView) findViewById(R.id.imageView);
                 switch(Action){
-                    case "4":
-                        //img.setImageResource(R.drawable.foodbowl);
-                        //FadeAnimation.fadeOutImage(img);
-                        break;
-                    case "3":
-                        img.setImageResource(R.drawable.dogbed_brown);
-                        FadeAnimation.fadeOutImage(img);
-                        break;
-                    case "1":
+                    case "1"://지능
                         img.setImageResource(R.drawable.book);
                         FadeAnimation.fadeOutImage(img);
                         break;
+                    case "2"://재미
+                        img.setImageResource(R.drawable.petball);
+                        FadeAnimation.fadeOutImage(img);
+                        break;
+                    case "3"://체력
+                        img.setImageResource(R.drawable.petbed);
+                        FadeAnimation.fadeOutImage(img);
+                        break;
+                    case "4"://포만감
+                        img.setImageResource(R.drawable.foodbowlnew);
+                        //FadeAnimation.fadeOutImage(img);
+                        break;
+                    case "5"://잔고
+                        img.setImageResource(R.drawable.coin);
+                        FadeAnimation.fadeOutImage(img);
+                        break;
+                    case "6"://자아실현
+                        //img.setImageResource(R.drawable.dogbed_brown);
+                        //FadeAnimation.fadeOutImage(img);
+                        break;
+
+
                     default:
                 }
 
@@ -419,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
                 PetView.setOnLongClickListener((view) -> {
                     Action ="interaction";
                     ImageView HeartImage=findViewById(R.id.HeartImage);
-                    HeartImage.setImageResource(R.drawable.petheart);
+                    HeartImage.setImageResource(R.drawable.heartvector);
                     FadeAnimation.fadeInImage(HeartImage);
                     PetView.setRepeatCount(1);
                     PetView.playAnimation();
@@ -607,17 +621,18 @@ public class MainActivity extends AppCompatActivity {
 
 
         ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;
+        ArrayList<String> StatList=SavedSettings.StatList;
         //Action=CategoryName;  //[PSY] 추가코드
         ActionInt=CategoryList.indexOf(CategoryName);  //취침은 CategoryList에서 0번째 위치->0번째 위치한 AffectingStat 이 무엇인지
         if(ActionInt>=0){
-          int AffectingStatIndex=AffectingStat.indexOf(ActionInt+1);
-          switch(AffectingStatIndex){  //"지능", "재미", "체력", "포만감", "잔고", "자아실현"
-              case 1: Action="1"; break;
-              case 2: Action="2"; break;
-              case 3: Action="3"; break;
-              case 4: Action="4"; break;
-              case 5: Action="5"; break;
-              case 6: Action="6"; break;
+          int AffectingStatIndex=AffectingStat.get(ActionInt);
+          switch(StatList.get(AffectingStatIndex-1)){  //"지능0", "재미1", "체력2", "포만감3", "잔고4", "자아실현5"
+              case "지능": Action="1"; break;
+              case "재미": Action="2"; break;
+              case "체력": Action="3"; break;
+              case "포만감": Action="4"; break;
+              case "잔고": Action="5"; break;
+              case "자아실현": Action="6"; break;
           }
         }
         setRadarData();       //[PSY] 추가코드
@@ -658,7 +673,7 @@ public class MainActivity extends AppCompatActivity {
             //addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
             Log.i("11111", "--" + SavedSettings.CategoryList.get(i)+ "  -  " + SavedSettings.ColorList.get(i)+ " " + SavedSettings.GoalType.get(i)+ SavedSettings.Goal.get(i)+ SavedSettings.AffectingStat.get(i)+ SavedSettings.Order.get(i));
         }
-        //setRadarData(); //[PSY] 추가 코드
+        setRadarData(); //[PSY] 추가 코드
     }
 
     public void addToActDB(String Category, int Year, int Month, int Date, int Shour, int Sminute, int Ehour, int Eminute) {
@@ -938,6 +953,7 @@ public class MainActivity extends AppCompatActivity {
         CountDownLatch CDL = new CountDownLatch(1);
         ActInfoItemList.clear();
         DayList.clear();
+        TotalStatDataList.clear();
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDAO mActInfoDao = db.actInfoDao();
@@ -983,6 +999,11 @@ public class MainActivity extends AppCompatActivity {
         //부합하면 +점수 부합하지 않으면 -점수
         for(int i=0;i<LableListInt.size();i++){  //AffectingStat: 3 4 3 1 2 /LableListInt: 3 4 1 2
             TotalStatDataList.add(0f);
+            Log.i("LableListInt",""+LableListInt.get(i));
+        }
+
+        for(int i=0;i<CategoryList.size();i++){
+            Log.i("CategoryStat",""+AffectingStat.get(i)+" "+CategoryList.get(i));
         }
 
         for(int i=0;i<DayList.size();i++){  //DayList.get(i) 가 하나의 날짜를 나타냄 ex) 5/20의 모든 시간 기록 담고있음
@@ -1007,20 +1028,14 @@ public class MainActivity extends AppCompatActivity {
             for(int l=0;l<LableListInt.size();l++){
                 for(int m=0;m< AffectingStat.size();m++){
                     if(LableListInt.get(l)==AffectingStat.get(m)){
-                        TotalStatDataList.add(l,TotalCategoryDataList.get(m));
+                        TotalStatDataList.set(l,TotalStatDataList.get(l)+TotalCategoryDataList.get(m));
                     }
                 }
-            }
+            }//이 부분 다시
             ByDateCategoryDataList.clear();
             TotalCategoryDataList.clear();
 
         }//이 for문 내부에서는 i값 유지(계속 같은 날짜)
-
-        for(ArrayList<ActInfoItem> Day:DayList){
-            for(int i=0;i<Day.size();i++){
-                Log.i("DayListTest",""+Day.get(i).getDate()+" "+Day.get(i).Category);
-            }
-        }
 
         for(int i=0;i<LableListInt.size();i++){
             if(!TotalStatDataList.isEmpty()){

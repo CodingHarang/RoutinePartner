@@ -39,7 +39,12 @@ public class PSY {
         switch(GoalType.get(index)){
             case 2:{  //GoalType 2: 시간
                 if (SH > EH) {
-                    TimeData = (24 - SH) + EH + ((60 - SM) + EM) / 60f;
+                    if(SH>=12){
+                        TimeData = (24 - SH) + EH + ((60 - SM) + EM) / 60f;
+                    }else{
+                        TimeData =(EH+12)-SH+((60 - SM) + EM) / 60f;
+                    }
+
                 } else {
                     TimeData = (EH - SH) + (EM - SM) / 60f;
                 }
