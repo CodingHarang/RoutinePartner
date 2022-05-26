@@ -32,7 +32,7 @@ public class SettingActivity extends AppCompatActivity {
     SetCategoryAdapter adapter;
     ArrayList<CategoryInfo> CategoryList;
     CategoryInfo Category;
-    int CurPositon;
+    int CurPosition;
 
     static int TimeInterval = 3;
 
@@ -91,18 +91,25 @@ public class SettingActivity extends AppCompatActivity {
 
                             }else{
                                 CategoryInfo editCategory = new CategoryInfo(Name, Color, Stat, GoalType, Goal, Order);
-                                adapter.editItem(CurPositon, editCategory);
+                                adapter.editItem(CurPosition, editCategory);
                                 recyclerViewRefresh();
+                                Log.i("", "" +  SavedSettings.CategoryList.get(CurPosition) + " " + Name);
+                                ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+                                    ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+                                    ActInfoDAO mActInfoDao = db.actInfoDao();
+                                    mActInfoDao.updateCategoryName(SavedSettings.CategoryList.get(CurPosition), Name);
+                                });
                                 Log.v("수정 값", ""+Name);
-                                SavedSettings.CategoryList.set(CurPositon, Name);
-                                SavedSettings.ColorList.set(CurPositon, Color);
-                                SavedSettings.AffectingStat.set(CurPositon, Stat);
-                                SavedSettings.GoalType.set(CurPositon, GoalType);
-                                SavedSettings.Goal.set(CurPositon, Goal);
+                                SavedSettings.CategoryList.set(CurPosition, Name);
+                                SavedSettings.ColorList.set(CurPosition, Color);
+                                SavedSettings.AffectingStat.set(CurPosition, Stat);
+                                SavedSettings.GoalType.set(CurPosition, GoalType);
+                                SavedSettings.Goal.set(CurPosition, Goal);
 
                                 Log.v("현재 리스트 이름", ""+SavedSettings.CategoryList);
                                 Log.v("현재 리스트 색", ""+SavedSettings.ColorList);
                                 Log.v("현재 리스트 순서", ""+SavedSettings.Order);
+
                             }
                             SettingsDB.DatabaseWriteExecutor.execute(() -> {
                                 SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
@@ -155,7 +162,7 @@ public class SettingActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new SetCategoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                CurPositon = position;
+                CurPosition = position;
 
                 Intent intent = new Intent(getApplicationContext(), SetCategoryActivity.class);
 
@@ -193,6 +200,7 @@ public class SettingActivity extends AppCompatActivity {
                             adapter.delItem(pos);
                             recyclerViewRefresh();
 
+                            String CatName = SavedSettings.CategoryList.get(pos);
                             SavedSettings.CategoryList.remove(pos);
                             SavedSettings.ColorList.remove(pos);
                             SavedSettings.AffectingStat.remove(pos);
@@ -211,6 +219,35 @@ public class SettingActivity extends AppCompatActivity {
                             }
 
                             Toast.makeText(SettingActivity.this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                            SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                                SettingsDB sdb = SettingsDB.getDatabase(getApplicationContext());
+                                SettingsDAO mSettingsDao = sdb.settingDao();
+                                mSettingsDao.deleteAll();
+                                ActInfoDB adb = ActInfoDB.getDatabase(getApplicationContext());
+                                ActInfoDAO mActInfoDao = adb.actInfoDao();
+                                mActInfoDao.deleteByCategory(CatName);
+                            });
+                            for(int j = 0; j < SavedSettings.CategoryList.size(); j++) {
+                                String category = SavedSettings.CategoryList.get(j);
+                                long color = SavedSettings.ColorList.get(j);
+                                int goalType = SavedSettings.GoalType.get(j);
+                                int goal = SavedSettings.Goal.get(j);
+                                int affectingStat = SavedSettings.AffectingStat.get(j);
+                                int order = SavedSettings.Order.get(j);
+                                SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                                    SettingsDAO mSettingsDao = db.settingDao();
+                                    Settings settings = new Settings();
+                                    settings.setCategory(category);
+                                    settings.setColor(color);
+                                    settings.setGoalType(goalType);
+                                    settings.setGoal(goal);
+                                    settings.setAffectingStat(affectingStat);
+                                    settings.setOrder(order);
+                                    mSettingsDao.insert(settings);
+                                });
+                                Log.i("", "" + SavedSettings.CategoryList.get(j));
+                            }
                         }
                     });
 
@@ -221,31 +258,7 @@ public class SettingActivity extends AppCompatActivity {
                 if(SetCategoryAdapter.CategoryItem.size() < 5){
                     CategoryAddBtn.setEnabled(true);
                 }
-                SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-                    SettingsDAO mSettingsDao = db.settingDao();
-                    mSettingsDao.deleteAll();
-                });
-                for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
-                    String category = SavedSettings.CategoryList.get(i);
-                    long color = SavedSettings.ColorList.get(i);
-                    int goalType = SavedSettings.GoalType.get(i);
-                    int goal = SavedSettings.Goal.get(i);
-                    int affectingStat = SavedSettings.AffectingStat.get(i);
-                    int order = SavedSettings.Order.get(i);
-                    SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                        SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-                        SettingsDAO mSettingsDao = db.settingDao();
-                        Settings settings = new Settings();
-                        settings.setCategory(category);
-                        settings.setColor(color);
-                        settings.setGoalType(goalType);
-                        settings.setGoal(goal);
-                        settings.setAffectingStat(affectingStat);
-                        settings.setOrder(order);
-                        mSettingsDao.insert(settings);
-                    });
-                }
+
             }
         });
 

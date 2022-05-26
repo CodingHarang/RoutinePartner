@@ -34,7 +34,7 @@ public interface ActInfoDAO {
     void updateData(int id, String CCategory, int CYear, int CMonth, int CDate, int CShour, int CSminute, int CEhour, int CEminute);
 
     @Query("UPDATE actInfo SET Category = :CCategory WHERE Category = :OCategory")
-    void updateCategoryName(String CCategory, String OCategory);
+    void updateCategoryName(String OCategory, String CCategory);
 
     @Query("DELETE FROM actInfo WHERE Category = :DCategory")
     void deleteByCategory(String DCategory);
