@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,6 +37,8 @@ public class SetCategoryActivity extends AppCompatActivity {
     Spinner SetStat;
     Button SetColor, CheckButton;
     RadioGroup RadioGroup;
+    LinearLayout NameLayout, StatLayout;
+    View Divider1, Divider2;
     String NameSet, ColorSet = "#ffffff", StatSet, GoalTypeSet;
     int ColorInt = 0xffffff, GoalSet, ParseColor, ActivityValue = 0, SpinnerSelect, GoalKey;
     Long ColorLong = 0xffffffffL;
@@ -56,7 +59,12 @@ public class SetCategoryActivity extends AppCompatActivity {
         GoalData.setVisibility(View.GONE);
         GoalText.setVisibility(View.GONE);
         Title = findViewById(R.id.Category);
-        
+        NameLayout = findViewById(R.id.linearLayout2);
+        StatLayout = findViewById(R.id.linearLayout3);
+        Divider1 = findViewById(R.id.divider);
+        Divider2 = findViewById(R.id.divider2);
+        NameLayout.setVisibility(View.VISIBLE);
+        StatLayout.setVisibility(View.VISIBLE);
         
         Title.setText("카테고리 생성");
         
@@ -68,8 +76,20 @@ public class SetCategoryActivity extends AppCompatActivity {
         int CurStat = GetIntent.getIntExtra("CurStat", 2);
         int CurGoalType = GetIntent.getIntExtra("CurGoalType",0);
         int CurGoal = GetIntent.getIntExtra("CurGoal", 0);
+        int CurPosition = GetIntent.getIntExtra("CurPosition", 6);
 
         if(CurName != null){
+            if(CurPosition == 0 || CurPosition == 1){
+                NameLayout.setVisibility(View.GONE);
+                StatLayout.setVisibility(View.GONE);
+                Divider1.setVisibility(View.GONE);
+                Divider2.setVisibility(View.GONE);
+            }else{
+                NameLayout.setVisibility(View.VISIBLE);
+                StatLayout.setVisibility(View.VISIBLE);
+                Divider1.setVisibility(View.VISIBLE);
+                Divider2.setVisibility(View.VISIBLE);
+            }
             ActivityValue = 1;
             CheckButton.setText("저장");
             Title.setText("카테고리 수정");

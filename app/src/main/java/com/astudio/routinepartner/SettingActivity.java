@@ -181,6 +181,7 @@ public class SettingActivity extends AppCompatActivity {
 //                intent.putExtra("CurGoalType", SetCategoryAdapter.CategoryItem.get(position).getGoalType());
 //                intent.putExtra("CurGoal", SetCategoryAdapter.CategoryItem.get(position).getGoal());
 
+                intent.putExtra("CurPosition", CurPosition);
                 intent.putExtra("CurName", SetCategoryAdapter.CategoryItem.get(position).getName());
                 intent.putExtra("CurColor", SetCategoryAdapter.CategoryItem.get(position).getColor());
                 intent.putExtra("CurStat", SetCategoryAdapter.CategoryItem.get(position).getStat());
@@ -194,8 +195,8 @@ public class SettingActivity extends AppCompatActivity {
         adapter.setOnItemLongClickListener(new SetCategoryAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View v, int pos) {
-                if(SavedSettings.CategoryList.size()==1){
-                    Toast.makeText(getApplicationContext(), "이 카테고리는 삭제할 수 없어요.",Toast.LENGTH_SHORT).show();
+                if(pos == 0 || pos == 1){
+                    Toast.makeText(getApplicationContext(), "기본 카테고리는 삭제할 수 없어요.",Toast.LENGTH_SHORT).show();
 
                 }else{
                     AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
