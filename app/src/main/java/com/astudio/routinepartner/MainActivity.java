@@ -339,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
                 sendDataToPieChart();
                 PieChart.update();
+                setRadarData(); //[PSY] 추가코드
             }
         });
 
@@ -407,7 +408,7 @@ public class MainActivity extends AppCompatActivity {
         //<--------------------------------------------------------------------PSY
 
 
-        /*MainContext=this;
+        MainContext=this;
         text_PetName=PreferenceManage.getString(MainContext,"rebuild");
         if(text_PetName.isEmpty()){
             text_PetName="";
@@ -472,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationRepeat(Animator animator) {
 
             }
-        });*/
+        });
 
 
 
@@ -507,10 +508,10 @@ public class MainActivity extends AppCompatActivity {
 
         PetStateChart=findViewById(R.id.RadarChart);
 
-        /*for(String stat:CategoryStat){
+        for(String stat:CategoryStat){
             if(!LableList.contains(stat))
                 LableList.add(stat);
-        }*/
+        }
 
         for(int stat:AffectingStat){
             if(!LableListInt.contains(stat))
@@ -530,7 +531,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //setRadarData();
+        setRadarData();
 
         /*String[] labels=new String[LableList.size()];
         int size=0;
@@ -554,14 +555,14 @@ public class MainActivity extends AppCompatActivity {
 
         PetStateChart.getDescription().setEnabled(false);
 
-        /*for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
+        for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
             set.setDrawValues(!set.isDrawValuesEnabled());
         }
-        PetStateChart.invalidate();*/
+        PetStateChart.invalidate();
 
 
         ((ImageView)findViewById(R.id.Restart)).setOnClickListener(view -> {
-            //setRadarData();
+            setRadarData();
         });
 
         //-------------------------------------------------------------------->PSY
@@ -582,7 +583,7 @@ public class MainActivity extends AppCompatActivity {
             int CategoryNum = mSettingsDao.getAll().length;
             //Log.i("in Main", "" + CategoryNum);
             if(CategoryNum == 0) {
-                Settings settings = new Settings();
+                setRadarData();      Settings settings = new Settings();
                 settings.setCategory("sleep");
                 settings.setColor(0xFFCCCCFFL);
                 settings.setGoalType(2);
@@ -646,7 +647,7 @@ public class MainActivity extends AppCompatActivity {
         //Action=CategoryName;  //[PSY] 추가코드
         ActionInt=CategoryList.indexOf(CategoryName);  //취침은 CategoryList에서 0번째 위치->0번째 위치한 AffectingStat 이 무엇인지
         if(ActionInt>=0){
-          int AffectingStatIndex=AffectingStat.indexOf(ActionInt);
+          int AffectingStatIndex=AffectingStat.indexOf(ActionInt+1);
           switch(AffectingStatIndex){  //"지능", "재미", "체력", "포만감", "잔고", "자아실현"
               case 1: Action="1"; break;
               case 2: Action="2"; break;
@@ -656,7 +657,7 @@ public class MainActivity extends AppCompatActivity {
               case 6: Action="6"; break;
           }
         }
-        //setRadarData();       //[PSY] 추가코드
+        setRadarData();       //[PSY] 추가코드
 
         Toast.makeText(getApplicationContext(), "Data Added", Toast.LENGTH_SHORT).show();
         Dialog.dismiss();
@@ -961,7 +962,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Integer> GoalType=SavedSettings.GoalType;
     //ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
 
-    /*public void setRadarData(){
+    public void setRadarData(){
         ArrayList<RadarEntry> visitors=new ArrayList<>();
 
         ArrayList<ArrayList<Float>> ByDateCategoryDataList=new ArrayList<>(); //하루의 모든 기록 속에 들어있는 데이터를 카테고리별로 분류해서 넣어놓는 용도
@@ -987,17 +988,29 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        /*for(int stat:AffectingStat){
+            if(!LableListInt.contains(stat))
+                LableListInt.add(stat);  //4 2 1
+        }*/
+
+        ArrayList<String> DateList=new ArrayList<>();
         for(int i=0;i<ActInfoList.size();i++){
-            //Log.i("TEST",""+ActInfoList.get(i).getCategory()+" "+ActInfoList.get(i).getStartHour()+"~"+ActInfoList.get(i).getEndHour());
-            if((i>=1) && ((ActInfoList.get(i).getYear() != ActInfoList.get(i-1).getYear() || ActInfoList.get(i).getMonth() != ActInfoList.get(i-1).getMonth()) || ActInfoList.get(i).getDate() != ActInfoList.get(i-1).getDate())){
-                DayList.add(ActInfoItemList);
-                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
-            }else{
-                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+            String Date=ActInfoList.get(i).getYear()+"/"+ActInfoList.get(i).getMonth()+"/"+ActInfoList.get(i).getDate();
+            if(!DateList.contains(Date)){
+                DateList.add(Date);
             }
         }
-        DayList.add(ActInfoItemList);
-
+        for(int i=0;i<DateList.size();i++){
+            DayList.add(new ArrayList<>());
+        }
+        for(int i=0;i<DateList.size();i++){
+            String[] splitdate=DateList.get(i).split("/");
+            for(int j=0;j<ActInfoList.size();j++){
+                if((ActInfoList.get(j).getYear()==Integer.parseInt(splitdate[0]))&&(ActInfoList.get(j).getMonth()==Integer.parseInt(splitdate[1]))&&(ActInfoList.get(j).getDate()==Integer.parseInt(splitdate[2]))){
+                    DayList.get(i).add(new ActInfoItem(ActInfoList.get(j).getId(), ActInfoList.get(j).getCategory(), ActInfoList.get(j).getYear(), ActInfoList.get(j).getMonth(), ActInfoList.get(j).getDate(), ActInfoList.get(j).getStartHour(), ActInfoList.get(j).getStartMinute(), ActInfoList.get(j).getEndHour(), ActInfoList.get(j).getEndMinute()));
+                }
+            }
+        }
         //한 카테고리 내 여러 시간 기록이 있을테니 arraylist에 저장
         //어레이리스트 속의 총합 시간 계산
         //총합 시간이 목표와 부합하는지 체크
@@ -1006,12 +1019,12 @@ public class MainActivity extends AppCompatActivity {
             TotalStatDataList.add(0f);
         }
 
-        for(int i=0;i<CategoryList.size();i++){
-            ByDateCategoryDataList.add(new ArrayList<>());//카테고리별로 기록 넣어둘 공간 할당
-        }
 
         for(int i=0;i<DayList.size();i++){  //DayList.get(i) 가 하나의 날짜를 나타냄 ex) 5/20의 모든 시간 기록 담고있음
             //한 날짜의 모든 시간 기록을 카테고리별로 분류  ex) 수면, 식사, 게임, 운동.....
+            for(int n=0;n<CategoryList.size();n++){
+                ByDateCategoryDataList.add(new ArrayList<>());//카테고리별로 기록 넣어둘 공간 할당
+            }
             for(int j=0;j<DayList.get(i).size();j++){  //ex) DayList.get(i): 5/20 DayList.get(i).get(j): 5/20 9~11 Study
                 int index=CategoryList.indexOf(DayList.get(i).get(j).Category);  //CategoryList(index) "식사(0)","취침(1)","공부(2)","운동(3)","게임(4)"
                 if(index>=0){
@@ -1022,9 +1035,6 @@ public class MainActivity extends AppCompatActivity {
                 TotalCategoryDataList.add(PetStateManage.calCategoryData(ByDateCategoryDataList.get(k)));
                 TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k)));
                 //하루 기록들에서 카테고리 데이터의 총합을 계산해 목표 달성 여부에 따른 증감 값을 반영하여 설정
-                /* for(int l=0;l<LableListInt.size();l++){
-                if(LableListInt.get(l)==AffectingStat.get())
-                }
             }
             for(int l=0;l<LableListInt.size();l++){
                 for(int m=0;m< AffectingStat.size();m++){
@@ -1065,7 +1075,7 @@ public class MainActivity extends AppCompatActivity {
 
         PetStateChart.setData(data);
         PetStateChart.invalidate();
-    }*/
+    }
 
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -1074,7 +1084,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /*public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.NameSet:{
                 AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
@@ -1105,7 +1115,7 @@ public class MainActivity extends AppCompatActivity {
             default:
         }
         return true;
-    }*/
+    }
 
 
 

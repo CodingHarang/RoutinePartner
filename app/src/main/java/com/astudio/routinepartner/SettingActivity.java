@@ -95,7 +95,7 @@ public class SettingActivity extends AppCompatActivity {
 
                             }else{
 
-                                CategoryInfo editCategory = new CategoryInfo(Name, Color, Stat, GoalType, Goal, Order);
+                                CategoryInfo editCategory = new CategoryInfo(Name, GetColor, Stat, GoalType, Goal, Order);
                                 adapter.editItem(CurPosition, editCategory);
 
                                 recyclerViewRefresh();
@@ -109,11 +109,11 @@ public class SettingActivity extends AppCompatActivity {
                                 });
                                 Log.v("수정 값", ""+Name);
 
-                                SavedSettings.CategoryList.set(CurPositon, Name);
-                                SavedSettings.ColorList.set(CurPositon, GetColor);
-                                SavedSettings.AffectingStat.set(CurPositon, Stat);
-                                SavedSettings.GoalType.set(CurPositon, GoalType);
-                                SavedSettings.Goal.set(CurPositon, Goal);
+                                SavedSettings.CategoryList.set(CurPosition, Name);
+                                SavedSettings.ColorList.set(CurPosition, GetColor);
+                                SavedSettings.AffectingStat.set(CurPosition, Stat);
+                                SavedSettings.GoalType.set(CurPosition, GoalType);
+                                SavedSettings.Goal.set(CurPosition, Goal);
 
                                 Log.v("현재 리스트 이름", ""+SavedSettings.CategoryList);
                                 Log.v("현재 리스트 색", ""+SavedSettings.ColorList);
