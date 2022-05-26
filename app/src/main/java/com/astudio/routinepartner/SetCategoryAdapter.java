@@ -2,7 +2,9 @@ package com.astudio.routinepartner;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -138,7 +141,8 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
             CategoryButton.setText(Html.fromHtml(styledText));
 //            CategoryButton.setText(Item.getName()+" "+Item.getStat()+" "+Item.getColor()+" "+Item.getGoalType()+" "+Item.getGoal());
             Log.v("t", ""+Item.getName());
-            CategoryButton.setBackgroundColor(Item.getColor().intValue());
+            CategoryButton.setBackgroundTintList(ColorStateList.valueOf(Item.getColor().intValue()));
+//            CategoryButton.setBackgroundColor(Item.getColor().intValue());
         }
     }
     public void delItem(int position) {

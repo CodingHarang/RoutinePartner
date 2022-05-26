@@ -15,6 +15,8 @@ import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,7 +38,7 @@ public class SettingActivity extends AppCompatActivity {
 
     static int TimeInterval = 3;
 
-    Button CategoryAddBtn, PlusInterval, MinusInterval;
+    ImageButton CategoryAddBtn, PlusInterval, MinusInterval;
     TextView TimeIntervalText;
 
     @Override
@@ -57,7 +59,7 @@ public class SettingActivity extends AppCompatActivity {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent intent = result.getData();
                             String Name = intent.getStringExtra("Name");
-                            long Color = intent.getLongExtra("Color", 0xffffffff);
+                            long GetColor = intent.getLongExtra("Color", 0xffffffff);
                             int Stat = intent.getIntExtra("Stat", 1);
                             int GoalType = intent.getIntExtra("GoalType", 1);
                             int Goal = intent.getIntExtra("Goal", 0);
@@ -68,19 +70,20 @@ public class SettingActivity extends AppCompatActivity {
                             }else
                                 Order = 1;
 
-                            Log.v("getExtra", ""+Name+" "+Color+" "+Stat+" "+GoalType+" "+Goal);
+                            Log.v("getExtra", ""+Name+" "+GetColor+" "+Stat+" "+GoalType+" "+Goal);
                             if(ActivitySet == 0){
-                                adapter.addItem(new CategoryInfo(Name, Color, Stat, GoalType, Goal, Order));
+                                adapter.addItem(new CategoryInfo(Name, GetColor, Stat, GoalType, Goal, Order));
                                 adapter.notifyItemInserted(SetCategoryAdapter.CategoryItem.size());
 
                                 SavedSettings.CategoryList.add(Name);
-                                SavedSettings.ColorList.add(Color);
+                                SavedSettings.ColorList.add(GetColor);
                                 SavedSettings.AffectingStat.add(Stat);
                                 SavedSettings.GoalType.add(GoalType);
                                 SavedSettings.Goal.add(Goal);
                                 SavedSettings.Order.add(Order);
 
                                 if(SetCategoryAdapter.CategoryItem.size()>=5){
+                                    CategoryAddBtn.setColorFilter(Color.parseColor("#C0C0C0"));
                                     CategoryAddBtn.setEnabled(false);
                                 }
 
@@ -90,12 +93,12 @@ public class SettingActivity extends AppCompatActivity {
                                 Log.v("현재 리스트 스탯", ""+SavedSettings.AffectingStat);
 
                             }else{
-                                CategoryInfo editCategory = new CategoryInfo(Name, Color, Stat, GoalType, Goal, Order);
+                                CategoryInfo editCategory = new CategoryInfo(Name, GetColor, Stat, GoalType, Goal, Order);
                                 adapter.editItem(CurPositon, editCategory);
                                 recyclerViewRefresh();
                                 Log.v("수정 값", ""+Name);
                                 SavedSettings.CategoryList.set(CurPositon, Name);
-                                SavedSettings.ColorList.set(CurPositon, Color);
+                                SavedSettings.ColorList.set(CurPositon, GetColor);
                                 SavedSettings.AffectingStat.set(CurPositon, Stat);
                                 SavedSettings.GoalType.set(CurPositon, GoalType);
                                 SavedSettings.Goal.set(CurPositon, Goal);
@@ -200,6 +203,12 @@ public class SettingActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
+                            SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                                SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                                SettingsDAO mSettingsDao = db.settingDao();
+                                mSettingsDao.deleteByOrder(SavedSettings.Order.get(pos));
+                            });
+
                             adapter.delItem(pos);
                             recyclerViewRefresh();
 
@@ -221,6 +230,12 @@ public class SettingActivity extends AppCompatActivity {
                             }
 
                             Toast.makeText(SettingActivity.this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                            if(SetCategoryAdapter.CategoryItem.size() < 5){
+                                CategoryAddBtn.setColorFilter(Color.parseColor("#707070"));
+                                CategoryAddBtn.setEnabled(true);
+                            }
+
+                            Log.v("오더 확인", ""+SavedSettings.Order);
                         }
                     });
 
@@ -228,16 +243,14 @@ public class SettingActivity extends AppCompatActivity {
                     builder.show();
                 }
 
-                if(SetCategoryAdapter.CategoryItem.size() < 5){
-                    CategoryAddBtn.setEnabled(true);
-                }
-
             }
         });
 
         if(SetCategoryAdapter.CategoryItem.size()>=5){
+            CategoryAddBtn.setColorFilter(Color.parseColor("#C0C0C0"));
             CategoryAddBtn.setEnabled(false);
         }else{
+            CategoryAddBtn.setColorFilter(Color.parseColor("#707070"));
             CategoryAddBtn.setEnabled(true);
         }
 
@@ -245,9 +258,11 @@ public class SettingActivity extends AppCompatActivity {
         //시간 간격 설정
 
         if(TimeInterval >= 3){
+            PlusInterval.setColorFilter(Color.parseColor("#C0C0C0"));
             PlusInterval.setEnabled(false);
         }else if(TimeInterval <= 1){
             MinusInterval.setEnabled(false);
+            MinusInterval.setColorFilter(Color.parseColor("#C0C0C0"));
         }
 
         PlusInterval.setOnClickListener(new View.OnClickListener() {
@@ -255,10 +270,12 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(TimeInterval < 3){
                     TimeInterval++;
+                    MinusInterval.setColorFilter(Color.parseColor("#707070"));
                     MinusInterval.setEnabled(true);
                     TimeIntervalText.setText(Integer.toString(TimeInterval));
                     PieChartView.TimeInterval = TimeInterval;
                     if(TimeInterval == 3){
+                        PlusInterval.setColorFilter(Color.parseColor("#C0C0C0"));
                         PlusInterval.setEnabled(false);
                     }
                 }
@@ -271,10 +288,12 @@ public class SettingActivity extends AppCompatActivity {
                 if(TimeInterval > 1){
                     TimeInterval--;
                     PlusInterval.setEnabled(true);
+                    PlusInterval.setColorFilter(Color.parseColor("#707070"));
                     TimeIntervalText.setText(Integer.toString(TimeInterval));
                     PieChartView.TimeInterval = TimeInterval;
                     if(TimeInterval == 1){
                         MinusInterval.setEnabled(false);
+                        MinusInterval.setColorFilter(Color.parseColor("#C0C0C0"));
                     }
                 }
             }
