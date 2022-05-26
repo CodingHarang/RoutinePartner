@@ -178,16 +178,6 @@ public class SettingActivity extends AppCompatActivity {
         adapter.setOnItemLongClickListener(new SetCategoryAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View v, int pos) {
-
-                SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                    ActInfoDB adb = ActInfoDB.getDatabase(getApplicationContext());
-                    ActInfoDAO mActInfoDao = adb.actInfoDao();
-                    //mActInfoDao.deleteByCategory();
-                    SettingsDB sdb = SettingsDB.getDatabase(getApplicationContext());
-                    SettingsDAO mSettingsDao = sdb.settingDao();
-                    mSettingsDao.deleteByOrder(SavedSettings.Order.get(pos));
-                });
-
                 if(SavedSettings.CategoryList.size()==1){
                     Toast.makeText(getApplicationContext(), "카테고리는 1개 이상 있어야해요",Toast.LENGTH_SHORT).show();
 
@@ -231,7 +221,31 @@ public class SettingActivity extends AppCompatActivity {
                 if(SetCategoryAdapter.CategoryItem.size() < 5){
                     CategoryAddBtn.setEnabled(true);
                 }
-
+                SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                    SettingsDAO mSettingsDao = db.settingDao();
+                    mSettingsDao.deleteAll();
+                });
+                for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
+                    String category = SavedSettings.CategoryList.get(i);
+                    long color = SavedSettings.ColorList.get(i);
+                    int goalType = SavedSettings.GoalType.get(i);
+                    int goal = SavedSettings.Goal.get(i);
+                    int affectingStat = SavedSettings.AffectingStat.get(i);
+                    int order = SavedSettings.Order.get(i);
+                    SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                        SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                        SettingsDAO mSettingsDao = db.settingDao();
+                        Settings settings = new Settings();
+                        settings.setCategory(category);
+                        settings.setColor(color);
+                        settings.setGoalType(goalType);
+                        settings.setGoal(goal);
+                        settings.setAffectingStat(affectingStat);
+                        settings.setOrder(order);
+                        mSettingsDao.insert(settings);
+                    });
+                }
             }
         });
 
