@@ -195,7 +195,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(View v, int pos) {
                 if(SavedSettings.CategoryList.size()==1){
-                    Toast.makeText(getApplicationContext(), "카테고리는 1개 이상 있어야해요",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "이 카테고리는 삭제할 수 없어요.",Toast.LENGTH_SHORT).show();
 
                 }else{
                     AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);

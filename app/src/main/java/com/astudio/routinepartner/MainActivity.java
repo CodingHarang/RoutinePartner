@@ -189,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
         sendDataToPieChart();
         PieChart.update();
-        setRadarData(); //[PSY] 추가코드
         if(SavedSettings.isRefreshed == false) {
             RemoteViews views = new RemoteViews(getApplicationContext().getPackageName(), R.layout.widget);
 
@@ -281,6 +280,11 @@ public class MainActivity extends AppCompatActivity {
                 Month = cal.get(Calendar.MONTH);
                 Date = cal.get(Calendar.DATE);
                 makeData();
+                timeToAngle();
+                timeToAngleYesterday();
+                Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
+                sendDataToPieChart();
+                PieChart.update();
                 //PetView.setRepeatCount(1);  //[PSY] 추가코드
                 //PetView.playAnimation();    //[PSY] 추가코드
             }
