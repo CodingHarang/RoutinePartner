@@ -1,6 +1,7 @@
 package com.astudio.routinepartner;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
@@ -17,13 +19,17 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<ActInfoItem> ActInfoList = new ArrayList<ActInfoItem>();
     Context Context, ActivityContext;
     ViewGroup parent;
+    SimpleDateFormat SDF = new SimpleDateFormat("yyyy/MM/dd", Locale.KOREA);
 
     public ActInfoRecyclerViewAdapter(Context context) {
         this.Context = context;
@@ -46,8 +52,19 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                 @Override
                 public void onClick(View v) {
 //                    Toast.makeText(Context, "clicked" + ActivityContext, Toast.LENGTH_SHORT).show();
+                    Calendar cal = Calendar.getInstance();
+                    int Year, Month, Date;
+                    Year = ContainingItem.Year;
+                    Month = ContainingItem.Month;
+                    Date = ContainingItem.Date;
+                    cal.set(Calendar.YEAR, Year);
+                    cal.set(Calendar.MONTH, Month - 1);
+                    cal.set(Calendar.DATE, Date);
+                    Toast.makeText(parent.getContext(), "" + cal.get(Calendar.YEAR) + " " + (cal.get(Calendar.MONTH) + 1) + " " + cal.get(Calendar.DATE), Toast.LENGTH_SHORT).show();
                     View dialogView = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_add, null);
                     EditText EdtCategory = dialogView.findViewById(R.id.edtCategory);
+                    Button BtnCalendar = dialogView.findViewById(R.id.btnCalendar);
+                    BtnCalendar.setText(SDF.format(cal.getTime()));
                     Button BtnOK = dialogView.findViewById(R.id.btnOK);
                     Button BtnCancel = dialogView.findViewById(R.id.btnCancel);
                     NumberPicker[] NumPickers = new NumberPicker[10];
@@ -64,10 +81,29 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                     AlertDialog alertDialog;
                     alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
+                    DatePickerDialog.OnDateSetListener DatePickerDiag = new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                            cal.set(Calendar.YEAR, year);
+                            cal.set(Calendar.MONTH, month);
+                            cal.set(Calendar.DAY_OF_MONTH, day);
+                            BtnCalendar.setText(SDF.format(cal.getTime()));
+                        }
+                    };
+                    BtnCalendar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new DatePickerDialog(parent.getContext(), R.style.MyDatePickerStyle, DatePickerDiag, Year, Month - 1, Date).show();
+                        }
+                    });
                     BtnOK.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             ContainingItem.Category = EdtCategory.getText().toString();
+                            ContainingItem.Year = cal.get(Calendar.YEAR);
+                            ContainingItem.Month = cal.get(Calendar.MONTH) + 1;
+                            ContainingItem.Date = cal.get(Calendar.DATE);
+                            Toast.makeText(parent.getContext(), "" + Year + " " + Month + " " + Date, Toast.LENGTH_SHORT).show();
                             ContainingItem.StartHour = NumPickers[0].getValue() == 0 ? NumPickers[2].getValue() : NumPickers[2].getValue() + 12;
                             ContainingItem.EndHour = NumPickers[1].getValue() == 0 ? NumPickers[3].getValue() : NumPickers[3].getValue() + 12;
                             ContainingItem.StartMinute = NumPickers[4].getValue();
@@ -76,7 +112,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                                 ActInfoDB db = ActInfoDB.getDatabase(parent.getContext());
                                 ActInfoDAO mActInfoDao = db.actInfoDao();
                                 ActInfo actInfo = new ActInfo();
-                                mActInfoDao.deleteByActId(ActInfoList.get(Index).ItemId);
+                                //mActInfoDao.deleteByActId(ActInfoList.get(Index).ItemId);
                                 actInfo.setCategory(ContainingItem.Category);
                                 actInfo.setYear(ContainingItem.Year);
                                 actInfo.setMonth(ContainingItem.Month);
@@ -85,13 +121,14 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                                 actInfo.setStartMinute(ContainingItem.StartMinute);
                                 actInfo.setEndHour(ContainingItem.EndHour);
                                 actInfo.setEndMinute(ContainingItem.EndMinute);
-                                mActInfoDao.insert(actInfo);
+                                //mActInfoDao.insert(actInfo);
+                                mActInfoDao.updateData(ContainingItem.ItemId, ContainingItem.Category, ContainingItem.Year, ContainingItem.Month, ContainingItem.Date, ContainingItem.StartHour, ContainingItem.StartMinute, ContainingItem.EndHour, ContainingItem.EndMinute);
                             });
                             BtnEdit.setText(ContainingItem.Category + "   id : " + Integer.toString(ContainingItem.ItemId) + "\n" + Integer.toString(ContainingItem.Year) + " - " + Integer.toString(ContainingItem.Month) + " - " + Integer.toString(ContainingItem.Date) + "\n" + Integer.toString(ContainingItem.StartHour) + " : " + Integer.toString(ContainingItem.StartMinute) + " ~ " + Integer.toString(ContainingItem.EndHour) + " : " + Integer.toString(ContainingItem.EndMinute));
                             alertDialog.dismiss();
+                            updateView();
                         }
                     });
-
                     BtnCancel.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -99,7 +136,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         }
                     });
                 }
-
             });
             BtnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,6 +233,9 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
 
     public void clearView() {
         ActInfoList.clear();
+        notifyDataSetChanged();
+    }
+    public void updateView() {
         notifyDataSetChanged();
     }
 }

@@ -58,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
     AlertDialog Dialog;
     NumberPicker[] NumPickers = new NumberPicker[10];
-    Button Btn1, Btn2, Btn3, Btn4, Btn5, BtnOK, BtnCancel, BtnAddTestData, BtnDeleteAll, BtnShowPieChart,BtnSelectDay;
+    Button Btn1, Btn2, Btn3, Btn4, Btn5, BtnCalendar, BtnOK, BtnCancel, BtnAddTestData, BtnDeleteAll, BtnShowPieChart,BtnSelectDay;
+    SimpleDateFormat SDF = new SimpleDateFormat("yyyy/MM/dd", Locale.KOREA);
+    Calendar cal;
+    int Year, Month, Date;
     ImageButton BtnShowList;
     EditText EdtCategory;
     TextView TxtTime;
@@ -109,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 Btn1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(0));
                     }
@@ -123,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
                 Btn2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(1));
                     }
@@ -137,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
                 Btn3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(2));
                     }
@@ -151,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
                 Btn4.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(3));
                     }
@@ -165,12 +176,19 @@ public class MainActivity extends AppCompatActivity {
                 Btn5.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        cal = Calendar.getInstance();
+                        BtnCalendar.setText(SDF.format(cal.getTime()));
                         openDialog();
                         EdtCategory.setText(SavedSettings.CategoryList.get(4));
                     }
                 });
             }
         }
+        timeToAngle();
+        timeToAngleYesterday();
+        Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
+        sendDataToPieChart();
+        PieChart.update();
         if(SavedSettings.isRefreshed == false) {
             RemoteViews views = new RemoteViews(getApplicationContext().getPackageName(), R.layout.widget);
 
@@ -190,8 +208,6 @@ public class MainActivity extends AppCompatActivity {
             //AppWidgetManager.getInstance(getApplicationContext()).updateAppWidget(new ComponentName(this.getPackageName(), WidgetProvider.class.getName()), views);
             finish();
             startActivity(getIntent());
-
-
         }
         Intent intent = new Intent(this, WidgetProvider.class);
         intent.setAction("SETTINGS_CHANGED");
@@ -230,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add, null);
 
         EdtCategory = dialogView.findViewById(R.id.edtCategory);
+        BtnCalendar = dialogView.findViewById(R.id.btnCalendar);
         BtnOK = dialogView.findViewById(R.id.btnOK);
         BtnCancel = dialogView.findViewById(R.id.btnCancel);
         YJS.numPickerSetting(dialogView, NumPickers);
@@ -237,12 +254,39 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(dialogView);
         Dialog = builder.create();
 
+        DatePickerDialog.OnDateSetListener DatePickerDiag = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                cal.set(Calendar.YEAR, year);
+                cal.set(Calendar.MONTH, month);
+                cal.set(Calendar.DAY_OF_MONTH, day);
+                BtnCalendar.setText(SDF.format(cal.getTime()));
+                Toast.makeText(getApplicationContext(), "" + cal.get(Calendar.YEAR) + " " + (cal.get(Calendar.MONTH) + 1) + " " + cal.get(Calendar.DATE), Toast.LENGTH_SHORT).show();
+            }
+        };
+        BtnCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Year = cal.get(Calendar.YEAR);
+                Month = cal.get(Calendar.MONTH);
+                Date = cal.get(Calendar.DATE);
+                new DatePickerDialog(getContext(), R.style.MyDatePickerStyle, DatePickerDiag, Year, Month, Date).show();
+            }
+        });
         BtnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Year = cal.get(Calendar.YEAR);
+                Month = cal.get(Calendar.MONTH);
+                Date = cal.get(Calendar.DATE);
                 makeData();
-                PetView.setRepeatCount(1);  //[PSY] 추가코드
-                PetView.playAnimation();    //[PSY] 추가코드
+                timeToAngle();
+                timeToAngleYesterday();
+                Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
+                sendDataToPieChart();
+                PieChart.update();
+                //PetView.setRepeatCount(1);  //[PSY] 추가코드
+                //PetView.playAnimation();    //[PSY] 추가코드
             }
         });
         BtnCancel.setOnClickListener(new View.OnClickListener() {
@@ -272,11 +316,11 @@ public class MainActivity extends AppCompatActivity {
                     ActInfoDAO mActInfoDao = db.actInfoDao();
                     mActInfoDao.deleteAll();
                 });
-                SettingsDB.DatabaseWriteExecutor.execute(() -> {
+                /*SettingsDB.DatabaseWriteExecutor.execute(() -> {
                     SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
                     SettingsDAO mSettingsDao = db.settingDao();
                     mSettingsDao.deleteAll();
-                });
+                });*/
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
             }
         });
@@ -310,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
         BtnChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent BarIntent = new Intent(getApplicationContext(), BarChartActivity.class);
+                Intent  BarIntent = new Intent(getApplicationContext(), BarChartActivity.class);
                 startActivity(BarIntent);
             }
         });
@@ -486,10 +530,10 @@ public class MainActivity extends AppCompatActivity {
 
         PetStateChart=findViewById(R.id.RadarChart);
 
-        /*for(String stat:CategoryStat){
+        for(String stat:CategoryStat){
             if(!LableList.contains(stat))
                 LableList.add(stat);
-        }*/
+        }
 
         for(int stat:AffectingStat){
             if(!LableListInt.contains(stat))
@@ -531,12 +575,12 @@ public class MainActivity extends AppCompatActivity {
         Legend legend=PetStateChart.getLegend();
         legend.setTextColor(0xFFBDBDBD);
 
-        PetStateChart.getDescription().setEnabled(false);
+        /*PetStateChart.getDescription().setEnabled(false);
 
         for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
             set.setDrawValues(!set.isDrawValuesEnabled());
         }
-        PetStateChart.invalidate();
+        PetStateChart.invalidate();*/
 
 
         ((ImageView)findViewById(R.id.Restart)).setOnClickListener(view -> {
@@ -549,6 +593,9 @@ public class MainActivity extends AppCompatActivity {
 
     //<--------------------------------------------------------------------YJS
     //<--------------------------------------------------------------------YJS
+    public Context getContext() {
+        return this;
+    }
     public void refreshSettings() {
         CountDownLatch CDL = new CountDownLatch(1);
         SettingsDB.DatabaseWriteExecutor.execute(() -> {
@@ -558,13 +605,21 @@ public class MainActivity extends AppCompatActivity {
             int CategoryNum = mSettingsDao.getAll().length;
             //Log.i("in Main", "" + CategoryNum);
             if(CategoryNum == 0) {
+                setRadarData();
                 Settings settings = new Settings();
-                settings.setCategory("취침");
+                settings.setCategory("수면");
                 settings.setColor(0xFFCCCCFFL);
                 settings.setGoalType(2);
                 settings.setGoal(7);
                 settings.setAffectingStat(3);
                 settings.setOrder(1);
+                mSettingsDao.insert(settings);
+                settings.setCategory("식사");
+                settings.setColor(0xFFCCFFFFL);
+                settings.setGoalType(1);
+                settings.setGoal(3);
+                settings.setAffectingStat(4);
+                settings.setOrder(2);
                 mSettingsDao.insert(settings);
             }
             SavedSettings.CategoryList.clear();
@@ -604,11 +659,9 @@ public class MainActivity extends AppCompatActivity {
     public void makeData() {
         Calendar cal = Calendar.getInstance();
         String CategoryName;
-        int Year, Month, Date, SAMPM, Shour, Sminute, EAMPM, Ehour, Eminute;
+        int SAMPM, Shour, Sminute, EAMPM, Ehour, Eminute;
         CategoryName = EdtCategory.getText().toString();
-        Year = cal.get(Calendar.YEAR);
-        Month = cal.get(Calendar.MONTH) + 1;
-        Date = cal.get(Calendar.DATE);
+
         SAMPM = NumPickers[0].getValue();
         Shour = NumPickers[2].getValue();
         Sminute = NumPickers[4].getValue();
@@ -617,7 +670,7 @@ public class MainActivity extends AppCompatActivity {
         Eminute = NumPickers[5].getValue();
 //        TxtTime.setText(CategoryName + "\n" + Year + "-" + Month + "-" + Date + "  " + SAMPM + " " + Shour + ":" + Sminute + " ~ " + EAMPM + " " + Ehour + ":" + Eminute);
 
-        addToActDB(CategoryName, Year, Month, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
+        addToActDB(CategoryName, Year, Month + 1, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
 
 
         ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;
@@ -659,15 +712,15 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("게임", 2022, 4, i, 20, 0, 22, 0);
             addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
         }*/
-        for(int i = 1; i < 12; i++) {
-            addToActDB("취침", 2022, 5, i, 0, 0, 6, 0);
-            addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
-            addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
-            addToActDB("식사", 2022, 5, i, 13, 0, 14, 0);
-            addToActDB("운동", 2022, 5, i, 16 , 0, 18, 0);
-            addToActDB("식사", 2022, 5, i, 18, 0, 19, 0);
-            addToActDB("게임", 2022, 5, i, 20, 0, 22, 0);
-            addToActDB("취침", 2022, 5, i, 22, 0, 24, 0);
+        for(int i = 1; i < 31; i++) {
+            addToActDB("sleep", 2022, 5, i, 0, 0, 6, 0);
+            addToActDB("eat", 2022, 5, i, 8, 0, 9, 0);
+            addToActDB("study", 2022, 5, i, 10, 0, 12, 0);
+            addToActDB("eat", 2022, 5, i, 13, 0, 14, 0);
+            addToActDB("exercise", 2022, 5, i, 16 , 0, 18, 0);
+            addToActDB("eat", 2022, 5, i, 18, 0, 19, 0);
+            addToActDB("game", 2022, 5, i, 20, 0, 22, 0);
+            addToActDB("sleep", 2022, 5, i, 22, 0, 24, 0);
         }
         for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
             //addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
@@ -973,14 +1026,12 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         ArrayList<String> DateList=new ArrayList<>();
-
         for(int i=0;i<ActInfoList.size();i++){
             String Date=ActInfoList.get(i).getYear()+"/"+ActInfoList.get(i).getMonth()+"/"+ActInfoList.get(i).getDate();
             if(!DateList.contains(Date)){
                 DateList.add(Date);
             }
         }
-
         for(int i=0;i<DateList.size();i++){
             DayList.add(new ArrayList<>());
         }
@@ -992,7 +1043,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         //한 카테고리 내 여러 시간 기록이 있을테니 arraylist에 저장
         //어레이리스트 속의 총합 시간 계산
         //총합 시간이 목표와 부합하는지 체크
@@ -1006,20 +1056,18 @@ public class MainActivity extends AppCompatActivity {
             Log.i("CategoryStat",""+AffectingStat.get(i)+" "+CategoryList.get(i));
         }
 
+
         for(int i=0;i<DayList.size();i++){  //DayList.get(i) 가 하나의 날짜를 나타냄 ex) 5/20의 모든 시간 기록 담고있음
             //한 날짜의 모든 시간 기록을 카테고리별로 분류  ex) 수면, 식사, 게임, 운동.....
-
             for(int n=0;n<CategoryList.size();n++){
                 ByDateCategoryDataList.add(new ArrayList<>());//카테고리별로 기록 넣어둘 공간 할당
             }
-
             for(int j=0;j<DayList.get(i).size();j++){  //ex) DayList.get(i): 5/20 DayList.get(i).get(j): 5/20 9~11 Study
                 int index=CategoryList.indexOf(DayList.get(i).get(j).Category);  //CategoryList(index) "식사(0)","취침(1)","공부(2)","운동(3)","게임(4)"
                 if(index>=0){
                     ByDateCategoryDataList.get(index).add(PetStateManage.calTimeValue(DayList.get(i).get(j).Category,DayList.get(i).get(j).StartHour,DayList.get(i).get(j).StartMinute,DayList.get(i).get(j).EndHour,DayList.get(i).get(j).EndMinute));
                 }
             }//이 for문에서는 하루 내의 기록들을 다룬다. 따라서 이 반복문이 끝나면 하루에 대한 데이터가 모두 카테고리별로 정리
-
             for(int k=0;k<CategoryList.size();k++){
                 TotalCategoryDataList.add(PetStateManage.calCategoryData(ByDateCategoryDataList.get(k)));
                 TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k)));
@@ -1056,8 +1104,8 @@ public class MainActivity extends AppCompatActivity {
         RadarData data=new RadarData();
         data.addDataSet(set1);
 
-        PetStateChart.setData(data);
-        PetStateChart.invalidate();
+        //PetStateChart.setData(data);
+        //PetStateChart.invalidate();
     }
 
 

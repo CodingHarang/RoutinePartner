@@ -22,14 +22,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/CategoryList"
         android:layout_width="367dp"
-        android:layout_height="308dp"
+        android:layout_height="380dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.227"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp" />
+        app:layout_constraintVertical_bias="0.269" />
 
     <TextView
         android:id="@+id/TimeIntervalSetting"
@@ -39,10 +39,10 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.103"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CategoryList"
-        app:layout_constraintVertical_bias="0.08" />
+        app:layout_constraintVertical_bias="0.246" />
 
     <TextView
         android:id="@+id/CurrentTimeInterval"
@@ -57,40 +57,48 @@
         app:layout_constraintTop_toBottomOf="@+id/TimeIntervalSetting"
         app:layout_constraintVertical_bias="0.16" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/CategoryAddBtn"
-        android:layout_width="83dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="28dp"
-        android:text="추가"
-        android:textSize="16sp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="29dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.102"
+        app:layout_constraintHorizontal_bias="0.077"
         app:layout_constraintStart_toEndOf="@+id/CategorySetting"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/addcategoryround" />
 
-    <Button
-        android:id="@+id/PlusInterval"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="+"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.41"
-        app:layout_constraintStart_toEndOf="@+id/CurrentTimeInterval"
-        app:layout_constraintTop_toBottomOf="@+id/TimeIntervalSetting" />
-
-    <Button
+    <ImageButton
         android:id="@+id/MinusInterval"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="-"
-        android:textSize="20sp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/CurrentTimeInterval"
-        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintHorizontal_bias="0.62"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TimeIntervalSetting" />
+        app:layout_constraintTop_toBottomOf="@+id/TimeIntervalSetting"
+        app:layout_constraintVertical_bias="0.155"
+        app:srcCompat="@drawable/ic_round_arrow_back_ios_24" />
+
+    <ImageButton
+        android:id="@+id/PlusInterval"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.381"
+        app:layout_constraintStart_toEndOf="@+id/CurrentTimeInterval"
+        app:layout_constraintTop_toBottomOf="@+id/TimeIntervalSetting"
+        app:layout_constraintVertical_bias="0.155"
+        app:srcCompat="@drawable/ic_round_arrow_forward_ios_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

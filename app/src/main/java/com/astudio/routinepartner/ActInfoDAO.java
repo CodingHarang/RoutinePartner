@@ -30,6 +30,12 @@ public interface ActInfoDAO {
     ActInfo[] getItemByCategory(String category);
 
     // 데이터 수정
-    @Query("UPDATE actInfo SET Year = :CYear, Month = :CMonth, Date = :CDate, StartHour = :CShour, StartMinute = :CSminute, EndHour = :CEhour, EndMinute = :CEminute WHERE id = :id")
-    void updateData(int id, int CYear, int CMonth, int CDate, int CShour, int CSminute, int CEhour, int CEminute);
+    @Query("UPDATE actInfo SET Category = :CCategory, Year = :CYear, Month = :CMonth, Date = :CDate, StartHour = :CShour, StartMinute = :CSminute, EndHour = :CEhour, EndMinute = :CEminute WHERE id = :id")
+    void updateData(int id, String CCategory, int CYear, int CMonth, int CDate, int CShour, int CSminute, int CEhour, int CEminute);
+
+    @Query("UPDATE actInfo SET Category = :CCategory WHERE Category = :OCategory")
+    void updateCategoryName(String OCategory, String CCategory);
+
+    @Query("DELETE FROM actInfo WHERE Category = :DCategory")
+    void deleteByCategory(String DCategory);
 }
