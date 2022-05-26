@@ -36,11 +36,13 @@ import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ import android.util.Log;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
@@ -285,8 +288,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
                 sendDataToPieChart();
                 PieChart.update();
-                //PetView.setRepeatCount(1);  //[PSY] 추가코드
-                //PetView.playAnimation();    //[PSY] 추가코드
+                PetView.setRepeatCount(1);  //[PSY] 추가코드
+                PetView.playAnimation();    //[PSY] 추가코드
             }
         });
         BtnCancel.setOnClickListener(new View.OnClickListener() {
@@ -449,7 +452,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case "4"://포만감
                         img.setImageResource(R.drawable.foodbowlnew);
-                        //FadeAnimation.fadeOutImage(img);
+                        FadeAnimation.fadeOutImage(img);
                         break;
                     case "5"://잔고
                         img.setImageResource(R.drawable.coin);
@@ -530,14 +533,18 @@ public class MainActivity extends AppCompatActivity {
 
         PetStateChart=findViewById(R.id.RadarChart);
 
-        for(String stat:CategoryStat){
-            if(!LableList.contains(stat))
-                LableList.add(stat);
+        if(!CategoryStat.isEmpty()){
+            for(String stat:CategoryStat){
+                if(!LableList.contains(stat))
+                    LableList.add(stat);
+            }
         }
 
-        for(int stat:AffectingStat){
-            if(!LableListInt.contains(stat))
-                LableListInt.add(stat);  //4 2 1
+        if(!AffectingStat.isEmpty()){
+            for(int stat:AffectingStat){
+                if(!LableListInt.contains(stat))
+                    LableListInt.add(stat);  //4 2 1
+            }
         }
 
         String[] labels=new String[LableListInt.size()];
@@ -575,11 +582,12 @@ public class MainActivity extends AppCompatActivity {
         Legend legend=PetStateChart.getLegend();
         legend.setTextColor(0xFFBDBDBD);
 
-        /*PetStateChart.getDescription().setEnabled(false);
+        PetStateChart.getDescription().setEnabled(false);
 
-        for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
+        /*for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
             set.setDrawValues(!set.isDrawValuesEnabled());
-        }
+        }//이 부분 문제
+
         PetStateChart.invalidate();*/
 
 
@@ -712,15 +720,15 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("게임", 2022, 4, i, 20, 0, 22, 0);
             addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
         }*/
-        for(int i = 1; i < 31; i++) {
-            addToActDB("sleep", 2022, 5, i, 0, 0, 6, 0);
-            addToActDB("eat", 2022, 5, i, 8, 0, 9, 0);
-            addToActDB("study", 2022, 5, i, 10, 0, 12, 0);
-            addToActDB("eat", 2022, 5, i, 13, 0, 14, 0);
-            addToActDB("exercise", 2022, 5, i, 16 , 0, 18, 0);
-            addToActDB("eat", 2022, 5, i, 18, 0, 19, 0);
-            addToActDB("game", 2022, 5, i, 20, 0, 22, 0);
-            addToActDB("sleep", 2022, 5, i, 22, 0, 24, 0);
+        for(int i = 1; i < 12; i++) {
+            addToActDB("취침", 2022, 5, i, 0, 0, 6, 0);
+            addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
+            addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
+            addToActDB("식사", 2022, 5, i, 13, 0, 14, 0);
+            addToActDB("운동", 2022, 5, i, 16 , 0, 18, 0);
+            addToActDB("식사", 2022, 5, i, 18, 0, 19, 0);
+            addToActDB("게임", 2022, 5, i, 20, 0, 22, 0);
+            addToActDB("취침", 2022, 5, i, 22, 0, 24, 0);
         }
         for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
             //addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
@@ -1104,8 +1112,8 @@ public class MainActivity extends AppCompatActivity {
         RadarData data=new RadarData();
         data.addDataSet(set1);
 
-        //PetStateChart.setData(data);
-        //PetStateChart.invalidate();
+        PetStateChart.setData(data);
+        PetStateChart.invalidate();
     }
 
 
