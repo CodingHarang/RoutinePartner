@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         this.sendBroadcast(intent);
         //Log.i("WidgetId", "" + intent.getAction());
         SavedSettings.isRefreshed = true;
+        setRadarData();
         //Log.i("in StartActivity", "" + AppWidgetManager.getInstance(getApplicationContext()).getAppWidgetIds(new ComponentName(this.getPackageName(), WidgetProvider.class.getName()))[0]);
     }
 
@@ -558,8 +559,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        setRadarData();
-
         /*String[] labels=new String[LableList.size()];
         int size=0;
         for(String item:LableList){
@@ -569,7 +568,7 @@ public class MainActivity extends AppCompatActivity {
 
         XAxis xAxis=PetStateChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-        xAxis.setTextColor(0xFFBDBDBD);
+        xAxis.setTextColor(0xFF898989);
         xAxis.setTextSize(8f);
         YAxis yAxis=PetStateChart.getYAxis();
         yAxis.setDrawLabels(false);
@@ -578,7 +577,7 @@ public class MainActivity extends AppCompatActivity {
         yAxis.setAxisMaximum(100);
         yAxis.setDrawLabels(false);
         Legend legend=PetStateChart.getLegend();
-        legend.setTextColor(0xFFBDBDBD);
+        legend.setTextColor(0xFF898989);
 
         PetStateChart.getDescription().setEnabled(false);
 
@@ -587,11 +586,6 @@ public class MainActivity extends AppCompatActivity {
         }//이 부분 문제
 
         PetStateChart.invalidate();*/
-
-
-        ((ImageView)findViewById(R.id.Restart)).setOnClickListener(view -> {
-            setRadarData();
-        });
 
         //-------------------------------------------------------------------->PSY
         //-------------------------------------------------------------------->PSY
@@ -718,15 +712,15 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("게임", 2022, 4, i, 20, 0, 22, 0);
             addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
         }*/
-        for(int i = 1; i < 12; i++) {
-            addToActDB("취침", 2022, 5, i, 0, 0, 6, 0);
+        for(int i = 1; i < 31; i++) {
+            addToActDB("수면", 2022, 5, i, 0, 0, 6, 0);
             addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
             addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
             addToActDB("식사", 2022, 5, i, 13, 0, 14, 0);
-            addToActDB("운동", 2022, 5, i, 16 , 0, 18, 0);
+            //addToActDB("운동", 2022, 5, i, 16 , 0, 18, 0);
             addToActDB("식사", 2022, 5, i, 18, 0, 19, 0);
-            addToActDB("게임", 2022, 5, i, 20, 0, 22, 0);
-            addToActDB("취침", 2022, 5, i, 22, 0, 24, 0);
+            //addToActDB("게임", 2022, 5, i, 20, 0, 22, 0);
+            addToActDB("수면", 2022, 5, i, 22, 0, 24, 0);
         }
         for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
             //addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));

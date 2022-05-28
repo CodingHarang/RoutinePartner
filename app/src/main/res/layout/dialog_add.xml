@@ -10,8 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edtCategory"
-        android:textColor="#BDBDBD"
+        android:textColor="#333333"
         android:background="@android:color/transparent"
+        android:textSize="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"/>
     <Button
@@ -19,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:id="@+id/btnCalendar"
-        android:textColor="#898989"
+        android:textColor="#333333"
         android:textAllCaps="false"
         android:background="@drawable/button_square" />
     <LinearLayout
@@ -92,7 +93,7 @@
             android:layout_margin="5dp"
             android:id="@+id/btnOK"
             android:text="OK"
-            android:textColor="#898989"
+            android:textColor="#333333"
             android:textAllCaps="false"
             android:background="@drawable/button_square" />
 
@@ -102,7 +103,7 @@
             android:layout_margin="5dp"
             android:id="@+id/btnCancel"
             android:text="Cancel"
-            android:textColor="#898989"
+            android:textColor="#333333"
             android:textAllCaps="false"
             android:background="@drawable/button_square" />
     </LinearLayout>

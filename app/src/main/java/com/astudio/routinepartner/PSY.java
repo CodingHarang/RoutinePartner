@@ -78,17 +78,17 @@ public class PSY {
         }
         switch(goaltype){
             case 1: { //횟수
-                if(GoalList.get(index)==ByDateTotalTime){
+                if(GoalList.get(index)<=ByDateTotalTime && ReturnValue < 100){
                     ReturnValue+=5;
                 }
-                else{
+                else if(GoalList.get(index)>ByDateTotalTime && ReturnValue > 0){
                     ReturnValue-=5;
                 }
             }break;
             case 2: {
-                if(GoalList.get(index)<=ByDateTotalTime){
+                if(GoalList.get(index)<=ByDateTotalTime && ReturnValue < 100){
                     ReturnValue+=5;
-                }else{
+                }else if(GoalList.get(index)>ByDateTotalTime && ReturnValue > 0){
                     ReturnValue-=5;
                 }
             }break;

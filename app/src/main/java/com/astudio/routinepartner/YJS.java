@@ -25,21 +25,21 @@ public class YJS {
             NP[i].setMaxValue(12);
             NP[i].setMinValue(0);
 //            NP[i].setBackgroundColor(0xFF000000);
-//            NP[i].setTextColor(0xFFFFFFFF);
+            NP[i].setTextColor(0xFF333333);
         }
         for(int i = 4; i < 6; i++) {
             NP[i].setTextSize(40);
             NP[i].setMaxValue(59);
             NP[i].setMinValue(0);
 //            NP[i].setBackgroundColor(0xFF000000);
-//            NP[i].setTextColor(0xFFFFFFFF);
+            NP[i].setTextColor(0xFF333333);
         }
         for(int i = 0; i < 2; i++) {
             NP[i].setTextSize(30);
             NP[i].setMaxValue(1);
             NP[i].setMinValue(0);
 //            NP[i].setBackgroundColor(0xFF000000);
-//            NP[i].setTextColor(0xFFFFFFFF);
+            NP[i].setTextColor(0xFF333333);
             NP[i].setDisplayedValues(new String[] {"AM", "PM"});
         }
     }

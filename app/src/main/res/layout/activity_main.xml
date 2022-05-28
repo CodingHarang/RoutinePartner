@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:background="@drawable/button_square"
-            android:textColor="#898989"
+            android:textColor="#333333"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,10 +75,11 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="350dp"
-        android:layout_height="340dp"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
         android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp">
 
         <com.astudio.routinepartner.PieChartView
             android:id="@+id/PieChartView"
@@ -89,24 +90,15 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:scaleX="1.1"
+            android:scaleY="1.1"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="280dp">
-
-        <ImageView
-            android:id="@+id/Restart"
-            android:layout_width="49dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="140dp"
-            android:layout_marginTop="12dp"
-            android:background="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/refresh" />
 
         <TextView
             android:id="@+id/PetName"
@@ -129,7 +121,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
-            app:lottie_scale="1" />
+            app:lottie_scale="1"
+            android:scaleX="1"
+            android:scaleY="1"/>
 
         <ImageView
             android:id="@+id/HeartImage"
@@ -155,10 +149,15 @@
             android:id="@+id/RadarChart"
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:layout_marginStart="16dp"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
             android:theme="@style/textColor"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.925">
 
         </com.github.mikephil.charting.charts.RadarChart>
 
@@ -177,7 +176,7 @@
             android:text="MakeData"
             android:textAllCaps="false"
             android:background="@drawable/button_square"
-            android:textColor="#898989" />
+            android:textColor="#333333" />
         <Button
             android:id="@+id/btnDeleteAll"
             android:layout_width="wrap_content"
@@ -187,7 +186,7 @@
             android:text="DeleteAll"
             android:textAllCaps="false"
             android:background="@drawable/button_square"
-            android:textColor="#898989" />
+            android:textColor="#333333" />
         <Button
             android:id="@+id/btnShowPieChart"
             android:layout_width="wrap_content"
@@ -196,7 +195,7 @@
             android:text="ShowPieChart"
             android:textAllCaps="false"
             android:background="@drawable/button_square"
-            android:textColor="#898989" />
+            android:textColor="#333333" />
     </LinearLayout>
     <!--<TextView
         android:id="@+id/txtTime"
@@ -206,7 +205,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
 
         <Button
             android:id="@+id/btn1"
@@ -216,7 +216,7 @@
             android:layout_weight="1"
             android:textAllCaps="false"
             android:background="@drawable/button_square"
-            android:textColor="#898989"
+            android:textColor="#333333"
             android:textSize="20dp"/>
 
         <Button
@@ -227,7 +227,7 @@
             android:layout_weight="1"
             android:textAllCaps="false"
             android:background="@drawable/button_square"
-            android:textColor="#898989"
+            android:textColor="#333333"
             android:textSize="20dp"  />
 
         <Button
@@ -238,7 +238,7 @@
             android:layout_weight="1"
             android:textAllCaps="false"
             android:background="@drawable/button_square"
-            android:textColor="#898989"
+            android:textColor="#333333"
             android:textSize="20dp"  />
 
         <Button
@@ -249,7 +249,7 @@
             android:layout_weight="1"
             android:textAllCaps="false"
             android:background="@drawable/button_square"
-            android:textColor="#898989"
+            android:textColor="#333333"
             android:textSize="20dp"  />
 
         <Button
@@ -260,7 +260,7 @@
             android:layout_weight="1"
             android:textAllCaps="false"
             android:background="@drawable/button_square"
-            android:textColor="#898989"
+            android:textColor="#333333"
             android:textSize="20dp"  />
     </LinearLayout>
 </LinearLayout>

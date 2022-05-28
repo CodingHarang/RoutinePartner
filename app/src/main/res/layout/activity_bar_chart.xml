@@ -86,22 +86,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         android:background="@drawable/button_square"
-        android:textColor="#898989" />
+        android:textColor="#333333" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="381dp"
+        android:layout_height="157dp"
+        android:background="@drawable/background_square"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.533"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/BtnMakeChart"
-        app:layout_constraintVertical_bias="0.129">
+        app:layout_constraintVertical_bias="0.377">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="20dp">
 
             <ProgressBar
@@ -113,10 +114,8 @@
                 android:progressDrawable="@drawable/circular_progressbar_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/ProgressPercent"
@@ -124,6 +123,7 @@
                 android:layout_height="wrap_content"
                 android:text="%"
                 android:textSize="16sp"
+                android:textColor="#333333"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -136,11 +136,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textSize="16sp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
-            android:text="차트의 데이터를 입력해주세요." />
+            android:text="차트의 데이터를 입력해주세요."
+            android:textColor="#333333"
+            android:textSize="16sp" />
     </LinearLayout>
 
 
