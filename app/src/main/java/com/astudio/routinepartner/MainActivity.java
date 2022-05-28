@@ -227,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //<--------------------------------------------------------------------YJS
         //<--------------------------------------------------------------------YJS
-        PetStateChart=findViewById(R.id.RadarChart);
         if(SavedSettings.isRefreshed == false) {
             refreshSettings();
         }
@@ -530,6 +529,9 @@ public class MainActivity extends AppCompatActivity {
         //ArrayList<String> StatList = SavedSettings.StatList;
         ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;  //4, 2, 4, 1, 2
         ArrayList<String> CategoryList=SavedSettings.CategoryList;  //"취침", "식사", "공부", "게임", "운동"
+
+
+        PetStateChart=findViewById(R.id.RadarChart);
 
         if(!CategoryStat.isEmpty()){
             for(String stat:CategoryStat){
@@ -1109,7 +1111,7 @@ public class MainActivity extends AppCompatActivity {
 
         RadarData data=new RadarData();
         data.addDataSet(set1);
-        Log.i("", "" + PetStateChart);
+
         PetStateChart.setData(data);
         PetStateChart.invalidate();
     }
