@@ -235,8 +235,6 @@ public class BarChartActivity extends AppCompatActivity {
             Smonth = ChartCalender.get(Calendar.MONTH) + 1;
             Sday = ChartCalender.get(Calendar.DAY_OF_MONTH);
             SDate = ChartCalender.get(Calendar.DATE);
-//
-            Log.v("값 확인", ""+Syear+"  "+Smonth+"  "+Sday);
 
             EditStartText = SDF.format(ChartCalender.getTime());
         }else if(DateWhen == EditEnd){
@@ -244,8 +242,6 @@ public class BarChartActivity extends AppCompatActivity {
             Emonth = ChartCalender.get(Calendar.MONTH) + 1;
             Eday = ChartCalender.get(Calendar.DAY_OF_MONTH);
             EDate = ChartCalender.get(Calendar.DATE);
-//
-            Log.v("값 확인", ""+Eyear+"  "+Emonth+"  "+Eday);
 
             EditEndText = SDF.format(ChartCalender.getTime());
 
@@ -342,6 +338,7 @@ public class BarChartActivity extends AppCompatActivity {
             for (int i = 0; i < daylist.size(); i++) {
                 for(int j = 0; j < weektimelist.size();j++){
                     weekroutine.add(weektimelist.get(j).get(i));
+
                 }
                 week = new float[weekroutine.size()];
                 int n = 0;
@@ -349,7 +346,6 @@ public class BarChartActivity extends AppCompatActivity {
                     week[n] = temp;
                     n++;
                 }
-                Log.v("bdetw", ""+week.length);
                 entries.add(new BarEntry(i, week));
                 weekroutine.clear();
             }
@@ -374,8 +370,6 @@ public class BarChartActivity extends AppCompatActivity {
                     Xaxis.setAxisMaximum(barDataSet.getXMax() + 0.5f);
                 }
             }
-
-            Log.v("asdfsg", ""+entries);
 
             Xaxis.setGranularity(1f);
 
@@ -452,7 +446,6 @@ public class BarChartActivity extends AppCompatActivity {
             }
         }
         AllDayList.add(ActInfoItemList);
-        Log.v("?????", ""+AllDayList);
 
 //        for(int i = 0; i < ActInfoList.size(); i++) {
 //            //만약 날이 바뀌면 기존 리스트 AllDayList에 추가하고 새로운 ActInfoItemList 생성
@@ -477,7 +470,6 @@ public class BarChartActivity extends AppCompatActivity {
     //카테고리에 따른 값 계산
 
     private void getCategory(){
-        Log.v("all", ""+AllDayList);
         float CategoryTime;
         String CurrentDay;
         //그 안에서 선택된 카테고리의 값만 가져오기
@@ -503,8 +495,9 @@ public class BarChartActivity extends AppCompatActivity {
             }
             TimeList.add(CategoryTime);
         }
-        Log.v("타임리스트", ""+ TimeList);
-        WeekTimeList.add(TimeList);
+        ArrayList<Float> tempList = new ArrayList<>();
+        tempList.addAll(TimeList);
+        WeekTimeList.add(tempList);
     }
 
 
@@ -564,6 +557,8 @@ public class BarChartActivity extends AppCompatActivity {
 
     }
 
+    //stacked bar chart
+
     public void weekChart(){
         Syear = ChartCalender.get(Calendar.YEAR);
         Smonth = ChartCalender.get(Calendar.MONTH)+1;
@@ -575,7 +570,6 @@ public class BarChartActivity extends AppCompatActivity {
         WeekTimeList.clear();
 
         getData();
-        Log.v("??", ""+AllDayList);
 
         for(int i = 0; i < SavedSettings.CategoryList.size(); i++){
             DayList.clear();

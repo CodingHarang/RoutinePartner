@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.jar.Attributes;
 
 public class SetCategoryActivity extends AppCompatActivity {
 
@@ -111,8 +112,6 @@ public class SetCategoryActivity extends AppCompatActivity {
             GoalData.setText(Integer.toString(CurGoal));
         }
 
-        //스탯, 라디오버튼, 라디오버튼 값 기본값 넣어줘야함.
-
         
         //스탯 설정
 
@@ -185,9 +184,6 @@ public class SetCategoryActivity extends AppCompatActivity {
                                 ColorInt = color;
                                 ColorLong = Long.valueOf(color);
                                 ParseColor = Color.parseColor(colorHex);
-                                Log.v("colorset", ""+ColorSet);
-                                Log.v("Colorint", ""+ColorInt);
-                                Log.v("컬러", ""+ParseColor+"  "+ColorSet);
                             }
                         })
                         .show();
@@ -225,14 +221,13 @@ public class SetCategoryActivity extends AppCompatActivity {
         CheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(SetCategoryName.getText().length() == 0 || ColorLong == 0 || StatSet == null || GoalKey == 0 || GoalData.getText().length() == 0){
+                if(CurPosition < 2 &&(ColorLong == 0||GoalKey == 0||GoalData.getText().length() == 0)){
+                    Toast.makeText(getApplicationContext(), "설정을 모두 완료해주세요", Toast.LENGTH_SHORT).show();
+                } else if(CurPosition >= 2 && (SetCategoryName.getText().length() == 0 || ColorLong == 0 || StatSet == null || GoalKey == 0 || GoalData.getText().length() == 0)){
                     Toast.makeText(getApplicationContext(), "설정을 모두 완료해주세요", Toast.LENGTH_SHORT).show();
                 }else{
                     NameSet = SetCategoryName.getText().toString();
                     GoalSet = Integer.parseInt(GoalData.getText().toString());
-                    for(int i = 0; i < SetCategoryAdapter.CategoryItem.size(); i++){
-                        Log.v("어레이", ""+SetCategoryAdapter.CategoryItem.get(i).getName());
-                    }
                     Intent Cheak = new Intent(getApplicationContext(), SettingActivity.class);
                     Cheak.putExtra("Name", NameSet);
 //                    Cheak.putExtra("Color", ColorSet);
