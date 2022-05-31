@@ -713,7 +713,7 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("게임", 2022, 4, i, 20, 0, 22, 0);
             addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
         }*/
-        for(int i = 1; i < 12; i++) {//31로 돌려놓기
+        for(int i = 1; i < 31; i++) {//31로 돌려놓기
             addToActDB("수면", 2022, 5, i, 0, 0, 6, 0);
             addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
             addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
@@ -1106,7 +1106,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
-        set1.setColor(Color.BLUE);
+        set1.setColor(Color.BLUE);  //선 색깔 변경
+        set1.setDrawFilled(true);
+        set1.setFillColor(Color.BLUE);  //내부 색깔 변경
         set1.setLineWidth(0.5f);
         set1.setValueTextSize(3f);
         set1.setDrawHighlightIndicators(false);
