@@ -187,8 +187,8 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
-        timeToAngle();
-        timeToAngleYesterday();
+        timeToAngle(PieYear, PieMonth, PieDay);
+        timeToAngleYesterday(PieYear, PieMonth, PieDay);
         Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
         sendDataToPieChart();
         PieChart.update();
@@ -285,8 +285,8 @@ public class MainActivity extends AppCompatActivity {
                 Month = cal.get(Calendar.MONTH);
                 Date = cal.get(Calendar.DATE);
                 makeData();
-                timeToAngle();
-                timeToAngleYesterday();
+                timeToAngle(PieYear, PieMonth, PieDay);
+                timeToAngleYesterday(PieYear, PieMonth, PieDay);
                 Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
                 sendDataToPieChart();
                 PieChart.update();
@@ -335,6 +335,9 @@ public class MainActivity extends AppCompatActivity {
         //<--------------------------------------------------------------------LSY
         //<--------------------------------------------------------------------LSY
 
+        PieYear = PieCalendar.get(Calendar.YEAR);
+        PieMonth = PieCalendar.get(Calendar.MONTH)+1;
+        PieDay = PieCalendar.get(Calendar.DAY_OF_MONTH);
 
         BtnShowPieChart = findViewById(R.id.btnShowPieChart);
         ImageButton BtnChart = (ImageButton) findViewById(R.id.BtnChart);
@@ -347,8 +350,8 @@ public class MainActivity extends AppCompatActivity {
         BtnShowPieChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timeToAngle();
-                timeToAngleYesterday();
+                timeToAngle(PieYear, PieMonth, PieDay);
+                timeToAngleYesterday(PieYear, PieMonth, PieDay);
                 Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
                 sendDataToPieChart();
                 PieChart.update();
@@ -385,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
                 updateDate();
 
                 PieYear = year;
-                PieMonth = month;
+                PieMonth = month+1;
                 PieDay = day;
 
                 timeToAngle(PieYear, PieMonth, PieDay);
@@ -788,46 +791,46 @@ public class MainActivity extends AppCompatActivity {
 
     //숫자로 받을 경우 바로 TimeLsit에 추가
 
-    public void timeToAngle(){
-        Calendar cal = Calendar.getInstance();
-        CountDownLatch CDL = new CountDownLatch(1);
-
-        AngleList.clear();
-        PieCategoryList.clear();
-        ActInfoItemList.clear();
-        AngleList.clear();
-        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-            ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))));
-            CDL.countDown();
-        });
-        try {
-            CDL.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        for(int i = 0; i < ActInfoList.size(); i++) {
-            ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
-        }
-        Collections.sort(ActInfoItemList, new Comparator<ActInfoItem>(){
-            public int compare(ActInfoItem o1, ActInfoItem o2) {
-                if(o1.StartHour == o2.StartHour) {
-                    if(o1.StartMinute == o2.StartMinute) return 0;
-                    return o1.StartMinute < o2.StartMinute ? -1 : 1;
-                }
-                return o1.StartHour < o2.StartHour ? -1 : 1;
-            }
-        });
-        for(int i = 0; i < ActInfoItemList.size(); i++) {
-            AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
-            AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
-            PieCategoryList.add(ActInfoItemList.get(i).Category);
-            Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
-            Log.v("카테고리", ""+ActInfoItemList.get(i).Category);
-        }
-
-    }
+//    public void timeToAngle(){
+//        Calendar cal = Calendar.getInstance();
+//        CountDownLatch CDL = new CountDownLatch(1);
+//
+//        AngleList.clear();
+//        PieCategoryList.clear();
+//        ActInfoItemList.clear();
+//        AngleList.clear();
+//        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+//            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+//            ActInfoDAO mActInfoDao = db.actInfoDao();
+//            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))));
+//            CDL.countDown();
+//        });
+//        try {
+//            CDL.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        for(int i = 0; i < ActInfoList.size(); i++) {
+//            ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
+//        }
+//        Collections.sort(ActInfoItemList, new Comparator<ActInfoItem>(){
+//            public int compare(ActInfoItem o1, ActInfoItem o2) {
+//                if(o1.StartHour == o2.StartHour) {
+//                    if(o1.StartMinute == o2.StartMinute) return 0;
+//                    return o1.StartMinute < o2.StartMinute ? -1 : 1;
+//                }
+//                return o1.StartHour < o2.StartHour ? -1 : 1;
+//            }
+//        });
+//        for(int i = 0; i < ActInfoItemList.size(); i++) {
+//            AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
+//            AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
+//            PieCategoryList.add(ActInfoItemList.get(i).Category);
+//            Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
+//            Log.v("카테고리", ""+ActInfoItemList.get(i).Category);
+//        }
+//
+//    }
 
 
     public void timeToAngle(int year, int month, int day) {
@@ -841,7 +844,7 @@ public class MainActivity extends AppCompatActivity {
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month + 1, day, year, month + 1, day)));
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month, day, year, month, day)));
             CDL.countDown();
         });
         try {
@@ -870,54 +873,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void timeToAngleYesterday(){
-        int BeforeTime, AfterTime;
-        float StartAngle, DrawAngle;
-
-        YesterDayAngleList.clear();
-
-        Calendar cal = Calendar.getInstance();
-        CountDownLatch CDL = new CountDownLatch(1);
-        ActInfoYesterdayItemList.clear();
-        YesterDayAngleList.clear();
-        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-            ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE)-1, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE)-1)));
-            CDL.countDown();
-        });
-        try {
-            CDL.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Collections.sort(ActInfoList, new Comparator<ActInfo>(){
-            public int compare(ActInfo o1, ActInfo o2) {
-                if(o1.getStartHour() == o2.getStartHour()) {
-                    if(o1.getStartMinute() == o2.getStartMinute()) return 0;
-                    return o1.getStartMinute() < o2.getStartMinute() ? -1 : 1;
-                }
-                return o1.getStartHour() < o2.getStartHour() ? -1 : 1;
-            }
-        });
-        int YdSize = ActInfoList.size()-1;
-        if((YdSize > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 24)
-        && (AngleList.get(0) == 270)){
-            ActInfoYesterdayItemList.add(new ActInfoItem(ActInfoList.get(YdSize).getId(), ActInfoList.get(YdSize).getCategory(), ActInfoList.get(YdSize).getYear(), ActInfoList.get(YdSize).getMonth(), ActInfoList.get(YdSize).getDate(), ActInfoList.get(YdSize).getStartHour(), ActInfoList.get(YdSize).getStartMinute(), ActInfoList.get(YdSize).getEndHour(), ActInfoList.get(YdSize).getEndMinute()));
-            BeforeTime = ActInfoYesterdayItemList.get(0).StartHour*60 + ActInfoYesterdayItemList.get(0).StartMinute;
-            AfterTime = ActInfoYesterdayItemList.get(0).EndHour*60 + ActInfoYesterdayItemList.get(0).EndMinute;
-
-            if(AfterTime == 0){
-                AfterTime = 1440;
-            }
-
-            StartAngle = BeforeTime * 0.25f - 90;
-            DrawAngle = (AfterTime - BeforeTime) * 0.25f;
-
-            YesterDayAngleList.add(StartAngle);
-            YesterDayAngleList.add(DrawAngle);
-        }
-    }
+//    public void timeToAngleYesterday(){
+//        int BeforeTime, AfterTime;
+//        float StartAngle, DrawAngle;
+//
+//        YesterDayAngleList.clear();
+//
+//        Calendar cal = Calendar.getInstance();
+//        CountDownLatch CDL = new CountDownLatch(1);
+//        ActInfoYesterdayItemList.clear();
+//        YesterDayAngleList.clear();
+//        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+//            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+//            ActInfoDAO mActInfoDao = db.actInfoDao();
+//            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE)-1, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE)-1)));
+//            CDL.countDown();
+//        });
+//        try {
+//            CDL.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        Collections.sort(ActInfoList, new Comparator<ActInfo>(){
+//            public int compare(ActInfo o1, ActInfo o2) {
+//                if(o1.getStartHour() == o2.getStartHour()) {
+//                    if(o1.getStartMinute() == o2.getStartMinute()) return 0;
+//                    return o1.getStartMinute() < o2.getStartMinute() ? -1 : 1;
+//                }
+//                return o1.getStartHour() < o2.getStartHour() ? -1 : 1;
+//            }
+//        });
+//        int YdSize = ActInfoList.size()-1;
+//        if((YdSize > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 24)
+//        && (AngleList.get(0) == 270)){
+//            ActInfoYesterdayItemList.add(new ActInfoItem(ActInfoList.get(YdSize).getId(), ActInfoList.get(YdSize).getCategory(), ActInfoList.get(YdSize).getYear(), ActInfoList.get(YdSize).getMonth(), ActInfoList.get(YdSize).getDate(), ActInfoList.get(YdSize).getStartHour(), ActInfoList.get(YdSize).getStartMinute(), ActInfoList.get(YdSize).getEndHour(), ActInfoList.get(YdSize).getEndMinute()));
+//            BeforeTime = ActInfoYesterdayItemList.get(0).StartHour*60 + ActInfoYesterdayItemList.get(0).StartMinute;
+//            AfterTime = ActInfoYesterdayItemList.get(0).EndHour*60 + ActInfoYesterdayItemList.get(0).EndMinute;
+//
+//            if(AfterTime == 0){
+//                AfterTime = 1440;
+//            }
+//
+//            StartAngle = BeforeTime * 0.25f - 90;
+//            DrawAngle = (AfterTime - BeforeTime) * 0.25f;
+//
+//            YesterDayAngleList.add(StartAngle);
+//            YesterDayAngleList.add(DrawAngle);
+//        }
+//    }
 
 
     public void timeToAngleYesterday(int year, int month, int day){
@@ -933,7 +936,7 @@ public class MainActivity extends AppCompatActivity {
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month + 1, day-1, year, month + 1, day-1)));
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month, day-1, year, month, day-1)));
             CDL.countDown();
         });
         try {
@@ -951,7 +954,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         int YdSize = ActInfoList.size()-1;
-        if((YdSize > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 24)
+        if((YdSize > 0) && (PieCategoryList.size() > 0) && (AngleList.size() > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 24)
                 && (AngleList.get(0) == 270)){
             ActInfoYesterdayItemList.add(new ActInfoItem(ActInfoList.get(YdSize).getId(), ActInfoList.get(YdSize).getCategory(), ActInfoList.get(YdSize).getYear(), ActInfoList.get(YdSize).getMonth(), ActInfoList.get(YdSize).getDate(), ActInfoList.get(YdSize).getStartHour(), ActInfoList.get(YdSize).getStartMinute(), ActInfoList.get(YdSize).getEndHour(), ActInfoList.get(YdSize).getEndMinute()));
             BeforeTime = ActInfoYesterdayItemList.get(0).StartHour*60 + ActInfoYesterdayItemList.get(0).StartMinute;
@@ -974,10 +977,6 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat SDF = new SimpleDateFormat(Format, Locale.KOREA);
 
         BtnSelectDay.setText(SDF.format(PieCalendar.getTime()));
-//        Syear = PieCalendar.get(Calendar.YEAR);
-//        Smonth = PieCalendar.get(Calendar.MONTH) + 1;
-//        Sday = PieCalendar.get(Calendar.DAY_OF_MONTH);
-//
     }
 
     //-------------------------------------------------------------------->LSY
