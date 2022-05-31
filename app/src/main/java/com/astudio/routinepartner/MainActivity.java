@@ -83,11 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     LottieAnimationView PetView;
-    TextView PetName;
     String Action ="";
     int ActionInt;
     Context MainContext;
-    String text_PetName="";
     RadarChart PetStateChart;
     ArrayList<String> LableList=new ArrayList<>();
     ArrayList<Integer> LableListInt=new ArrayList<>();
@@ -425,12 +423,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         MainContext=this;
-        text_PetName=PreferenceManage.getString(MainContext,"rebuild");
-        if(text_PetName.isEmpty()){
-            text_PetName="";
-        }
-        PetName=(TextView) findViewById(R.id.PetName);
-        PetName.setText(text_PetName);
 
         PetView=findViewById(R.id.lottie);
         PetView.setAnimation("HappyDog.json");
@@ -484,6 +476,7 @@ public class MainActivity extends AppCompatActivity {
 
                 PetView.setOnLongClickListener((view) -> {
                     Action ="interaction";
+                    PSY.InteractionNum++;
                     ImageView HeartImage=findViewById(R.id.HeartImage);
                     HeartImage.setImageResource(R.drawable.heartvector);
                     FadeAnimation.fadeInImage(HeartImage);
@@ -549,7 +542,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        String[] labels=new String[LableListInt.size()];
+        String[] labels=new String[LableListInt.size()+1];
         for(int i=0;i<LableListInt.size();i++){
             switch(LableListInt.get(i)){
                 case 1: labels[i]="지능"; LableList.add(labels[i]); break;
@@ -561,6 +554,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+        labels[LableListInt.size()]="애정";  //애정 부분 추가
+
+
 
         /*String[] labels=new String[LableList.size()];
         int size=0;
@@ -573,6 +569,8 @@ public class MainActivity extends AppCompatActivity {
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         xAxis.setTextColor(0xFF898989);
         xAxis.setTextSize(8f);
+        xAxis.setAxisMinimum(0);
+        xAxis.setAxisMaximum(100);
         YAxis yAxis=PetStateChart.getYAxis();
         yAxis.setDrawLabels(false);
         yAxis.setLabelCount(5,false);
@@ -715,7 +713,7 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("게임", 2022, 4, i, 20, 0, 22, 0);
             addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
         }*/
-        for(int i = 1; i < 31; i++) {
+        for(int i = 1; i < 12; i++) {//31로 돌려놓기
             addToActDB("수면", 2022, 5, i, 0, 0, 6, 0);
             addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
             addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
@@ -1075,7 +1073,16 @@ public class MainActivity extends AppCompatActivity {
             for(int l=0;l<LableListInt.size();l++){
                 for(int m=0;m< AffectingStat.size();m++){
                     if(LableListInt.get(l)==AffectingStat.get(m)){
-                        TotalStatDataList.set(l,TotalStatDataList.get(l)+TotalCategoryDataList.get(m));
+//                        if(!(TotalStatDataList.get(l)<=0&&TotalCategoryDataList.get(m)<0)||!(TotalStatDataList.get(l)>=100&&TotalCategoryDataList.get(m)>0)){
+//                            TotalStatDataList.set(l,TotalStatDataList.get(l)+TotalCategoryDataList.get(m));
+//                        }
+                        if(TotalStatDataList.get(l)==0&&TotalCategoryDataList.get(m)<0){
+                            TotalStatDataList.set(l,0f);
+                        }else if(TotalStatDataList.get(l)==100&&TotalCategoryDataList.get(m)>0){
+                            TotalStatDataList.set(l,100f);
+                        }else{
+                            TotalStatDataList.set(l,TotalStatDataList.get(l)+TotalCategoryDataList.get(m));
+                        }
                     }
                 }
             }//이 부분 다시
@@ -1091,6 +1098,12 @@ public class MainActivity extends AppCompatActivity {
                 visitors.add(new RadarEntry(0f));
             }
         }
+        if(PSY.InteractionNum>=20){
+            visitors.add(new RadarEntry(100));
+        }else{
+            visitors.add(new RadarEntry(PSY.InteractionNum*5));
+        }
+
 
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
         set1.setColor(Color.BLUE);
@@ -1099,54 +1112,12 @@ public class MainActivity extends AppCompatActivity {
         set1.setDrawHighlightIndicators(false);
         set1.setDrawHighlightCircleEnabled(true);
 
-
         RadarData data=new RadarData();
         data.addDataSet(set1);
 
         PetStateChart.setData(data);
         PetStateChart.invalidate();
     }
-
-
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.setup_menu,menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.NameSet:{
-                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("펫 이름 설정");
-                builder.setMessage("이름을 입력하시오.");
-                final EditText editText=new EditText(MainActivity.this);
-                builder.setView(editText);
-
-                builder.setPositiveButton("입력", new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog,int which){
-                        String name;
-                        name=editText.getText().toString();
-                        PetName.setText(name);
-                        PreferenceManage.setString(MainContext, "rebuild", name);
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton("취소",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                builder.show();
-            } break;
-
-            default:
-        }
-        return true;
-    }
-
 
 
     //-------------------------------------------------------------------->PSY
