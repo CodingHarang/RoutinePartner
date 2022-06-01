@@ -53,6 +53,7 @@ import android.util.Log;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
@@ -68,8 +69,9 @@ public class MainActivity extends AppCompatActivity {
     ImageButton BtnShowList;
     EditText EdtCategory;
     TextView TxtTime;
-    int CategoryNum, PieYear, PieMonth, PieDay;
+    int CategoryNum, PieYear, PieMonth, PieDay, YesterdayYear, YesterdayMonth, YesterdayDay;
     Calendar PieCalendar = Calendar.getInstance();
+    Calendar YesterdayCal = Calendar.getInstance();
 
     PieChartView PieChart;
     ArrayList<Integer> TimeList = new ArrayList<Integer>();
@@ -186,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         timeToAngle(PieYear, PieMonth, PieDay);
-        timeToAngleYesterday(PieYear, PieMonth, PieDay);
+        timeToAngleYesterday(YesterdayYear, YesterdayMonth, YesterdayDay);
         Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
         sendDataToPieChart();
         PieChart.update();
@@ -284,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                 Date = cal.get(Calendar.DATE);
                 makeData();
                 timeToAngle(PieYear, PieMonth, PieDay);
-                timeToAngleYesterday(PieYear, PieMonth, PieDay);
+                timeToAngleYesterday(YesterdayYear, YesterdayMonth, YesterdayDay);
                 Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
                 sendDataToPieChart();
                 PieChart.update();
@@ -337,6 +339,12 @@ public class MainActivity extends AppCompatActivity {
         PieMonth = PieCalendar.get(Calendar.MONTH)+1;
         PieDay = PieCalendar.get(Calendar.DAY_OF_MONTH);
 
+        YesterdayCal.add(PieCalendar.DATE, -1);
+
+        YesterdayYear = YesterdayCal.get(Calendar.YEAR);
+        YesterdayMonth = YesterdayCal.get(Calendar.MONTH)+1;
+        YesterdayDay = YesterdayCal.get(Calendar.DAY_OF_MONTH);
+
         BtnShowPieChart = findViewById(R.id.btnShowPieChart);
         ImageButton BtnChart = (ImageButton) findViewById(R.id.BtnChart);
         ImageButton SettingButton = findViewById(R.id.SettingBtn);
@@ -348,12 +356,7 @@ public class MainActivity extends AppCompatActivity {
         BtnShowPieChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                timeToAngle(PieYear, PieMonth, PieDay);
-//                timeToAngleYesterday(PieYear, PieMonth, PieDay);
-//                Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
-//                sendDataToPieChart();
-//                PieChart.update();
-                //setRadarData(); //[PSY] 추가코드
+
             }
         });
 
@@ -389,8 +392,15 @@ public class MainActivity extends AppCompatActivity {
                 PieMonth = month+1;
                 PieDay = day;
 
+                YesterdayCal = new GregorianCalendar(year, month, day);
+                YesterdayCal.add(YesterdayCal.DATE, -1);
+
+                YesterdayYear = YesterdayCal.get(Calendar.YEAR);
+                YesterdayMonth = YesterdayCal.get(Calendar.MONTH)+1;
+                YesterdayDay = YesterdayCal.get(Calendar.DAY_OF_MONTH);
+
                 timeToAngle(PieYear, PieMonth, PieDay);
-                timeToAngleYesterday(PieYear, PieMonth, PieDay);
+                timeToAngleYesterday(YesterdayYear, YesterdayMonth, YesterdayDay);
                 sendDataToPieChart();
                 PieChart.update();
             }
@@ -865,6 +875,9 @@ public class MainActivity extends AppCompatActivity {
         });
         for (int i = 0; i < ActInfoItemList.size(); i++) {
             AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
+            if(ActInfoItemList.get(i).EndHour == 0){
+                ActInfoItemList.get(i).EndHour = 24;
+            }
             AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
             PieCategoryList.add(ActInfoItemList.get(i).Category);
             Log.i("" + (ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f), "" + (ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f));
@@ -935,7 +948,7 @@ public class MainActivity extends AppCompatActivity {
         ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month, day-1, year, month, day-1)));
+            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month, day, year, month, day)));
             CDL.countDown();
         });
         try {
@@ -953,7 +966,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         int YdSize = ActInfoList.size()-1;
-        if((YdSize > 0) && (PieCategoryList.size() > 0) && (AngleList.size() > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 24)
+        if((YdSize >= 0) && (PieCategoryList.size() > 0) && (AngleList.size() > 0) && (ActInfoList.get(YdSize).getCategory().equals(PieCategoryList.get(0))) && (ActInfoList.get(YdSize).getEndHour() == 0)
                 && (AngleList.get(0) == 270)){
             ActInfoYesterdayItemList.add(new ActInfoItem(ActInfoList.get(YdSize).getId(), ActInfoList.get(YdSize).getCategory(), ActInfoList.get(YdSize).getYear(), ActInfoList.get(YdSize).getMonth(), ActInfoList.get(YdSize).getDate(), ActInfoList.get(YdSize).getStartHour(), ActInfoList.get(YdSize).getStartMinute(), ActInfoList.get(YdSize).getEndHour(), ActInfoList.get(YdSize).getEndMinute()));
             BeforeTime = ActInfoYesterdayItemList.get(0).StartHour*60 + ActInfoYesterdayItemList.get(0).StartMinute;
