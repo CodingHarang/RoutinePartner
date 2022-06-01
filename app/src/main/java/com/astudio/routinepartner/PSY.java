@@ -91,6 +91,8 @@ public class PSY {
                     ReturnValue=10;
                 }else{
                     ReturnValue=-10;
+                    if(InteractionNum > 0)
+                        InteractionNum--;
                 }
             }break;
         }

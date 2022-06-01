@@ -178,7 +178,7 @@ public class BarChartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DateWhen = EditStart;
-                new DatePickerDialog(BarChartActivity.this, ChartDatePicker, ChartCalender.get(Calendar.YEAR),
+                new DatePickerDialog(BarChartActivity.this, R.style.MyDatePickerStyle, ChartDatePicker, ChartCalender.get(Calendar.YEAR),
                         ChartCalender.get(Calendar.MONTH), ChartCalender.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
@@ -187,7 +187,7 @@ public class BarChartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DateWhen = EditEnd;
-                new DatePickerDialog(BarChartActivity.this, ChartDatePicker, ChartCalender.get(Calendar.YEAR),
+                new DatePickerDialog(BarChartActivity.this, R.style.MyDatePickerStyle, ChartDatePicker, ChartCalender.get(Calendar.YEAR),
                         ChartCalender.get(Calendar.MONTH), ChartCalender.get(Calendar.DAY_OF_MONTH)).show();
             }
         });

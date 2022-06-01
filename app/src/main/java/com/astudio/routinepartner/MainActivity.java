@@ -348,12 +348,12 @@ public class MainActivity extends AppCompatActivity {
         BtnShowPieChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timeToAngle(PieYear, PieMonth, PieDay);
-                timeToAngleYesterday(PieYear, PieMonth, PieDay);
-                Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
-                sendDataToPieChart();
-                PieChart.update();
-                setRadarData(); //[PSY] 추가코드
+//                timeToAngle(PieYear, PieMonth, PieDay);
+//                timeToAngleYesterday(PieYear, PieMonth, PieDay);
+//                Toast.makeText(getApplicationContext(), "" + AngleList.size(), Toast.LENGTH_SHORT).show();
+//                sendDataToPieChart();
+//                PieChart.update();
+                //setRadarData(); //[PSY] 추가코드
             }
         });
 
@@ -399,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
         BtnSelectDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(MainActivity.this, PieDatePicker, PieCalendar.get(Calendar.YEAR),
+                new DatePickerDialog(MainActivity.this, R.style.MyDatePickerStyle, PieDatePicker, PieCalendar.get(Calendar.YEAR),
                         PieCalendar.get(Calendar.MONTH), PieCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
@@ -482,6 +482,8 @@ public class MainActivity extends AppCompatActivity {
                     FadeAnimation.fadeInImage(HeartImage);
                     PetView.setRepeatCount(1);
                     PetView.playAnimation();
+
+                    setRadarData();
                     return true;
                 });
 
@@ -1119,8 +1121,6 @@ public class MainActivity extends AppCompatActivity {
         PetStateChart.setData(data);
         PetStateChart.invalidate();
     }
-
-
     //-------------------------------------------------------------------->PSY
     //-------------------------------------------------------------------->PSY
 }
