@@ -10,6 +10,7 @@ public class PSY {
     //Pet 떠나갈 상태
     private float TimeData = 0;
     private float CategoryData = 0;
+    public static int InteractionNum=0;
 
     //ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "취침", "공부", "운동"));
     ArrayList<String> CategoryList=SavedSettings.CategoryList;
@@ -78,23 +79,25 @@ public class PSY {
         }
         switch(goaltype){
             case 1: { //횟수
-                if(GoalList.get(index)<=ByDateTotalTime && ReturnValue < 100){
-                    ReturnValue+=5;
+                if(GoalList.get(index)<=ByDateTotalTime){
+                    ReturnValue=10;
                 }
-                else if(GoalList.get(index)>ByDateTotalTime && ReturnValue > 0){
-                    ReturnValue-=5;
+                else{
+                    ReturnValue=-10;
                 }
             }break;
             case 2: {
-                if(GoalList.get(index)<=ByDateTotalTime && ReturnValue < 100){
-                    ReturnValue+=5;
-                }else if(GoalList.get(index)>ByDateTotalTime && ReturnValue > 0){
-                    ReturnValue-=5;
+                if(GoalList.get(index)<=ByDateTotalTime){
+                    ReturnValue=10;
+                }else{
+                    ReturnValue=-10;
                 }
             }break;
         }
         return ReturnValue;
     }
+
+
 
 /*    public ArrayList<Boolean> isGoalAchieved(ArrayList<Float> TotalTimeList){
         ArrayList<Boolean> IsGoalAchieved=new ArrayList<>();
