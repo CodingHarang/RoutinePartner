@@ -573,13 +573,12 @@ public class MainActivity extends AppCompatActivity {
         xAxis.setAxisMaximum(100);
         YAxis yAxis=PetStateChart.getYAxis();
         yAxis.setDrawLabels(false);
-        yAxis.setLabelCount(5,false);
+        yAxis.setLabelCount(5,true);
         yAxis.setAxisMinimum(0);
         yAxis.setAxisMaximum(100);
         yAxis.setDrawLabels(false);
         Legend legend=PetStateChart.getLegend();
         legend.setTextColor(0xFF898989);
-
         PetStateChart.getDescription().setEnabled(false);
 
         /*for(IDataSet<?> set:PetStateChart.getData().getDataSets()){
