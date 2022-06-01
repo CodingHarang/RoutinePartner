@@ -207,11 +207,18 @@ public class SettingActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
+                            CountDownLatch CDL = new CountDownLatch(1);
                             SettingsDB.DatabaseWriteExecutor.execute(() -> {
                                 SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
                                 SettingsDAO mSettingsDao = db.settingDao();
                                 mSettingsDao.deleteByOrder(SavedSettings.Order.get(pos));
+                                CDL.countDown();
                             });
+                            try {
+                                CDL.await();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
 
                             adapter.delItem(pos);
                             recyclerViewRefresh();
