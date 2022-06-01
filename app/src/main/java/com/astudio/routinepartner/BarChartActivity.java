@@ -215,6 +215,9 @@ public class BarChartActivity extends AppCompatActivity {
                     getData();
                     getCategory();
                     drawBarChart(DayList, TimeList);
+                    if(DayList.size() == 0){
+                        Bar_Chart.setNoDataText("데이터가 없습니다.");
+                    }
                     GoalPercent();
                 }
             }
@@ -309,12 +312,15 @@ public class BarChartActivity extends AppCompatActivity {
 
             barDataSet.setColors(Color.parseColor("#AEDDEF"));
 
-            Bar_Chart.setData(data);
-            Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정
-//        Bar_Chart.setVisibleXRangeMaximum(8);
-            Bar_Chart.setVisibleXRange(0, Chartdata);
-            Bar_Chart.getBarData().setValueTextColor(0xFFBDBDBD);
-            Bar_Chart.animateXY(1000, 1000);
+            if(entries.size() == 0){
+                Bar_Chart.setNoDataText("데이터가 없습니다.");
+            }else{
+                Bar_Chart.setData(data);
+                Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정
+                Bar_Chart.setVisibleXRange(0, Chartdata);
+                Bar_Chart.getBarData().setValueTextColor(0xFFBDBDBD);
+                Bar_Chart.animateXY(1000, 1000);
+            }
             Bar_Chart.invalidate();
         }
     }
