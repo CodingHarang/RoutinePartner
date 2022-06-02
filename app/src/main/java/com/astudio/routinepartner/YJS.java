@@ -43,6 +43,4 @@ public class YJS {
             NP[i].setDisplayedValues(new String[] {"AM", "PM"});
         }
     }
-
-
 }

@@ -14,4 +14,5 @@ public class SavedSettings {
     public static ArrayList<Integer> Order = new ArrayList<>(Arrays.asList());
     public static boolean isRefreshed = false;
     public static ArrayList<String> StatList = new ArrayList<>(Arrays.asList("지능", "재미", "체력", "포만감", "잔고", "자아실현"));
+    public static int TimeInterval;
 }

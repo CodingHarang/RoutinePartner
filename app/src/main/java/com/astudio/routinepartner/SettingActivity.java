@@ -37,7 +37,6 @@ public class SettingActivity extends AppCompatActivity {
     CategoryInfo Category;
     int CurPosition;
 
-    static int TimeInterval = 3;
 
     ImageButton CategoryAddBtn, PlusInterval, MinusInterval;
     TextView TimeIntervalText;
@@ -145,8 +144,8 @@ public class SettingActivity extends AppCompatActivity {
 
 
         TimeIntervalText = findViewById(R.id.CurrentTimeInterval);
-        TimeIntervalText.setText(Integer.toString(TimeInterval));
-        TimeInterval = Integer.parseInt(TimeIntervalText.getText().toString());
+        TimeIntervalText.setText(Integer.toString(SavedSettings.TimeInterval));
+        SavedSettings.TimeInterval = Integer.parseInt(TimeIntervalText.getText().toString());
         PlusInterval = findViewById(R.id.PlusInterval);
         MinusInterval = findViewById(R.id.MinusInterval);
         CategoryAddBtn = findViewById(R.id.CategoryAddBtn);
@@ -226,7 +225,6 @@ public class SettingActivity extends AppCompatActivity {
                             Toast.makeText(SettingActivity.this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
 
 
-                            SettingsDB sdb = SettingsDB.getDatabase(getApplicationContext());
                             mSettingsDao.deleteAll();
                             ActInfoDB adb = ActInfoDB.getDatabase(getApplicationContext());
                             ActInfoDAO mActInfoDao = adb.actInfoDao();
@@ -280,10 +278,10 @@ public class SettingActivity extends AppCompatActivity {
 
         //시간 간격 설정
 
-        if(TimeInterval >= 3){
+        if(SavedSettings.TimeInterval >= 3){
             PlusInterval.setColorFilter(Color.parseColor("#C0C0C0"));
             PlusInterval.setEnabled(false);
-        }else if(TimeInterval <= 1){
+        }else if(SavedSettings.TimeInterval <= 1){
             MinusInterval.setEnabled(false);
             MinusInterval.setColorFilter(Color.parseColor("#C0C0C0"));
         }
@@ -291,34 +289,45 @@ public class SettingActivity extends AppCompatActivity {
         PlusInterval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(TimeInterval < 3){
-                    TimeInterval++;
+                if(SavedSettings.TimeInterval < 3){
+                    SavedSettings.TimeInterval++;
                     MinusInterval.setColorFilter(Color.parseColor("#707070"));
                     MinusInterval.setEnabled(true);
-                    TimeIntervalText.setText(Integer.toString(TimeInterval));
-                    PieChartView.TimeInterval = TimeInterval;
-                    if(TimeInterval == 3){
+                    TimeIntervalText.setText(Integer.toString(SavedSettings.TimeInterval));
+                    if(SavedSettings.TimeInterval == 3){
                         PlusInterval.setColorFilter(Color.parseColor("#C0C0C0"));
                         PlusInterval.setEnabled(false);
                     }
                 }
+                SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                TimeIntervalDAO mTimeIntervalDao = db.timeIntervalDao();
+                mTimeIntervalDao.deleteAll();
+                TimeInterval timeInterval = new TimeInterval();
+                timeInterval.setInterval(SavedSettings.TimeInterval);
+                mTimeIntervalDao.insert(timeInterval);
+
             }
         });
 
         MinusInterval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(TimeInterval > 1){
-                    TimeInterval--;
+                if(SavedSettings.TimeInterval > 1){
+                    SavedSettings.TimeInterval--;
                     PlusInterval.setEnabled(true);
                     PlusInterval.setColorFilter(Color.parseColor("#707070"));
-                    TimeIntervalText.setText(Integer.toString(TimeInterval));
-                    PieChartView.TimeInterval = TimeInterval;
-                    if(TimeInterval == 1){
+                    TimeIntervalText.setText(Integer.toString(SavedSettings.TimeInterval));
+                    if(SavedSettings.TimeInterval == 1){
                         MinusInterval.setEnabled(false);
                         MinusInterval.setColorFilter(Color.parseColor("#C0C0C0"));
                     }
                 }
+                SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                TimeIntervalDAO mTimeIntervalDao = db.timeIntervalDao();
+                mTimeIntervalDao.deleteAll();
+                TimeInterval timeInterval = new TimeInterval();
+                timeInterval.setInterval(SavedSettings.TimeInterval);
+                mTimeIntervalDao.insert(timeInterval);
             }
         });
 

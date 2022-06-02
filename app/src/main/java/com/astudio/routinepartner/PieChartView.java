@@ -29,7 +29,6 @@ public class PieChartView extends View {
     ArrayList<Long> PieColor = new ArrayList<>();
     ArrayList<String> CategoryList = new ArrayList<>();
     Boolean YsData;
-    static int TimeInterval = 3;
 
 
     public PieChartView(Context context, AttributeSet attrs){
@@ -67,13 +66,13 @@ public class PieChartView extends View {
         //파이차트 바깥쪽에 시간 텍스트 표시
 
         float TextStartPoint = -90;
-        for(int i = 0; i < 24; i += TimeInterval){
+        for(int i = 0; i < 24; i += SavedSettings.TimeInterval){
             float radius = (float)(Interval+50);
 //            float radius = (float)(Interval+((Interval/100)*15));
             float x = (float)(radius * Math.cos(TextStartPoint * Math.PI / 180F)) + getWidth()/2-20;
             float y = (float)(radius * Math.sin(TextStartPoint * Math.PI / 180F)) + getHeight()/2+10;
             canvas.drawText(""+i , x, y , TextPaint);
-            TextStartPoint += 15*TimeInterval;
+            TextStartPoint += 15*SavedSettings.TimeInterval;
         }
 
 

@@ -10,11 +10,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 // Database Object
-@Database(entities = {Settings.class}, version = 1, exportSchema = false)
+@Database(entities = {Settings.class, TimeInterval.class}, version = 1, exportSchema = false)
 public abstract class SettingsDB extends RoomDatabase {
 
     private static volatile SettingsDB INSTANCE = null;
     public abstract SettingsDAO settingDao();
+    public abstract TimeIntervalDAO timeIntervalDao();
     static final ExecutorService DatabaseWriteExecutor = Executors.newSingleThreadExecutor();
 
     // Database가 열려있지 않은 경우 연다

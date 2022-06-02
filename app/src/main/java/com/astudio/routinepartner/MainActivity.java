@@ -599,11 +599,11 @@ public class MainActivity extends AppCompatActivity {
     public void refreshSettings() {
         SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
         SettingsDAO mSettingsDao = db.settingDao();
+        TimeIntervalDAO mTimeIntervalDao = db.timeIntervalDao();
         //Log.i("CategoryNum", "" + mSettingsDao.getAll().length);
         int CategoryNum = mSettingsDao.getAll().length;
         //Log.i("in Main", "" + CategoryNum);
         if(CategoryNum == 0) {
-            setRadarData();
             Settings settings = new Settings();
             settings.setCategory("수면");
             settings.setColor(0xFFCCCCFFL);
@@ -619,6 +619,10 @@ public class MainActivity extends AppCompatActivity {
             settings.setAffectingStat(4);
             settings.setOrder(2);
             mSettingsDao.insert(settings);
+            TimeInterval timeInterval = new TimeInterval();
+            timeInterval.setInterval(3);
+            mTimeIntervalDao.insert(timeInterval);
+            setRadarData();
         }
         SavedSettings.CategoryList.clear();
         SavedSettings.ColorList.clear();
@@ -634,6 +638,7 @@ public class MainActivity extends AppCompatActivity {
             SavedSettings.AffectingStat.add(mSettingsDao.getAll()[i].getAffectingStat());
             SavedSettings.Order.add(mSettingsDao.getAll()[i].getOrder());
         }
+        SavedSettings.TimeInterval = mTimeIntervalDao.getAll().getInterval();
             //Log.i("initializing","" + mSettingsDao.getAll().length);
         //Log.i("initializing Done","");
         SavedSettings.isRefreshed = true;
