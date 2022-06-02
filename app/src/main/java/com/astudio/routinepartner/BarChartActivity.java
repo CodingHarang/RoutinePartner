@@ -403,14 +403,23 @@ public class BarChartActivity extends AppCompatActivity {
     ArrayList<ArrayList<ActInfoItem>> AllDayList = new ArrayList<>();
 
     private void getData(){
+        CountDownLatch CDL = new CountDownLatch(1);
         ActInfoItemList.clear();
         ActInfoItemListTemp.clear();
         AllDayList.clear();
-        ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-        ActInfoDAO mActInfoDao = db.actInfoDao();
-        ActInfoList = new ArrayList<>(Arrays.asList(mActInfoDao.getItemByDate(Syear, Smonth, Sday, Eyear, Emonth, Eday)));
-        ArrayList<ActInfo> ActDayList = new ArrayList<>();
+        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+            ActInfoDAO mActInfoDao = db.actInfoDao();
+            ActInfoList = new ArrayList<>(Arrays.asList(mActInfoDao.getItemByDate(Syear, Smonth, Sday, Eyear, Emonth, Eday)));
+            ArrayList<ActInfo> ActDayList = new ArrayList<>();
 
+            CDL.countDown();
+        });
+        try {
+            CDL.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         for(int i = 0; i < ActInfoList.size(); i++){
             ActInfoItemListTemp.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(),

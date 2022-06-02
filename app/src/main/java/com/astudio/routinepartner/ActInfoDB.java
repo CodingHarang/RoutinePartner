@@ -22,7 +22,7 @@ public abstract class ActInfoDB extends RoomDatabase {
         if(INSTANCE == null) {
             synchronized (ActInfoDB.class) {
                 if(INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), ActInfoDB.class, "act_info_database").allowMainThreadQueries().build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), ActInfoDB.class, "act_info_database").build();
                 }
             }
         }
