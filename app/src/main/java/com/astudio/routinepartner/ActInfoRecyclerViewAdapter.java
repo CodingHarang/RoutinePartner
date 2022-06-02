@@ -108,21 +108,22 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                             ContainingItem.EndHour = NumPickers[1].getValue() == 0 ? NumPickers[3].getValue() : NumPickers[3].getValue() + 12;
                             ContainingItem.StartMinute = NumPickers[4].getValue();
                             ContainingItem.EndMinute = NumPickers[5].getValue();
-                            ActInfoDB db = ActInfoDB.getDatabase(parent.getContext());
-                            ActInfoDAO mActInfoDao = db.actInfoDao();
-                            ActInfo actInfo = new ActInfo();
-                            //mActInfoDao.deleteByActId(ActInfoList.get(Index).ItemId);
-                            actInfo.setCategory(ContainingItem.Category);
-                            actInfo.setYear(ContainingItem.Year);
-                            actInfo.setMonth(ContainingItem.Month);
-                            actInfo.setDate(ContainingItem.Date);
-                            actInfo.setStartHour(ContainingItem.StartHour);
-                            actInfo.setStartMinute(ContainingItem.StartMinute);
-                            actInfo.setEndHour(ContainingItem.EndHour);
-                            actInfo.setEndMinute(ContainingItem.EndMinute);
-                            //mActInfoDao.insert(actInfo);
-                            mActInfoDao.updateData(ContainingItem.ItemId, ContainingItem.Category, ContainingItem.Year, ContainingItem.Month, ContainingItem.Date, ContainingItem.StartHour, ContainingItem.StartMinute, ContainingItem.EndHour, ContainingItem.EndMinute);
-
+                            ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+                                ActInfoDB db = ActInfoDB.getDatabase(parent.getContext());
+                                ActInfoDAO mActInfoDao = db.actInfoDao();
+                                ActInfo actInfo = new ActInfo();
+                                //mActInfoDao.deleteByActId(ActInfoList.get(Index).ItemId);
+                                actInfo.setCategory(ContainingItem.Category);
+                                actInfo.setYear(ContainingItem.Year);
+                                actInfo.setMonth(ContainingItem.Month);
+                                actInfo.setDate(ContainingItem.Date);
+                                actInfo.setStartHour(ContainingItem.StartHour);
+                                actInfo.setStartMinute(ContainingItem.StartMinute);
+                                actInfo.setEndHour(ContainingItem.EndHour);
+                                actInfo.setEndMinute(ContainingItem.EndMinute);
+                                //mActInfoDao.insert(actInfo);
+                                mActInfoDao.updateData(ContainingItem.ItemId, ContainingItem.Category, ContainingItem.Year, ContainingItem.Month, ContainingItem.Date, ContainingItem.StartHour, ContainingItem.StartMinute, ContainingItem.EndHour, ContainingItem.EndMinute);
+                            });
                             BtnEdit.setText(ContainingItem.Category + "   id : " + Integer.toString(ContainingItem.ItemId) + "\n" + Integer.toString(ContainingItem.Year) + " - " + Integer.toString(ContainingItem.Month) + " - " + Integer.toString(ContainingItem.Date) + "\n" + Integer.toString(ContainingItem.StartHour) + " : " + Integer.toString(ContainingItem.StartMinute) + " ~ " + Integer.toString(ContainingItem.EndHour) + " : " + Integer.toString(ContainingItem.EndMinute));
                             alertDialog.dismiss();
                             updateView();
@@ -140,9 +141,11 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(Context, Integer.toString(Index), Toast.LENGTH_SHORT).show();
-                    ActInfoDB db = ActInfoDB.getDatabase(Context);
-                    ActInfoDAO mActInfoDao = db.actInfoDao();
-                    mActInfoDao.deleteByActId(ActInfoList.get(Index).ItemId);
+                    ActInfoDB.DatabaseWriteExecutor.execute(() -> {
+                        ActInfoDB db = ActInfoDB.getDatabase(Context);
+                        ActInfoDAO mActInfoDao = db.actInfoDao();
+                        mActInfoDao.deleteByActId(ActInfoList.get(Index).ItemId);
+                    });
                     Toast.makeText(Context, "id" + Integer.toString(Index) + "deleted", Toast.LENGTH_SHORT).show();
                     delItem(Index);
                 }

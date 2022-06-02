@@ -1015,8 +1015,10 @@ public class MainActivity extends AppCompatActivity {
 
         PSY PetStateManage=new PSY();
 
+
         String today=""+cal.get(Calendar.YEAR)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.DATE);
         Log.i("Today",today);
+
 
         CountDownLatch CDL = new CountDownLatch(1);
         ActInfoItemList.clear();
