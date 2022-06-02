@@ -83,44 +83,35 @@ public class WidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
         Log.i("in onReceive actionName : ", intent.getAction());
 
-        CountDownLatch CDL = new CountDownLatch(1);
-        SettingsDB.DatabaseWriteExecutor.execute(() -> {
-            SettingsDB db = SettingsDB.getDatabase(context);
-            SettingsDAO mSettingsDao = db.settingDao();
-            //Log.i("CategoryNum", "" + mSettingsDao.getAll().length);
-            int CategoryNum = mSettingsDao.getAll().length;
-            if(CategoryNum == 0) {
-                Settings settings = new Settings();
-                settings.setCategory("취침");
-                settings.setColor(0xFFCCCCFFL);
-                settings.setGoalType(2);
-                settings.setGoal(7);
-                settings.setAffectingStat(3);
-                settings.setOrder(1);
-                mSettingsDao.insert(settings);
-            }
-            SavedSettings.CategoryList.clear();
-            SavedSettings.ColorList.clear();
-            SavedSettings.GoalType.clear();
-            SavedSettings.Goal.clear();
-            SavedSettings.AffectingStat.clear();
-            SavedSettings.Order.clear();
-            for(int i = 0; i < CategoryNum; i++) {
-                SavedSettings.CategoryList.add(mSettingsDao.getAll()[i].getCategory());
-                SavedSettings.ColorList.add(mSettingsDao.getAll()[i].getColor());
-                SavedSettings.GoalType.add(mSettingsDao.getAll()[i].getGoalType());
-                SavedSettings.Goal.add(mSettingsDao.getAll()[i].getGoal());
-                SavedSettings.AffectingStat.add(mSettingsDao.getAll()[i].getAffectingStat());
-                SavedSettings.Order.add(mSettingsDao.getAll()[i].getOrder());
-            }
-            CDL.countDown();
-            //Log.i("in Widget", "DB transaction End");
-        });
-        try {
-            CDL.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        SettingsDB db = SettingsDB.getDatabase(context);
+        SettingsDAO mSettingsDao = db.settingDao();
+        //Log.i("CategoryNum", "" + mSettingsDao.getAll().length);
+        int CategoryNum = mSettingsDao.getAll().length;
+        if(CategoryNum == 0) {
+            Settings settings = new Settings();
+            settings.setCategory("취침");
+            settings.setColor(0xFFCCCCFFL);
+            settings.setGoalType(2);
+            settings.setGoal(7);
+            settings.setAffectingStat(3);
+            settings.setOrder(1);
+            mSettingsDao.insert(settings);
         }
+        SavedSettings.CategoryList.clear();
+        SavedSettings.ColorList.clear();
+        SavedSettings.GoalType.clear();
+        SavedSettings.Goal.clear();
+        SavedSettings.AffectingStat.clear();
+        SavedSettings.Order.clear();
+        for(int i = 0; i < CategoryNum; i++) {
+            SavedSettings.CategoryList.add(mSettingsDao.getAll()[i].getCategory());
+            SavedSettings.ColorList.add(mSettingsDao.getAll()[i].getColor());
+            SavedSettings.GoalType.add(mSettingsDao.getAll()[i].getGoalType());
+            SavedSettings.Goal.add(mSettingsDao.getAll()[i].getGoal());
+            SavedSettings.AffectingStat.add(mSettingsDao.getAll()[i].getAffectingStat());
+            SavedSettings.Order.add(mSettingsDao.getAll()[i].getOrder());
+        }
+            //Log.i("in Widget", "DB transaction End");
         //Log.i("in Widget", "Next");
         if (intent.getAction() == "CONTROL_SERVICE1" || intent.getAction() == "CONTROL_SERVICE2" || intent.getAction() == "CONTROL_SERVICE3" || intent.getAction() == "CONTROL_SERVICE4" || intent.getAction() == "CONTROL_SERVICE5" || intent.getAction() == "SETTINGS_CHANGED") {
             if(intent.getAction() != "SETTINGS_CHANGED")

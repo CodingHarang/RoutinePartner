@@ -64,20 +64,12 @@ public class ActInfoListActivity extends AppCompatActivity {
         BtnGetList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CountDownLatch CDL = new CountDownLatch(1);
                 MAdapter.clearView();
                 ActInfoItemList.clear();
-                ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-                    ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-                    ActInfoDAO mActInfoDao = db.actInfoDao();
-                    ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(Syear, Smonth, Sdate, Eyear, Emonth, Edate)));
-                    CDL.countDown();
-                });
-                try {
-                    CDL.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+                ActInfoDAO mActInfoDao = db.actInfoDao();
+                ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(Syear, Smonth, Sdate, Eyear, Emonth, Edate)));
+
                 for(int i = 0; i < ActInfoList.size(); i++) {
                     ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
                 }

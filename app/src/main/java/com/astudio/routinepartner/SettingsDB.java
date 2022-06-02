@@ -22,7 +22,7 @@ public abstract class SettingsDB extends RoomDatabase {
         if(INSTANCE == null) {
             synchronized (SettingsDB.class) {
                 if(INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SettingsDB.class, "settings_database").build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SettingsDB.class, "settings_database").allowMainThreadQueries().build();
                 }
             }
         }
