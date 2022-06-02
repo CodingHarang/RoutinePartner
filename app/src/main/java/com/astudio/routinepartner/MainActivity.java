@@ -98,11 +98,6 @@ public class MainActivity extends AppCompatActivity {
         if(SavedSettings.isRefreshed == false) {
             refreshSettings();
         }
-//        SettingsDB.DatabaseWriteExecutor.execute(() -> {
-//                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-//                    SettingsDAO mSettingsDao = db.settingDao();
-//                    mSettingsDao.deleteAll();
-//                });
         int CategoryNum = SavedSettings.CategoryList.size();
         Log.i("onStart", "" + CategoryNum);
         for(int i = 0; i < CategoryNum; i++) {
@@ -316,16 +311,9 @@ public class MainActivity extends AppCompatActivity {
         BtnDeleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-                    ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-                    ActInfoDAO mActInfoDao = db.actInfoDao();
-                    mActInfoDao.deleteAll();
-                });
-                /*SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-                    SettingsDAO mSettingsDao = db.settingDao();
-                    mSettingsDao.deleteAll();
-                });*/
+                ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+                ActInfoDAO mActInfoDao = db.actInfoDao();
+                mActInfoDao.deleteAll();
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
             }
         });
@@ -651,6 +639,7 @@ public class MainActivity extends AppCompatActivity {
             SavedSettings.Order.add(mSettingsDao.getAll()[i].getOrder());
         }
         SavedSettings.TimeInterval = mTimeIntervalDao.getAll().getInterval();
+            //Log.i("initializing","" + mSettingsDao.getAll().length);
         //Log.i("initializing Done","");
         SavedSettings.isRefreshed = true;
         finish();
@@ -737,36 +726,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addToActDB(String Category, int Year, int Month, int Date, int Shour, int Sminute, int Ehour, int Eminute) {
-        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-            ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfo actInfo = new ActInfo();
-            actInfo.setCategory(Category);
-            actInfo.setYear(Year);
-            actInfo.setMonth(Month);
-            actInfo.setDate(Date);
-            actInfo.setStartHour(Shour);
-            actInfo.setStartMinute(Sminute);
-            actInfo.setEndHour(Ehour);
-            actInfo.setEndMinute(Eminute);
-            mActInfoDao.insert(actInfo);
-        });
+
+        ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+        ActInfoDAO mActInfoDao = db.actInfoDao();
+        ActInfo actInfo = new ActInfo();
+        actInfo.setCategory(Category);
+        actInfo.setYear(Year);
+        actInfo.setMonth(Month);
+        actInfo.setDate(Date);
+        actInfo.setStartHour(Shour);
+        actInfo.setStartMinute(Sminute);
+        actInfo.setEndHour(Ehour);
+        actInfo.setEndMinute(Eminute);
+        mActInfoDao.insert(actInfo);
+
     }
 
     public void addToSettingsDB(String Category, long Color, int GoalType, int Goal, int AffectingStat, int Order) {
 
-        SettingsDB.DatabaseWriteExecutor.execute(() -> {
-            SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-            SettingsDAO mSettingsDao = db.settingDao();
-            Settings settings = new Settings();
-            settings.setCategory(Category);
-            settings.setColor(Color);
-            settings.setGoalType(GoalType);
-            settings.setGoal(Goal);
-            settings.setAffectingStat(AffectingStat);
-            settings.setOrder(Order);
-            mSettingsDao.insert(settings);
-        });
+        SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+        SettingsDAO mSettingsDao = db.settingDao();
+        Settings settings = new Settings();
+        settings.setCategory(Category);
+        settings.setColor(Color);
+        settings.setGoalType(GoalType);
+        settings.setGoal(Goal);
+        settings.setAffectingStat(AffectingStat);
+        settings.setOrder(Order);
+        mSettingsDao.insert(settings);
 
     }
 
@@ -797,7 +784,6 @@ public class MainActivity extends AppCompatActivity {
 
 //    public void timeToAngle(){
 //        Calendar cal = Calendar.getInstance();
-//        CountDownLatch CDL = new CountDownLatch(1);
 //
 //        AngleList.clear();
 //        PieCategoryList.clear();
@@ -807,13 +793,7 @@ public class MainActivity extends AppCompatActivity {
 //            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
 //            ActInfoDAO mActInfoDao = db.actInfoDao();
 //            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))));
-//            CDL.countDown();
 //        });
-//        try {
-//            CDL.await();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 //        for(int i = 0; i < ActInfoList.size(); i++) {
 //            ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
 //        }
@@ -839,23 +819,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void timeToAngle(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
-        CountDownLatch CDL = new CountDownLatch(1);
 
         AngleList.clear();
         PieCategoryList.clear();
         ActInfoItemList.clear();
         AngleList.clear();
-        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-            ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month, day, year, month, day)));
-            CDL.countDown();
-        });
-        try {
-            CDL.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+        ActInfoDAO mActInfoDao = db.actInfoDao();
+        ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month, day, year, month, day)));
+
         for (int i = 0; i < ActInfoList.size(); i++) {
             ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(), ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(), ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
         }
@@ -887,20 +859,13 @@ public class MainActivity extends AppCompatActivity {
 //        YesterDayAngleList.clear();
 //
 //        Calendar cal = Calendar.getInstance();
-//        CountDownLatch CDL = new CountDownLatch(1);
 //        ActInfoYesterdayItemList.clear();
 //        YesterDayAngleList.clear();
 //        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
 //            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
 //            ActInfoDAO mActInfoDao = db.actInfoDao();
 //            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE)-1, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE)-1)));
-//            CDL.countDown();
 //        });
-//        try {
-//            CDL.await();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 //        Collections.sort(ActInfoList, new Comparator<ActInfo>(){
 //            public int compare(ActInfo o1, ActInfo o2) {
 //                if(o1.getStartHour() == o2.getStartHour()) {
@@ -937,20 +902,12 @@ public class MainActivity extends AppCompatActivity {
         YesterDayAngleList.clear();
 
         Calendar cal = Calendar.getInstance();
-        CountDownLatch CDL = new CountDownLatch(1);
         ActInfoYesterdayItemList.clear();
         YesterDayAngleList.clear();
-        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-            ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month, day, year, month, day)));
-            CDL.countDown();
-        });
-        try {
-            CDL.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+        ActInfoDAO mActInfoDao = db.actInfoDao();
+        ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(year, month, day, year, month, day)));
+
         Collections.sort(ActInfoList, new Comparator<ActInfo>(){
             public int compare(ActInfo o1, ActInfo o2) {
                 if(o1.getStartHour() == o2.getStartHour()) {
@@ -1006,31 +963,16 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Float> TotalCategoryDataList=new ArrayList<>();
         ArrayList<Float> TotalStatDataList=new ArrayList<>();
         ArrayList<ArrayList<ActInfoItem>> DayList=new ArrayList<>();  //ArrayList<ActInfoItem>->하루 기록 리스트->그거의 리스트: 날짜별 기록을 가지는 리스트
-        Calendar cal = Calendar.getInstance();
 
         PSY PetStateManage=new PSY();
 
-
-        String today=""+cal.get(Calendar.YEAR)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.DATE);
-        Log.i("Today",today);
-
-
-        CountDownLatch CDL = new CountDownLatch(1);
         ActInfoItemList.clear();
         DayList.clear();
         TotalStatDataList.clear();
-        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
             ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
             ActInfoDAO mActInfoDao = db.actInfoDao();
             //ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))));
             ActInfoList=new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
-            CDL.countDown();
-        });
-        try {
-            CDL.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         /*for(int stat:AffectingStat){
             if(!LableListInt.contains(stat))
@@ -1068,8 +1010,6 @@ public class MainActivity extends AppCompatActivity {
             Log.i("CategoryStat",""+AffectingStat.get(i)+" "+CategoryList.get(i));
         }
 
-        int NumOfFail=0;
-
 
         for(int i=0;i<DayList.size();i++){  //DayList.get(i) 가 하나의 날짜를 나타냄 ex) 5/20의 모든 시간 기록 담고있음
             //한 날짜의 모든 시간 기록을 카테고리별로 분류  ex) 수면, 식사, 게임, 운동.....
@@ -1084,10 +1024,7 @@ public class MainActivity extends AppCompatActivity {
             }//이 for문에서는 하루 내의 기록들을 다룬다. 따라서 이 반복문이 끝나면 하루에 대한 데이터가 모두 카테고리별로 정리
             for(int k=0;k<CategoryList.size();k++){
                 TotalCategoryDataList.add(PetStateManage.calCategoryData(ByDateCategoryDataList.get(k)));
-                TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k),(DateList.get(i)==today)));
-                if(DateList.get(i)==today&&TotalCategoryDataList.get(k)<0){
-                    PSY.InteractionNum--;
-                }
+                TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k)));
                 //하루 기록들에서 카테고리 데이터의 총합을 계산해 목표 달성 여부에 따른 증감 값을 반영하여 설정
             }
             for(int l=0;l<LableListInt.size();l++){
@@ -1118,11 +1055,9 @@ public class MainActivity extends AppCompatActivity {
                 visitors.add(new RadarEntry(0f));
             }
         }
-
         if(PSY.InteractionNum>=20){
             visitors.add(new RadarEntry(100));
-        }
-        else{
+        }else{
             visitors.add(new RadarEntry(PSY.InteractionNum*5));
         }
 

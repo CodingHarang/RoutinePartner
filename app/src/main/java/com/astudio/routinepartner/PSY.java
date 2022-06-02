@@ -11,7 +11,6 @@ public class PSY {
     private float TimeData = 0;
     private float CategoryData = 0;
     public static int InteractionNum=0;
-    private int FailNum=0;
 
     //ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "취침", "공부", "운동"));
     ArrayList<String> CategoryList=SavedSettings.CategoryList;
@@ -72,18 +71,15 @@ public class PSY {
         return TotalData;
     }
 
-    public float applyGoal(float ByDateTotalTime, String category, int goaltype, boolean isToday){
+    public float applyGoal(float ByDateTotalTime, String category, int goaltype){
         int index=CategoryList.indexOf(category);
         float ReturnValue=ByDateTotalTime;
         if(index<0){
             return 0f;
         }
-        if(isToday&&ByDateTotalTime==0){
-            return 0f;
-        }
         switch(goaltype){
             case 1: { //횟수
-                if(GoalList.get(index)==ByDateTotalTime){
+                if(GoalList.get(index)<=ByDateTotalTime){
                     ReturnValue=10;
                 }
                 else{
@@ -95,21 +91,12 @@ public class PSY {
                     ReturnValue=10;
                 }else{
                     ReturnValue=-10;
-                    /*if(InteractionNum>0){
+                    if(InteractionNum > 0)
                         InteractionNum--;
-                    }*/
                 }
             }break;
         }
         return ReturnValue;
-    }
-
-    public void setFailNum(int failnum){
-        FailNum=failnum;
-    }
-
-    public int getFailNum(){
-        return FailNum;
     }
 
 

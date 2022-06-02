@@ -91,20 +91,18 @@ public class WidgetService extends Service {
         EHour = cal.get(Calendar.HOUR);
         EMinute = cal.get(Calendar.MINUTE);
 
-        ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-            ActInfoDAO mActInfoDao = db.actInfoDao();
-            ActInfo actInfo = new ActInfo();
-            actInfo.setCategory(SavedSettings.CategoryList.get(CategoryNum - 1));
-            actInfo.setYear(SYear);
-            actInfo.setMonth(SMonth);
-            actInfo.setDate(SDate);
-            actInfo.setStartHour(SHour);
-            actInfo.setStartMinute(SMinute);
-            actInfo.setEndHour(EHour);
-            actInfo.setEndMinute(EMinute);
-            mActInfoDao.insert(actInfo);
-        });
+        ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+        ActInfoDAO mActInfoDao = db.actInfoDao();
+        ActInfo actInfo = new ActInfo();
+        actInfo.setCategory(SavedSettings.CategoryList.get(CategoryNum - 1));
+        actInfo.setYear(SYear);
+        actInfo.setMonth(SMonth);
+        actInfo.setDate(SDate);
+        actInfo.setStartHour(SHour);
+        actInfo.setStartMinute(SMinute);
+        actInfo.setEndHour(EHour);
+        actInfo.setEndMinute(EMinute);
+        mActInfoDao.insert(actInfo);
         super.onDestroy();
     }
 
