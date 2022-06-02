@@ -101,12 +101,9 @@ public class SettingActivity extends AppCompatActivity {
                                 recyclerViewRefresh();
                                 Log.i("", "" +  SavedSettings.CategoryList.get(CurPosition) + " " + Name);
                                 String OName = SavedSettings.CategoryList.get(CurPosition);
-                                CountDownLatch CDL = new CountDownLatch(1);
-                                ActInfoDB.DatabaseWriteExecutor.execute(() -> {
-                                    ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-                                    ActInfoDAO mActInfoDao = db.actInfoDao();
-                                    mActInfoDao.updateCategoryName(OName, Name);
-                                });
+                                ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+                                ActInfoDAO mActInfoDao = db.actInfoDao();
+                                mActInfoDao.updateCategoryName(OName, Name);
                                 Log.v("수정 값", ""+Name);
 
                                 SavedSettings.CategoryList.set(CurPosition, Name);
@@ -120,11 +117,9 @@ public class SettingActivity extends AppCompatActivity {
                                 Log.v("현재 리스트 순서", ""+SavedSettings.Order);
 
                             }
-                            SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                                SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-                                SettingsDAO mSettingsDao = db.settingDao();
-                                mSettingsDao.deleteAll();
-                            });
+                            SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                            SettingsDAO mSettingsDao = db.settingDao();
+                            mSettingsDao.deleteAll();
                             for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
                                 String category = SavedSettings.CategoryList.get(i);
                                 long color = SavedSettings.ColorList.get(i);
@@ -132,18 +127,14 @@ public class SettingActivity extends AppCompatActivity {
                                 int goal = SavedSettings.Goal.get(i);
                                 int affectingStat = SavedSettings.AffectingStat.get(i);
                                 int order = SavedSettings.Order.get(i);
-                                SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-                                    SettingsDAO mSettingsDao = db.settingDao();
-                                    Settings settings = new Settings();
-                                    settings.setCategory(category);
-                                    settings.setColor(color);
-                                    settings.setGoalType(goalType);
-                                    settings.setGoal(goal);
-                                    settings.setAffectingStat(affectingStat);
-                                    settings.setOrder(order);
-                                    mSettingsDao.insert(settings);
-                                });
+                                Settings settings = new Settings();
+                                settings.setCategory(category);
+                                settings.setColor(color);
+                                settings.setGoalType(goalType);
+                                settings.setGoal(goal);
+                                settings.setAffectingStat(affectingStat);
+                                settings.setOrder(order);
+                                mSettingsDao.insert(settings);
                             }
                             Log.i("in SettingActivity", ""+ SavedSettings.Order);
                         }
@@ -207,18 +198,9 @@ public class SettingActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            CountDownLatch CDL = new CountDownLatch(1);
-                            SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                                SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-                                SettingsDAO mSettingsDao = db.settingDao();
-                                mSettingsDao.deleteByOrder(SavedSettings.Order.get(pos));
-                                CDL.countDown();
-                            });
-                            try {
-                                CDL.await();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                            SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
+                            SettingsDAO mSettingsDao = db.settingDao();
+                            mSettingsDao.deleteByOrder(SavedSettings.Order.get(pos));
 
                             adapter.delItem(pos);
                             recyclerViewRefresh();
@@ -243,14 +225,12 @@ public class SettingActivity extends AppCompatActivity {
 
                             Toast.makeText(SettingActivity.this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
 
-                            SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                                SettingsDB sdb = SettingsDB.getDatabase(getApplicationContext());
-                                SettingsDAO mSettingsDao = sdb.settingDao();
-                                mSettingsDao.deleteAll();
-                                ActInfoDB adb = ActInfoDB.getDatabase(getApplicationContext());
-                                ActInfoDAO mActInfoDao = adb.actInfoDao();
-                                mActInfoDao.deleteByCategory(CatName);
-                            });
+
+                            SettingsDB sdb = SettingsDB.getDatabase(getApplicationContext());
+                            mSettingsDao.deleteAll();
+                            ActInfoDB adb = ActInfoDB.getDatabase(getApplicationContext());
+                            ActInfoDAO mActInfoDao = adb.actInfoDao();
+                            mActInfoDao.deleteByCategory(CatName);
                             for(int j = 0; j < SavedSettings.CategoryList.size(); j++) {
                                 String category = SavedSettings.CategoryList.get(j);
                                 long color = SavedSettings.ColorList.get(j);
@@ -258,18 +238,14 @@ public class SettingActivity extends AppCompatActivity {
                                 int goal = SavedSettings.Goal.get(j);
                                 int affectingStat = SavedSettings.AffectingStat.get(j);
                                 int order = SavedSettings.Order.get(j);
-                                SettingsDB.DatabaseWriteExecutor.execute(() -> {
-                                    SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
-                                    SettingsDAO mSettingsDao = db.settingDao();
-                                    Settings settings = new Settings();
-                                    settings.setCategory(category);
-                                    settings.setColor(color);
-                                    settings.setGoalType(goalType);
-                                    settings.setGoal(goal);
-                                    settings.setAffectingStat(affectingStat);
-                                    settings.setOrder(order);
-                                    mSettingsDao.insert(settings);
-                                });
+                                Settings settings = new Settings();
+                                settings.setCategory(category);
+                                settings.setColor(color);
+                                settings.setGoalType(goalType);
+                                settings.setGoal(goal);
+                                settings.setAffectingStat(affectingStat);
+                                settings.setOrder(order);
+                                mSettingsDao.insert(settings);
                                 Log.i("", "" + SavedSettings.CategoryList.get(j));
                             }
 
