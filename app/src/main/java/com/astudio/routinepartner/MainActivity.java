@@ -963,8 +963,12 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Float> TotalCategoryDataList=new ArrayList<>();
         ArrayList<Float> TotalStatDataList=new ArrayList<>();
         ArrayList<ArrayList<ActInfoItem>> DayList=new ArrayList<>();  //ArrayList<ActInfoItem>->하루 기록 리스트->그거의 리스트: 날짜별 기록을 가지는 리스트
+        Calendar cal = Calendar.getInstance();
 
         PSY PetStateManage=new PSY();
+
+        String today=""+cal.get(Calendar.YEAR)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.DATE);
+        Log.i("Today",today);
 
         ActInfoItemList.clear();
         DayList.clear();
@@ -1009,7 +1013,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0;i<CategoryList.size();i++){
             Log.i("CategoryStat",""+AffectingStat.get(i)+" "+CategoryList.get(i));
         }
-
+        int NumOfFail=0;
 
         for(int i=0;i<DayList.size();i++){  //DayList.get(i) 가 하나의 날짜를 나타냄 ex) 5/20의 모든 시간 기록 담고있음
             //한 날짜의 모든 시간 기록을 카테고리별로 분류  ex) 수면, 식사, 게임, 운동.....
@@ -1024,7 +1028,10 @@ public class MainActivity extends AppCompatActivity {
             }//이 for문에서는 하루 내의 기록들을 다룬다. 따라서 이 반복문이 끝나면 하루에 대한 데이터가 모두 카테고리별로 정리
             for(int k=0;k<CategoryList.size();k++){
                 TotalCategoryDataList.add(PetStateManage.calCategoryData(ByDateCategoryDataList.get(k)));
-                TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k)));
+                TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k),(DateList.get(i)==today)));
+                if(DateList.get(i)==today&&TotalCategoryDataList.get(k)<0){
+                    PSY.InteractionNum--;
+                }
                 //하루 기록들에서 카테고리 데이터의 총합을 계산해 목표 달성 여부에 따른 증감 값을 반영하여 설정
             }
             for(int l=0;l<LableListInt.size();l++){
