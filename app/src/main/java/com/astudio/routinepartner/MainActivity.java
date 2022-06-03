@@ -842,7 +842,7 @@ public class MainActivity extends AppCompatActivity {
         });
         for (int i = 0; i < ActInfoItemList.size(); i++) {
             AngleList.add(ActInfoItemList.get(i).StartHour * 15 + ActInfoItemList.get(i).StartMinute * 0.25f + 270);
-            if(ActInfoItemList.get(i).EndHour == 0){
+            if(ActInfoItemList.get(i).EndHour == 0 && ActInfoItemList.get(i).EndMinute == 0){
                 ActInfoItemList.get(i).EndHour = 24;
             }
             AngleList.add(ActInfoItemList.get(i).EndHour * 15 + ActInfoItemList.get(i).EndMinute * 0.25f - ActInfoItemList.get(i).StartHour * 15 - ActInfoItemList.get(i).StartMinute * 0.25f);
