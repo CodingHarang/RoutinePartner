@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
         this.sendBroadcast(intent);
         //Log.i("WidgetId", "" + intent.getAction());
         SavedSettings.isRefreshed = true;
+        MainContext=getApplicationContext();
         setRadarData();
         //Log.i("in StartActivity", "" + AppWidgetManager.getInstance(getApplicationContext()).getAppWidgetIds(new ComponentName(this.getPackageName(), WidgetProvider.class.getName()))[0]);
     }
