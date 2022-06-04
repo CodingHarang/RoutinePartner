@@ -453,11 +453,6 @@ public class MainActivity extends AppCompatActivity {
 
                     default:
                 }
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
                 PetView.setOnClickListener((view -> {
                     Action ="";
                     PetView.setRepeatCount(1);
@@ -476,6 +471,12 @@ public class MainActivity extends AppCompatActivity {
                     setRadarData();
                     return true;
                 });
+
+            }
+
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
 
             }
 
@@ -517,8 +518,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Integer> Order=new ArrayList<>(Arrays.asList(1,2,3,4));
         ArrayList<String> StatList = SavedSettings.StatList;
         //ArrayList<String> StatList = SavedSettings.StatList;
-        ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;  //4, 2, 4, 1, 2
-        ArrayList<String> CategoryList=SavedSettings.CategoryList;  //"취침", "식사", "공부", "게임", "운동"
+        AffectingStat=SavedSettings.AffectingStat;  //4, 2, 4, 1, 2
+        CategoryList=SavedSettings.CategoryList;
+        GoalType=SavedSettings.GoalType;  //"취침", "식사", "공부", "게임", "운동"
 
         if(!CategoryStat.isEmpty()){
             for(String stat:CategoryStat){
@@ -943,10 +945,9 @@ public class MainActivity extends AppCompatActivity {
     //<--------------------------------------------------------------------PSY
     //<--------------------------------------------------------------------PSY
     //ArrayList<String> CategoryList=new ArrayList<>(Arrays.asList("식사","취침","공부","운동"));
-    ArrayList<String> CategoryList=SavedSettings.CategoryList;  //"식사","취침","공부","운동","게임"
-    ArrayList<String> CategoryStat =SavedSettings.StatList;  // "지능", "재미", "체력", "포만감", "잔고", "자아실현"
-    ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;
-    ArrayList<Integer> GoalType=SavedSettings.GoalType;
+    ArrayList<String> CategoryList;  //"식사","취침","공부","운동","게임"
+    ArrayList<Integer> AffectingStat;
+    ArrayList<Integer> GoalType;
     int AffectionEntry=0;
     String today;
     //ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
@@ -964,18 +965,13 @@ public class MainActivity extends AppCompatActivity {
         PSY PetStateManage=new PSY();
         today=""+cal.get(Calendar.YEAR)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.DATE);
 
-        ActInfoItemList.clear();
         DayList.clear();
         TotalStatDataList.clear();
-            ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
-            ActInfoDAO mActInfoDao = db.actInfoDao();
-            //ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getItemByDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))));
-            ActInfoList=new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
+        ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
+        ActInfoDAO mActInfoDao = db.actInfoDao();
+        ActInfoList = new ArrayList<ActInfo>(Arrays.asList(mActInfoDao.getAll()));
 
-        /*for(int stat:AffectingStat){
-            if(!LableListInt.contains(stat))
-                LableListInt.add(stat);  //4 2 1
-        }*/
+
 
         ArrayList<String> DateList=new ArrayList<>();
         for(int i=0;i<ActInfoList.size();i++){

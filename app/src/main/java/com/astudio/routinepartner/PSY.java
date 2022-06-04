@@ -48,7 +48,6 @@ public class PSY {
                     }else{
                         TimeData =(EH+12)-SH+((60 - SM) + EM) / 60f;
                     }
-
                 } else {
                     TimeData = (EH - SH) + (EM - SM) / 60f;
                 }
