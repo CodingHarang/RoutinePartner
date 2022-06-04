@@ -952,6 +952,7 @@ public class MainActivity extends AppCompatActivity {
     //ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
 
     public void setRadarData(){
+        Context context=getApplicationContext();
         ArrayList<RadarEntry> visitors=new ArrayList<>();
 
         ArrayList<ArrayList<Float>> ByDateCategoryDataList=new ArrayList<>(); //하루의 모든 기록 속에 들어있는 데이터를 카테고리별로 분류해서 넣어놓는 용도
@@ -1061,11 +1062,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if(today.compareTo(PreferenceManage.getString(MainContext,"Date"))!=0){
-            AffectionEntry=(PSY.InteractionNum-NumOfFail)+PreferenceManage.getInt(MainContext,"AffectionNum");
+        if(today.compareTo(PreferenceManage.getString(context,"Date"))!=0){
+            AffectionEntry=(PSY.InteractionNum-NumOfFail)+PreferenceManage.getInt(context,"AffectionNum");
         }else{
             if(!NotEnd)
-            AffectionEntry=PreferenceManage.getInt(MainContext,"InteractionNum")+PSY.InteractionNum-NumOfFail;
+            AffectionEntry=PreferenceManage.getInt(context,"InteractionNum")+PSY.InteractionNum-NumOfFail;
         }
         NotEnd=false;
 
@@ -1103,10 +1104,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        Context context=getApplicationContext();
         super.onStop();
-        PreferenceManage.setInt(MainContext,"InteractionNum",PSY.InteractionNum);
-        PreferenceManage.setInt(MainContext,"AffectionNum",AffectionEntry);
-        PreferenceManage.setString(MainContext,"Date",today);
+        PreferenceManage.setInt(context,"InteractionNum",PSY.InteractionNum);
+        PreferenceManage.setInt(context,"AffectionNum",AffectionEntry);
+        PreferenceManage.setString(context,"Date",today);
     }
 
     //-------------------------------------------------------------------->PSY
