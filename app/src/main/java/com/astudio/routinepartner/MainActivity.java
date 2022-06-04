@@ -1094,6 +1094,11 @@ public class MainActivity extends AppCompatActivity {
         PetStateChart.invalidate();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        NotEnd=true;
+    }
 
     @Override
     protected void onStop() {
