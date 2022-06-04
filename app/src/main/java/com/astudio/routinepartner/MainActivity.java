@@ -702,15 +702,47 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("게임", 2022, 4, i, 20, 0, 22, 0);
             addToActDB("취침", 2022, 4, i, 22, 0, 24, 0);
         }*/
-        for(int i = 1; i < 31; i++) {//31로 돌려놓기
-            addToActDB("수면", 2022, 5, i, 0, 0, 6, 0);
-            addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
-            addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
-            addToActDB("식사", 2022, 5, i, 13, 0, 14, 0);
-            //addToActDB("운동", 2022, 5, i, 16 , 0, 18, 0);
-            addToActDB("식사", 2022, 5, i, 18, 0, 19, 0);
-            //addToActDB("게임", 2022, 5, i, 20, 0, 22, 0);
-            addToActDB("수면", 2022, 5, i, 22, 0, 24, 0);
+//        for(int i = 1; i < 31; i++) {//31로 돌려놓기
+//            addToActDB("수면", 2022, 5, i, 0, 0, 6, 0);
+//            addToActDB("식사", 2022, 5, i, 8, 0, 9, 0);
+//            addToActDB("공부", 2022, 5, i, 10, 0, 12, 0);
+//            addToActDB("식사", 2022, 5, i, 13, 0, 14, 0);
+//            //addToActDB("운동", 2022, 5, i, 16 , 0, 18, 0);
+//            addToActDB("식사", 2022, 5, i, 18, 0, 19, 0);
+//            //addToActDB("게임", 2022, 5, i, 20, 0, 22, 0);
+//            addToActDB("수면", 2022, 5, i, 22, 0, 24, 0);
+//        }
+        for(int i = 1; i <= 13; i+=4){
+            addToActDB("수면", 2022, 6, i, 0, 0, 7, 0);
+            addToActDB("식사", 2022, 6, i, 7, 0, 8, 0);
+            addToActDB("공부", 2022, 6, i, 10, 30, 12, 0);
+            addToActDB("식사", 2022, 6, i, 12, 30, 13, 30);
+            addToActDB("공부", 2022, 6, i, 13, 30, 18, 0);
+            addToActDB("식사", 2022, 6, i, 19, 0, 20, 0);
+            addToActDB("수면", 2022, 6, i, 22, 0, 0, 0);
+
+            addToActDB("수면", 2022, 6, i+1, 0, 0, 8, 0);
+            addToActDB("공부", 2022, 6, i+1, 10, 0, 14, 0);
+            addToActDB("식사", 2022, 6, i+1, 14, 0, 15, 0);
+            addToActDB("공부", 2022, 6, i+1, 15, 0, 19, 30);
+            addToActDB("식사", 2022, 6, i+1, 20, 0, 20, 30);
+            addToActDB("공부", 2022, 6, i+1, 21, 0, 22, 30);
+            addToActDB("수면", 2022, 6, i+1, 23, 0, 0, 0);
+
+            addToActDB("수면", 2022, 6, i+2, 0, 0, 6, 0);
+            addToActDB("식사", 2022, 6, i+2, 7, 0, 7, 30);
+            addToActDB("공부", 2022, 6, i+2, 8, 0, 11, 0);
+            addToActDB("식사", 2022, 6, i+2, 12, 0, 13, 0);
+            addToActDB("공부", 2022, 6, i+2, 14, 0, 16, 0);
+            addToActDB("식사", 2022, 6, i+2, 19, 0, 19, 30);
+            addToActDB("공부", 2022, 6, i+2, 21, 0, 0, 0);
+
+            addToActDB("수면", 2022, 6, i+3, 0, 0, 9, 0);
+            addToActDB("식사", 2022, 6, i+3, 10, 0, 11, 0);
+            addToActDB("공부", 2022, 6, i+3, 12, 0, 14, 0);
+            addToActDB("식사", 2022, 6, i+3, 15, 0, 16, 0);
+            addToActDB("식사", 2022, 6, i+3, 20, 0, 21, 0);
+            addToActDB("수면", 2022, 6, i+3, 23, 0, 0, 0);
         }
         for(int i = 0; i < SavedSettings.CategoryList.size(); i++) {
             //addToSettingsDB(SavedSettings.CategoryList.get(i), SavedSettings.ColorList.get(i), SavedSettings.GoalType.get(i), SavedSettings.Goal.get(i), SavedSettings.AffectingStat.get(i), SavedSettings.Order.get(i));
