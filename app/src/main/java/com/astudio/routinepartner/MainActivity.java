@@ -998,23 +998,23 @@ public class MainActivity extends AppCompatActivity {
             TotalStatDataList.add(0f);
             Log.i("LableListInt",""+LableListInt.get(i));
         }
-
+        Log.i("", "" + SavedSettings.CategoryList);
         for(int i=0;i<DayList.size();i++){  //DayList.get(i) 가 하나의 날짜를 나타냄 ex) 5/20의 모든 시간 기록 담고있음
             //한 날짜의 모든 시간 기록을 카테고리별로 분류  ex) 수면, 식사, 게임, 운동.....
-            for(int n=0;n<CategoryList.size();n++){
+            for(int n=0;n<SavedSettings.CategoryList.size();n++){
                 ByDateCategoryDataList.add(new ArrayList<>());//카테고리별로 기록 넣어둘 공간 할당
             }
             for(int j=0;j<DayList.get(i).size();j++){  //ex) DayList.get(i): 5/20 DayList.get(i).get(j): 5/20 9~11 Study
-                int index=CategoryList.indexOf(DayList.get(i).get(j).Category);  //CategoryList(index) "식사(0)","취침(1)","공부(2)","운동(3)","게임(4)"
+                int index=SavedSettings.CategoryList.indexOf(DayList.get(i).get(j).Category);  //CategoryList(index) "식사(0)","취침(1)","공부(2)","운동(3)","게임(4)"
                 if(index>=0){
                     ByDateCategoryDataList.get(index).add(PetStateManage.calTimeValue(DayList.get(i).get(j).Category,DayList.get(i).get(j).StartHour,DayList.get(i).get(j).StartMinute,DayList.get(i).get(j).EndHour,DayList.get(i).get(j).EndMinute));
                 }
             }//이 for문에서는 하루 내의 기록들을 다룬다. 따라서 이 반복문이 끝나면 하루에 대한 데이터가 모두 카테고리별로 정리
 
 
-            for(int k=0;k<CategoryList.size();k++){
+            for(int k=0;k<SavedSettings.CategoryList.size();k++){
                 TotalCategoryDataList.add(PetStateManage.calCategoryData(ByDateCategoryDataList.get(k)));
-                TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k),(DateList.get(i).compareTo(today)==0)));
+                TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),SavedSettings.CategoryList.get(k), SavedSettings.GoalType.get(k),(DateList.get(i).compareTo(today)==0)));
 
 
                 //하루 기록들에서 카테고리 데이터의 총합을 계산해 목표 달성 여부에 따른 증감 값을 반영하여 설정
