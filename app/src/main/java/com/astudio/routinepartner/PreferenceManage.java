@@ -7,7 +7,7 @@ public class PreferenceManage {
 
     private static final String PREFERENCE_NAME="rebuild_preference";
     private static final String DEFAULT_VALUE_STRING = "";
-    private static final float DEFAULT_VALUE_FLOAT=0;
+    private static final int DEFAULT_VALUE_INT =0;
 
     private static SharedPreferences getPreferences(Context context){
         return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -26,16 +26,16 @@ public class PreferenceManage {
         return value;
     }
 
-    public static void setFloat(Context context, String key, float value) {
+    public static void setInt(Context context, String key, int value) {
         SharedPreferences sharedPreferences = getPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat(key, value);
+        editor.putInt(key, value);
         editor.commit();
     }
 
-    public static float getFloat(Context context, String key) {
+    public static int getInt(Context context, String key) {
         SharedPreferences prefs = getPreferences(context);
-        float value = prefs.getFloat(key, DEFAULT_VALUE_FLOAT);
+        int value = prefs.getInt(key, DEFAULT_VALUE_INT);
         return value;
     }
 

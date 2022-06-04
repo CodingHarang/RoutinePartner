@@ -4,17 +4,11 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -26,23 +20,18 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.IntegerRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,9 +43,7 @@ import android.util.Log;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -91,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     RadarChart PetStateChart;
     ArrayList<String> LableList=new ArrayList<>();
     ArrayList<Integer> LableListInt=new ArrayList<>();
+    boolean NotEnd=false;
 
     @Override
     protected void onStart() {
@@ -314,6 +302,9 @@ public class MainActivity extends AppCompatActivity {
                 ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
                 ActInfoDAO mActInfoDao = db.actInfoDao();
                 mActInfoDao.deleteAll();
+                setRadarData();//[PSY] 추가코드
+                PSY.InteractionNum=0; //[PSY] 추가코드
+                PreferenceManage.clear(MainContext); //[PSY] 추가코드
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
             }
         });
@@ -650,6 +641,7 @@ public class MainActivity extends AppCompatActivity {
     public void showList() {
         Intent intent = new Intent(this, ActInfoListActivity.class);
         startActivity(intent);
+        NotEnd=true;
     }
 
     public void makeData() {
@@ -954,6 +946,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> CategoryStat =SavedSettings.StatList;  // "지능", "재미", "체력", "포만감", "잔고", "자아실현"
     ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;
     ArrayList<Integer> GoalType=SavedSettings.GoalType;
+    int AffectionEntry=0;
+    String today;
     //ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
 
     public void setRadarData(){
@@ -966,9 +960,7 @@ public class MainActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
 
         PSY PetStateManage=new PSY();
-
-        String today=""+cal.get(Calendar.YEAR)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.DATE);
-        Log.i("Today",today);
+        today=""+cal.get(Calendar.YEAR)+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.DATE);
 
         ActInfoItemList.clear();
         DayList.clear();
@@ -1013,6 +1005,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0;i<CategoryList.size();i++){
             Log.i("CategoryStat",""+AffectingStat.get(i)+" "+CategoryList.get(i));
         }
+
         int NumOfFail=0;
 
         for(int i=0;i<DayList.size();i++){  //DayList.get(i) 가 하나의 날짜를 나타냄 ex) 5/20의 모든 시간 기록 담고있음
@@ -1026,12 +1019,16 @@ public class MainActivity extends AppCompatActivity {
                     ByDateCategoryDataList.get(index).add(PetStateManage.calTimeValue(DayList.get(i).get(j).Category,DayList.get(i).get(j).StartHour,DayList.get(i).get(j).StartMinute,DayList.get(i).get(j).EndHour,DayList.get(i).get(j).EndMinute));
                 }
             }//이 for문에서는 하루 내의 기록들을 다룬다. 따라서 이 반복문이 끝나면 하루에 대한 데이터가 모두 카테고리별로 정리
+
+
             for(int k=0;k<CategoryList.size();k++){
                 TotalCategoryDataList.add(PetStateManage.calCategoryData(ByDateCategoryDataList.get(k)));
-                TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k),(DateList.get(i)==today)));
-                if(DateList.get(i)==today&&TotalCategoryDataList.get(k)<0){
-                    PSY.InteractionNum--;
+                TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k),(DateList.get(i).compareTo(today)==0)));
+
+                if(DateList.get(i).compareTo(today)==0){
+                    NumOfFail=PetStateManage.subtractInteractionNum(TotalCategoryDataList);
                 }
+
                 //하루 기록들에서 카테고리 데이터의 총합을 계산해 목표 달성 여부에 따른 증감 값을 반영하여 설정
             }
             for(int l=0;l<LableListInt.size();l++){
@@ -1062,12 +1059,24 @@ public class MainActivity extends AppCompatActivity {
                 visitors.add(new RadarEntry(0f));
             }
         }
-        if(PSY.InteractionNum>=20){
+
+        if(today.compareTo(PreferenceManage.getString(MainContext,"Date"))!=0){
+            AffectionEntry=(PSY.InteractionNum-NumOfFail)+PreferenceManage.getInt(MainContext,"AffectionNum");
+        }else{
+            if(!NotEnd)
+            AffectionEntry=PreferenceManage.getInt(MainContext,"InteractionNum")+PSY.InteractionNum-NumOfFail;
+        }
+        NotEnd=false;
+
+        if(AffectionEntry<0){
+            visitors.add(new RadarEntry(0f));
+            PSY.InteractionNum+=NumOfFail-PSY.InteractionNum;
+        }else if(AffectionEntry>=20){
             visitors.add(new RadarEntry(100));
         }else{
-            visitors.add(new RadarEntry(PSY.InteractionNum*5));
+            visitors.add(new RadarEntry(AffectionEntry*5));
         }
-
+        Log.i("InteractionNum","InteractionNum: "+PSY.InteractionNum+" FailNum: "+NumOfFail+" AffectionEntry: "+AffectionEntry);
 
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
         set1.setColor(Color.BLUE);  //선 색깔 변경
@@ -1084,6 +1093,16 @@ public class MainActivity extends AppCompatActivity {
         PetStateChart.setData(data);
         PetStateChart.invalidate();
     }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        PreferenceManage.setInt(MainContext,"InteractionNum",PSY.InteractionNum);
+        PreferenceManage.setInt(MainContext,"AffectionNum",AffectionEntry);
+        PreferenceManage.setString(MainContext,"Date",today);
+    }
+
     //-------------------------------------------------------------------->PSY
     //-------------------------------------------------------------------->PSY
 }

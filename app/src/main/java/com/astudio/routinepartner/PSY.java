@@ -1,5 +1,7 @@
 package com.astudio.routinepartner;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,6 +13,7 @@ public class PSY {
     private float TimeData = 0;
     private float CategoryData = 0;
     public static int InteractionNum=0;
+    public static boolean IsAffectionMinus=false;
     private int FailNum=0;
     //ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "취침", "공부", "운동"));
     ArrayList<String> CategoryList=SavedSettings.CategoryList;
@@ -82,7 +85,7 @@ public class PSY {
         }
         switch(goaltype){
             case 1: { //횟수
-                if(GoalList.get(index)==ByDateTotalTime){
+                if(GoalList.get(index)<=ByDateTotalTime){
                     ReturnValue=10;
                 }
                 else{
@@ -103,14 +106,19 @@ public class PSY {
         return ReturnValue;
     }
 
-    public void setFailNum(int failnum){
-        FailNum=failnum;
-    }
+    public int subtractInteractionNum(ArrayList<Float> TodayDataList){
+        int FailNum=0;
+        if(!TodayDataList.isEmpty()){
+            for(float data: TodayDataList){
+                if(data<0){
+                    FailNum++;
+                }
+            }
+        }
 
-    public int getFailNum(){
         return FailNum;
-    }
 
+    }
 
 /*    public ArrayList<Boolean> isGoalAchieved(ArrayList<Float> TotalTimeList){
         ArrayList<Boolean> IsGoalAchieved=new ArrayList<>();
