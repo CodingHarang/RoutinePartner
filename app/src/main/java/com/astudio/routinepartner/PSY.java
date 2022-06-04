@@ -12,7 +12,6 @@ public class PSY {
     //Pet 떠나갈 상태
     private float TimeData = 0;
     private float CategoryData = 0;
-    public static int InteractionNum=0;
     public static boolean IsAffectionMinus=false;
     private int FailNum=0;
     //ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("식사", "취침", "공부", "운동"));

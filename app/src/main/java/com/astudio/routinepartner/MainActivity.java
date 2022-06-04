@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     int CategoryNum, PieYear, PieMonth, PieDay, YesterdayYear, YesterdayMonth, YesterdayDay;
     Calendar PieCalendar = Calendar.getInstance();
     Calendar YesterdayCal = Calendar.getInstance();
+    boolean isLongClicked = false;
 
     PieChartView PieChart;
     ArrayList<Integer> TimeList = new ArrayList<Integer>();
@@ -304,7 +305,6 @@ public class MainActivity extends AppCompatActivity {
                 ActInfoDAO mActInfoDao = db.actInfoDao();
                 mActInfoDao.deleteAll();
                 setRadarData();//[PSY] 추가코드
-                PSY.InteractionNum=0; //[PSY] 추가코드
                 PreferenceManage.clear(MainContext); //[PSY] 추가코드
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
             }
@@ -461,13 +461,12 @@ public class MainActivity extends AppCompatActivity {
 
                 PetView.setOnLongClickListener((view) -> {
                     Action ="interaction";
-                    PSY.InteractionNum++;
                     ImageView HeartImage=findViewById(R.id.HeartImage);
                     HeartImage.setImageResource(R.drawable.heartvector);
                     FadeAnimation.fadeInImage(HeartImage);
                     PetView.setRepeatCount(1);
                     PetView.playAnimation();
-
+                    isLongClicked = true;
                     setRadarData();
                     return true;
                 });
@@ -616,7 +615,6 @@ public class MainActivity extends AppCompatActivity {
             TimeInterval timeInterval = new TimeInterval();
             timeInterval.setInterval(3);
             mTimeIntervalDao.insert(timeInterval);
-            setRadarData();
         }
         SavedSettings.CategoryList.clear();
         SavedSettings.ColorList.clear();
@@ -636,6 +634,7 @@ public class MainActivity extends AppCompatActivity {
             //Log.i("initializing","" + mSettingsDao.getAll().length);
         //Log.i("initializing Done","");
         SavedSettings.isRefreshed = true;
+        setRadarData();
         finish();
         overridePendingTransition(0, 0);
         startActivity(getIntent());
@@ -948,7 +947,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> CategoryList;  //"식사","취침","공부","운동","게임"
     ArrayList<Integer> AffectingStat;
     ArrayList<Integer> GoalType;
-    int AffectionEntry=0;
+    int AffectionEntry;
     String today;
     //ArrayList<String> CategoryStat = new ArrayList<>(Arrays.asList("포만감", "체력", "지능", "체력"));
 
@@ -1000,12 +999,6 @@ public class MainActivity extends AppCompatActivity {
             Log.i("LableListInt",""+LableListInt.get(i));
         }
 
-        for(int i=0;i<CategoryList.size();i++){
-            Log.i("CategoryStat",""+AffectingStat.get(i)+" "+CategoryList.get(i));
-        }
-
-        int NumOfFail=0;
-
         for(int i=0;i<DayList.size();i++){  //DayList.get(i) 가 하나의 날짜를 나타냄 ex) 5/20의 모든 시간 기록 담고있음
             //한 날짜의 모든 시간 기록을 카테고리별로 분류  ex) 수면, 식사, 게임, 운동.....
             for(int n=0;n<CategoryList.size();n++){
@@ -1023,9 +1016,6 @@ public class MainActivity extends AppCompatActivity {
                 TotalCategoryDataList.add(PetStateManage.calCategoryData(ByDateCategoryDataList.get(k)));
                 TotalCategoryDataList.set(k,PetStateManage.applyGoal(TotalCategoryDataList.get(k),CategoryList.get(k), GoalType.get(k),(DateList.get(i).compareTo(today)==0)));
 
-                if(DateList.get(i).compareTo(today)==0){
-                    NumOfFail=PetStateManage.subtractInteractionNum(TotalCategoryDataList);
-                }
 
                 //하루 기록들에서 카테고리 데이터의 총합을 계산해 목표 달성 여부에 따른 증감 값을 반영하여 설정
             }
@@ -1058,23 +1048,31 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if(today.compareTo(PreferenceManage.getString(context,"Date"))!=0){
-            AffectionEntry=(PSY.InteractionNum-NumOfFail)+PreferenceManage.getInt(context,"AffectionNum");
-        }else{
-            if(!NotEnd)
-            AffectionEntry=PreferenceManage.getInt(context,"InteractionNum")+PSY.InteractionNum-NumOfFail;
-        }
-        NotEnd=false;
+//        if(today.compareTo(PreferenceManage.getString(context,"Date"))!=0){
+//            AffectionEntry=(PSY.InteractionNum-NumOfFail)+PreferenceManage.getInt(context,"AffectionNum");
+//        }else{
+//            if(!NotEnd)
+//            AffectionEntry=PreferenceManage.getInt(context,"InteractionNum")+PSY.InteractionNum-NumOfFail;
+//        }
+//        NotEnd=false;
+//
 
-        if(AffectionEntry<0){
-            visitors.add(new RadarEntry(0f));
-            PSY.InteractionNum+=NumOfFail-PSY.InteractionNum;
-        }else if(AffectionEntry>=20){
-            visitors.add(new RadarEntry(100));
-        }else{
-            visitors.add(new RadarEntry(AffectionEntry*5));
+        AffectionEntry = PreferenceManage.getInt(context,"AffectionNum");
+        if(today.compareTo(PreferenceManage.getString(context,"DATE"))!=0) {
+            PreferenceManage.setString(context,"DATE",today);
+            if(AffectionEntry >= 20)
+                AffectionEntry -= 20;
+            else
+                AffectionEntry = 0;
+            PreferenceManage.setInt(context,"AffectionNum",AffectionEntry);
         }
-        Log.i("InteractionNum","InteractionNum: "+PSY.InteractionNum+" FailNum: "+NumOfFail+" AffectionEntry: "+AffectionEntry);
+        if(isLongClicked == true){
+            isLongClicked = false;
+            if(AffectionEntry < 100)
+                AffectionEntry += 5;
+            PreferenceManage.setInt(context,"AffectionNum",AffectionEntry);
+        }
+        visitors.add(new RadarEntry(AffectionEntry));
 
         RadarDataSet set1=new RadarDataSet(visitors,"펫 상태");
         set1.setColor(Color.BLUE);  //선 색깔 변경
@@ -1090,21 +1088,6 @@ public class MainActivity extends AppCompatActivity {
 
         PetStateChart.setData(data);
         PetStateChart.invalidate();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        NotEnd=true;
-    }
-
-    @Override
-    protected void onStop() {
-        Context context=getApplicationContext();
-        super.onStop();
-        PreferenceManage.setInt(context,"InteractionNum",PSY.InteractionNum);
-        PreferenceManage.setInt(context,"AffectionNum",AffectionEntry);
-        PreferenceManage.setString(context,"Date",today);
     }
 
     //-------------------------------------------------------------------->PSY
