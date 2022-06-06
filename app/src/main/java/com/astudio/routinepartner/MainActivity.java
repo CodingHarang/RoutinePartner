@@ -325,7 +325,6 @@ public class MainActivity extends AppCompatActivity {
         YesterdayMonth = YesterdayCal.get(Calendar.MONTH)+1;
         YesterdayDay = YesterdayCal.get(Calendar.DAY_OF_MONTH);
 
-        BtnShowPieChart = findViewById(R.id.btnShowPieChart);
         ImageButton BtnChart = (ImageButton) findViewById(R.id.BtnChart);
         ImageButton SettingButton = findViewById(R.id.SettingBtn);
         BtnSelectDay = findViewById(R.id.SelectDayBtn);
@@ -333,12 +332,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         PieChart = (PieChartView) findViewById(R.id.PieChartView);
-        BtnShowPieChart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         BtnChart.setOnClickListener(new View.OnClickListener() {
             @Override

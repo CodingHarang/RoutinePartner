@@ -1,1 +1,0 @@
-build.gradle -> dependencies에 implementation 'com.github.Dhaval2404:ColorPicker:2.3' 추가
