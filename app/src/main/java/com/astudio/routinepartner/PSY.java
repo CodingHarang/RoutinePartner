@@ -88,15 +88,4 @@ public class PSY {
         return ReturnValue;
     }
 
-    public int subtractInteractionNum(ArrayList<Float> TodayDataList){
-        int FailNum=0;
-        if(!TodayDataList.isEmpty()){
-            for(float data: TodayDataList){
-                if(data<0){
-                    FailNum++;
-                }
-            }
-        }
-        return FailNum;
-    }
 }

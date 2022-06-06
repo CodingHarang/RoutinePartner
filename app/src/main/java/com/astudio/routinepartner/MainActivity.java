@@ -423,8 +423,8 @@ public class MainActivity extends AppCompatActivity {
                         FadeAnimation.fadeOutImage(img);
                         break;
                     case "6"://자아실현
-                        //img.setImageResource(R.drawable.dogbed_brown);
-                        //FadeAnimation.fadeOutImage(img);
+                        img.setImageResource(R.drawable.trophy);
+                        FadeAnimation.fadeOutImage(img);
                         break;
 
 
