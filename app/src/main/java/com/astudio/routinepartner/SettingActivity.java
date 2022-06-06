@@ -15,20 +15,14 @@ import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 public class SettingActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -70,7 +64,6 @@ public class SettingActivity extends AppCompatActivity {
                             }else
                                 Order = 1;
 
-                            Log.v("getExtra", ""+Name+" "+GetColor+" "+Stat+" "+GoalType+" "+Goal);
                             if(ActivitySet == 0){
                                 adapter.addItem(new CategoryInfo(Name, GetColor, Stat, GoalType, Goal, Order));
                                 adapter.notifyItemInserted(SetCategoryAdapter.CategoryItem.size());
@@ -87,34 +80,22 @@ public class SettingActivity extends AppCompatActivity {
                                     CategoryAddBtn.setEnabled(false);
                                 }
 
-                                Log.v("현재 리스트 이름", ""+SavedSettings.CategoryList);
-                                Log.v("현재 리스트 색", ""+SavedSettings.ColorList);
-                                Log.v("현재 리스트 순서", ""+SavedSettings.Order);
-                                Log.v("현재 리스트 스탯", ""+SavedSettings.AffectingStat);
-
                             }else{
 
                                 CategoryInfo editCategory = new CategoryInfo(Name, GetColor, Stat, GoalType, Goal, Order);
                                 adapter.editItem(CurPosition, editCategory);
 
                                 recyclerViewRefresh();
-                                Log.i("", "" +  SavedSettings.CategoryList.get(CurPosition) + " " + Name);
                                 String OName = SavedSettings.CategoryList.get(CurPosition);
                                 ActInfoDB db = ActInfoDB.getDatabase(getApplicationContext());
                                 ActInfoDAO mActInfoDao = db.actInfoDao();
                                 mActInfoDao.updateCategoryName(OName, Name);
-                                Log.v("수정 값", ""+Name);
 
                                 SavedSettings.CategoryList.set(CurPosition, Name);
                                 SavedSettings.ColorList.set(CurPosition, GetColor);
                                 SavedSettings.AffectingStat.set(CurPosition, Stat);
                                 SavedSettings.GoalType.set(CurPosition, GoalType);
                                 SavedSettings.Goal.set(CurPosition, Goal);
-
-                                Log.v("현재 리스트 이름", ""+SavedSettings.CategoryList);
-                                Log.v("현재 리스트 색", ""+SavedSettings.ColorList);
-                                Log.v("현재 리스트 순서", ""+SavedSettings.Order);
-
                             }
                             SettingsDB db = SettingsDB.getDatabase(getApplicationContext());
                             SettingsDAO mSettingsDao = db.settingDao();
@@ -135,9 +116,7 @@ public class SettingActivity extends AppCompatActivity {
                                 settings.setOrder(order);
                                 mSettingsDao.insert(settings);
                             }
-                            Log.i("in SettingActivity", ""+ SavedSettings.Order);
                         }
-                        Log.i("in SettingActivity", "" + WidgetSettings.AppWidgetId);
                         AppWidgetManager.getInstance(getApplicationContext()).notifyAppWidgetViewDataChanged(WidgetSettings.AppWidgetId, R.id.widgetLayout);
                     }
                 });
@@ -164,12 +143,6 @@ public class SettingActivity extends AppCompatActivity {
                 CurPosition = position;
 
                 Intent intent = new Intent(getApplicationContext(), SetCategoryActivity.class);
-
-//                intent.putExtra("CurName", SetCategoryAdapter.CategoryItem.get(position).getName());
-//                intent.putExtra("CurColor", SetCategoryAdapter.CategoryItem.get(position).getColor());
-//                intent.putExtra("CurStat", SetCategoryAdapter.CategoryItem.get(position).getStat());
-//                intent.putExtra("CurGoalType", SetCategoryAdapter.CategoryItem.get(position).getGoalType());
-//                intent.putExtra("CurGoal", SetCategoryAdapter.CategoryItem.get(position).getGoal());
 
                 intent.putExtra("CurPosition", CurPosition);
                 intent.putExtra("CurName", SetCategoryAdapter.CategoryItem.get(position).getName());
@@ -244,15 +217,12 @@ public class SettingActivity extends AppCompatActivity {
                                 settings.setAffectingStat(affectingStat);
                                 settings.setOrder(order);
                                 mSettingsDao.insert(settings);
-                                Log.i("", "" + SavedSettings.CategoryList.get(j));
                             }
 
                             if(SetCategoryAdapter.CategoryItem.size() < 5){
                                 CategoryAddBtn.setColorFilter(Color.parseColor("#707070"));
                                 CategoryAddBtn.setEnabled(true);
                             }
-
-                            Log.v("오더 확인", ""+SavedSettings.Order);
                         }
                     });
 

@@ -5,15 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.jar.Attributes;
 
 public class PieChartView extends View {
 
@@ -56,7 +51,6 @@ public class PieChartView extends View {
         TextPaint.setColor(Color.parseColor("#898989"));
         TextPaint.setTextSize(40);
         RectF rect = new RectF();
-//        rect.set((getWidth()/10), getHeight()/10, (getWidth()/10)*9, getHeight()/10*9);
         rect.set(Left, Top, Right, Bottom);
         RectF arcrect = new RectF();
         arcrect.set(Left, Top, Right, Bottom);
@@ -64,11 +58,9 @@ public class PieChartView extends View {
         SmallPaint.setColor(Color.parseColor("#DFF4FF"));
 
         //파이차트 바깥쪽에 시간 텍스트 표시
-
         float TextStartPoint = -90;
         for(int i = 0; i < 24; i += SavedSettings.TimeInterval){
             float radius = (float)(Interval+50);
-//            float radius = (float)(Interval+((Interval/100)*15));
             float x = (float)(radius * Math.cos(TextStartPoint * Math.PI / 180F)) + getWidth()/2-20;
             float y = (float)(radius * Math.sin(TextStartPoint * Math.PI / 180F)) + getHeight()/2+10;
             canvas.drawText(""+i , x, y , TextPaint);
@@ -83,25 +75,6 @@ public class PieChartView extends View {
                 }
             }
             canvas.drawArc(arcrect, Data.get(2*i), Data.get(2*i+1), true, paint);
-
-
-//            switch (CategoryList.get(i)){
-//                case "Sleep":
-//                    paint.setColor(Color.parseColor(PColors[0]));
-//                    break;
-//                case "Etc":
-//                    paint.setColor(Color.parseColor(PColors[1]));
-//                    break;
-//                case "Study":
-//                    paint.setColor(Color.parseColor(PColors[2]));
-//                    break;
-//                case "Eat":
-//                    paint.setColor(Color.parseColor(PColors[3]));
-//                    break;
-//                default:
-//                    paint.setColor(Color.parseColor(PColors[4]));
-//            }
-//            canvas.drawArc(arcrect, Data.get(2*i), Data.get(2*i+1), true, paint);
         }
 
         if(YesterdayData != null) { //전날과 이어지는 시간 표시 / style: 원 안
@@ -133,24 +106,7 @@ public class PieChartView extends View {
                     SmallPaint.setColor(SavedSettings.ColorList.get(i).intValue());
                 }
             }
-//            switch (YdCategory) {
-//                case "Sleep":
-//                    SmallPaint.setColor(Color.parseColor(PColors[0]));
-//                    break;
-//                case "Etc":
-//                    SmallPaint.setColor(Color.parseColor(PColors[1]));
-//                    break;
-//                case "Study":
-//                    SmallPaint.setColor(Color.parseColor(PColors[2]));
-//                    break;
-//                case "Eat":
-//                    SmallPaint.setColor(Color.parseColor(PColors[3]));
-//                    break;
-//                default:
-//                    SmallPaint.setColor(Color.parseColor(PColors[4]));
-//            }
             RectF smallarcrect = new RectF();
-//            smallarcrect.set((getWidth() / 2) - 405, getHeight() / 2 - 606, (getWidth() / 2) + 445, getHeight() / 2 + 246);
             smallarcrect.set(Left+(float)(Interval/100*6), Top+(float)(Interval/100*6), Right-(float)(Interval/100*6), Bottom-(float)(Interval/100*6));
             for (int i = 0; i < YesterdayData.size() / 2; i++) {
                 canvas.drawArc(smallarcrect, YesterdayData.get(2 * i)+0.8f, YesterdayData.get(2 * i + 1)-0.8f, false, SmallPaint);

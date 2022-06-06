@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,10 +24,8 @@ import com.github.dhaval2404.colorpicker.model.ColorShape;
 import com.github.dhaval2404.colorpicker.model.ColorSwatch;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.jar.Attributes;
 
 public class SetCategoryActivity extends AppCompatActivity {
 
@@ -141,28 +138,6 @@ public class SetCategoryActivity extends AppCompatActivity {
                 "#9DF0E1", "#32F1FF", "#00D7FF", "#93DAFF", "#00BFFF", "#00AFFF", "#BECDFF","#90AFFF", "#6495ED", "#148CFF",
                 "#E19B50", "#CD853F", "#D27D32"};
 
-        //Hue
-
-//        SetColor.setOnClickListener(new View.OnClickListener() {
-//            @SuppressLint("ResourceType")
-//            @Override
-//            public void onClick(View view) {
-//                new ColorPickerDialog
-//                        .Builder(SetCategoryActivity.this)
-//                        .setTitle("Pick Theme")
-//                        .setColorShape(ColorShape.SQAURE)
-//                        .setDefaultColor(Color.parseColor("#ffffff"))
-//                        .setColorListener(new ColorListener() {
-//                            @Override
-//                            public void onColorSelected(int color, @NotNull String colorHex) {
-//                                SetColor.setBackgroundColor(color);
-//                            }
-//                        })
-//                        .show();
-//            }
-//        });
-
-        //팔레트
 
         SetColor.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceType")
@@ -230,11 +205,6 @@ public class SetCategoryActivity extends AppCompatActivity {
                     GoalSet = Integer.parseInt(GoalData.getText().toString());
                     Intent Cheak = new Intent(getApplicationContext(), SettingActivity.class);
                     Cheak.putExtra("Name", NameSet);
-//                    Cheak.putExtra("Color", ColorSet);
-//                    Cheak.putExtra("GoalType", GoalTypeSet);
-//                    Cheak.putExtra("Goal", GoalSet);
-//                    Cheak.putExtra("Stat", StatSet);
-//                    Cheak.putExtra("Stat", StatSet);
                     Cheak.putExtra("Color", ColorLong);
                     Cheak.putExtra("GoalType", GoalKey);
                     Cheak.putExtra("Goal", GoalSet);

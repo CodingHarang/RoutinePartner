@@ -1,24 +1,15 @@
 package com.astudio.routinepartner;
 
-
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
-
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 public class WidgetService extends Service {
@@ -57,8 +48,6 @@ public class WidgetService extends Service {
     @Override // startService()로 서비스를 시작할 때 호출
     public int onStartCommand(Intent intent, int flags, int startId) {
         CategoryNum = WidgetSettings.ClickedWidgetButton;
-        //Log.i("InWidgetService", "Service " + CategoryNum + " Started");
-        //Log.i("SavedSettings", SavedSettings.CategoryName.get(1));
         Toast.makeText(getApplicationContext(), "Service Started", Toast.LENGTH_SHORT).show();
 
         Calendar cal = Calendar.getInstance();
@@ -83,7 +72,6 @@ public class WidgetService extends Service {
 
     @Override // 서비스가 소멸될 때 호출
     public void onDestroy() {
-        //Log.i("End Service", "End service and notification");
         Calendar cal = Calendar.getInstance();
         EYear = cal.get(Calendar.YEAR);
         EMonth = cal.get(Calendar.MONTH) + 1;
@@ -103,6 +91,7 @@ public class WidgetService extends Service {
         actInfo.setEndHour(EHour);
         actInfo.setEndMinute(EMinute);
         mActInfoDao.insert(actInfo);
+        Toast.makeText(getApplicationContext(), "Service Ended", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 

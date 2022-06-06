@@ -3,18 +3,12 @@ package com.astudio.routinepartner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.RectF;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -22,33 +16,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.dataprovider.BarDataProvider;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.renderer.BarChartRenderer;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 
 public class BarChartActivity extends AppCompatActivity {
     protected ArrayList<ActInfo> ActInfoList;
@@ -103,7 +85,6 @@ public class BarChartActivity extends AppCompatActivity {
         CircularProgressBar = findViewById(R.id.CirCularprogressBar);
         ProgressDataText = findViewById(R.id.ProgressDataText);
 
-//        bringDataFromTest();
         CircularProgressBar.setMax(100);
         CatetoryList.addAll(SavedSettings.CategoryList);
 
@@ -119,9 +100,7 @@ public class BarChartActivity extends AppCompatActivity {
         Ylaxis.setDrawAxisLine(false);
         Ylaxis.setDrawGridLines(false);
 
-//        Ylaxis.setAxisMaximum(6);
         Ylaxis.setAxisMinimum(0);
-//        Ylaxis.setLabelCount(5);
 
         Xaxis = Bar_Chart.getXAxis();
         Xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -145,7 +124,6 @@ public class BarChartActivity extends AppCompatActivity {
 
 
         //스피너에 관한 부분
-
         ArrayAdapter<String> ChartAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CatetoryList);
 
         ChartAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
@@ -155,8 +133,6 @@ public class BarChartActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 CurrentCategory = CatetoryList.get(i);
                 CategoryValue = true;
-//                DayList.clear();
-//                TimeList.clear();
                 if(i == 0){
                     CategoryValue = false;
                 }
@@ -173,7 +149,6 @@ public class BarChartActivity extends AppCompatActivity {
 
 
         //날짜 입력에 관한 부분
-
         EditStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,7 +169,6 @@ public class BarChartActivity extends AppCompatActivity {
 
 
         //차트 그리기 + 입력된 값이 잘못됐을 경우 토스트 메세지 띄우기
-
         BtnMakeChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -226,7 +200,6 @@ public class BarChartActivity extends AppCompatActivity {
 
 
     //날짜 입력받고 텍스트 설정에 관한 부분
-
     public void updateDate(){
         String Format = "yyyy/MM/dd";
         SimpleDateFormat SDF = new SimpleDateFormat(Format, Locale.KOREA);
@@ -252,7 +225,6 @@ public class BarChartActivity extends AppCompatActivity {
     }
 
     //입력받은 날짜 비교에 관한 부분
-
     public void compareDate(){
         if((EditStart.getText().length() == 0) || (EditEnd.getText().length() == 0)){
             DateCompareValue = false;
@@ -261,19 +233,6 @@ public class BarChartActivity extends AppCompatActivity {
         }else
             DateCompareValue = false;
     }
-
-
-    //차트 설정에 관한 부분
-
-//    public class CustomBarChartRenderer extends BarChartRenderer {
-//        private int mradius;
-//        private RectF mBarShadowRectBuffer = new RectF();
-//
-//        CustomBarChartRenderer(BarDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler, int mRadius) {
-//            super(chart, animator, viewPortHandler);
-//            this.mradius = mRadius;
-//        }
-//    }
 
     private void drawBarChart(ArrayList<String> daylist, ArrayList<Float> timelist) {
 
@@ -395,11 +354,7 @@ public class BarChartActivity extends AppCompatActivity {
         }
     }
 
-
-
-
     //선택한 기간의 데이터 가져오기
-
     ArrayList<ArrayList<ActInfoItem>> AllDayList = new ArrayList<>();
 
     private void getData(){
@@ -444,28 +399,9 @@ public class BarChartActivity extends AppCompatActivity {
         }
         AllDayList.add(ActInfoItemList);
 
-//        for(int i = 0; i < ActInfoList.size(); i++) {
-//            //만약 날이 바뀌면 기존 리스트 AllDayList에 추가하고 새로운 ActInfoItemList 생성
-//            if((i>0) && ((ActInfoList.get(i).getYear() != ActInfoList.get(i-1).getYear() || ActInfoList.get(i).getMonth() != ActInfoList.get(i-1).getMonth()) || ActInfoList.get(i).getDate() != ActInfoList.get(i-1).getDate())){
-//                AllDayList.add(ActInfoItemList);
-//                ActInfoItemList = new ArrayList<>();
-//                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(),
-//                        ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(),
-//                        ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
-//            }else{
-//                //아니면 기존리스트에 데이터 추가
-//                ActInfoItemList.add(new ActInfoItem(ActInfoList.get(i).getId(), ActInfoList.get(i).getCategory(), ActInfoList.get(i).getYear(),
-//                        ActInfoList.get(i).getMonth(), ActInfoList.get(i).getDate(), ActInfoList.get(i).getStartHour(), ActInfoList.get(i).getStartMinute(),
-//                        ActInfoList.get(i).getEndHour(), ActInfoList.get(i).getEndMinute()));
-//            }
-//        }
-//        //AllDayList는 날짜별로 묶인 데이터가 들어가있는 리스트
-//        AllDayList.add(ActInfoItemList);
     }
 
-
     //카테고리에 따른 값 계산
-
     private void getCategory(){
         float CategoryTime;
         String CurrentDay;
@@ -497,11 +433,7 @@ public class BarChartActivity extends AppCompatActivity {
         WeekTimeList.add(tempList);
     }
 
-
-
-
     //목표달성률
-
     private void GoalPercent(){
         int i = 0;
         int index, CurGoalType, Curgoal, SuccessGoal = 0, SizeOfData = AllDayList.size();
@@ -555,7 +487,6 @@ public class BarChartActivity extends AppCompatActivity {
     }
 
     //stacked bar chart
-
     public void weekChart(){
         Syear = ChartCalender.get(Calendar.YEAR);
         Smonth = ChartCalender.get(Calendar.MONTH)+1;

@@ -6,26 +6,18 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
+
 import android.view.View;
-import android.widget.Button;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.CountDownLatch;
 
 public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         final int N = appWidgetIds.length;
 
-        //Log.i("in onUpdate", "Widget Updated");
         for (int i=0; i<N; i++) {
             int MyAppWidgetId = appWidgetIds[i];
             Intent intent1 = new Intent(context, getClass());
@@ -74,18 +66,14 @@ public class WidgetProvider extends AppWidgetProvider {
             }
             appWidgetManager.updateAppWidget(MyAppWidgetId, views);
             WidgetSettings.AppWidgetId = MyAppWidgetId;
-
-            Log.i("in WidgetProvider", "" + WidgetSettings.AppWidgetId);
         }
     }
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Log.i("in onReceive actionName : ", intent.getAction());
 
         SettingsDB db = SettingsDB.getDatabase(context);
         SettingsDAO mSettingsDao = db.settingDao();
-        //Log.i("CategoryNum", "" + mSettingsDao.getAll().length);
         int CategoryNum = mSettingsDao.getAll().length;
         if(CategoryNum == 0) {
             Settings settings = new Settings();
@@ -111,8 +99,6 @@ public class WidgetProvider extends AppWidgetProvider {
             SavedSettings.AffectingStat.add(mSettingsDao.getAll()[i].getAffectingStat());
             SavedSettings.Order.add(mSettingsDao.getAll()[i].getOrder());
         }
-            //Log.i("in Widget", "DB transaction End");
-        //Log.i("in Widget", "Next");
         if (intent.getAction() == "CONTROL_SERVICE1" || intent.getAction() == "CONTROL_SERVICE2" || intent.getAction() == "CONTROL_SERVICE3" || intent.getAction() == "CONTROL_SERVICE4" || intent.getAction() == "CONTROL_SERVICE5" || intent.getAction() == "SETTINGS_CHANGED") {
             if(intent.getAction() != "SETTINGS_CHANGED")
             {
@@ -135,7 +121,6 @@ public class WidgetProvider extends AppWidgetProvider {
                     WidgetSettings.IsServiceRunning = false;
                 }
             }
-            //WidgetSettings.IsWidgetUpdated = false;
             this.onUpdate(context, AppWidgetManager.getInstance(context), AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, getClass())));
         }
     }

@@ -3,21 +3,13 @@ package com.astudio.routinepartner;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Toast;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -32,10 +24,7 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
     }
 
     static ArrayList<CategoryInfo> CategoryItem = new ArrayList<CategoryInfo>(
-            Arrays.asList(
-                    //new CategoryInfo(SavedSettings.CategoryList.get(0), SavedSettings.ColorList.get(0), SavedSettings.CategoryStatList.get(0), SavedSettings.GoalType.get(0), SavedSettings.GoalList.get(0)),
-                    //00new CategoryInfo(SavedSettings.CategoryList.get(1), SavedSettings.ColorList.get(1), SavedSettings.CategoryStatList.get(1), SavedSettings.GoalType.get(1), SavedSettings.GoalList.get(1))));
-            ));
+            Arrays.asList());
 
     Button CategoryButton;
 
@@ -82,7 +71,6 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
     public void onBindViewHolder(@NonNull SetCategoryAdapter.ViewHolder holder, int position) {
 
         CategoryInfo cate = CategoryItem.get(position);
-        Log.v("cate", ""+cate.getName()+"   "+position);
         holder.setItem(cate);
     }
 
@@ -139,10 +127,7 @@ public class SetCategoryAdapter extends RecyclerView.Adapter<SetCategoryAdapter.
             }
 
             CategoryButton.setText(Html.fromHtml(styledText));
-//            CategoryButton.setText(Item.getName()+" "+Item.getStat()+" "+Item.getColor()+" "+Item.getGoalType()+" "+Item.getGoal());
-            Log.v("t", ""+Item.getName());
             CategoryButton.setBackgroundTintList(ColorStateList.valueOf(Item.getColor().intValue()));
-//            CategoryButton.setBackgroundColor(Item.getColor().intValue());
         }
     }
     public void delItem(int position) {

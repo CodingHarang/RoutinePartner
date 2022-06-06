@@ -2,11 +2,7 @@ package com.astudio.routinepartner;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +11,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,7 +46,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
             BtnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(Context, "clicked" + ActivityContext, Toast.LENGTH_SHORT).show();
                     Calendar cal = Calendar.getInstance();
                     int Year, Month, Date;
                     Year = ContainingItem.Year;
@@ -60,7 +54,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                     cal.set(Calendar.YEAR, Year);
                     cal.set(Calendar.MONTH, Month - 1);
                     cal.set(Calendar.DATE, Date);
-                    Toast.makeText(parent.getContext(), "" + cal.get(Calendar.YEAR) + " " + (cal.get(Calendar.MONTH) + 1) + " " + cal.get(Calendar.DATE), Toast.LENGTH_SHORT).show();
                     View dialogView = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_add, null);
                     EditText EdtCategory = dialogView.findViewById(R.id.edtCategory);
                     Button BtnCalendar = dialogView.findViewById(R.id.btnCalendar);
@@ -103,7 +96,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                             ContainingItem.Year = cal.get(Calendar.YEAR);
                             ContainingItem.Month = cal.get(Calendar.MONTH) + 1;
                             ContainingItem.Date = cal.get(Calendar.DATE);
-                            Toast.makeText(parent.getContext(), "" + Year + " " + Month + " " + Date, Toast.LENGTH_SHORT).show();
                             ContainingItem.StartHour = NumPickers[0].getValue() == 0 ? NumPickers[2].getValue() : NumPickers[2].getValue() + 12;
                             ContainingItem.EndHour = NumPickers[1].getValue() == 0 ? NumPickers[3].getValue() : NumPickers[3].getValue() + 12;
                             ContainingItem.StartMinute = NumPickers[4].getValue();
@@ -111,7 +103,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                             ActInfoDB db = ActInfoDB.getDatabase(parent.getContext());
                             ActInfoDAO mActInfoDao = db.actInfoDao();
                             ActInfo actInfo = new ActInfo();
-                            //mActInfoDao.deleteByActId(ActInfoList.get(Index).ItemId);
                             actInfo.setCategory(ContainingItem.Category);
                             actInfo.setYear(ContainingItem.Year);
                             actInfo.setMonth(ContainingItem.Month);
@@ -120,7 +111,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                             actInfo.setStartMinute(ContainingItem.StartMinute);
                             actInfo.setEndHour(ContainingItem.EndHour);
                             actInfo.setEndMinute(ContainingItem.EndMinute);
-                            //mActInfoDao.insert(actInfo);
                             mActInfoDao.updateData(ContainingItem.ItemId, ContainingItem.Category, ContainingItem.Year, ContainingItem.Month, ContainingItem.Date, ContainingItem.StartHour, ContainingItem.StartMinute, ContainingItem.EndHour, ContainingItem.EndMinute);
 
                             BtnEdit.setText(ContainingItem.Category + "   id : " + Integer.toString(ContainingItem.ItemId) + "\n" + Integer.toString(ContainingItem.Year) + " - " + Integer.toString(ContainingItem.Month) + " - " + Integer.toString(ContainingItem.Date) + "\n" + Integer.toString(ContainingItem.StartHour) + " : " + Integer.toString(ContainingItem.StartMinute) + " ~ " + Integer.toString(ContainingItem.EndHour) + " : " + Integer.toString(ContainingItem.EndMinute));
@@ -139,11 +129,9 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
             BtnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(Context, Integer.toString(Index), Toast.LENGTH_SHORT).show();
                     ActInfoDB db = ActInfoDB.getDatabase(Context);
                     ActInfoDAO mActInfoDao = db.actInfoDao();
                     mActInfoDao.deleteByActId(ActInfoList.get(Index).ItemId);
-                    Toast.makeText(Context, "id" + Integer.toString(Index) + "deleted", Toast.LENGTH_SHORT).show();
                     delItem(Index);
                 }
             });
@@ -162,7 +150,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         BtnEdit.setBackgroundResource(R.drawable.round_square1);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square1);
-                        Log.i("ContainingItem.Category", "" + SavedSettings.CategoryList + "   " + position);
                     }
                 }
                 if(i == 1 && i < CategoryNum) {
@@ -170,7 +157,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         BtnEdit.setBackgroundResource(R.drawable.round_square2);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square2);
-                        Log.i("ContainingItem.Category", "" + ContainingItem.Category);
                     }
                 }
                 if(i == 2 && i < CategoryNum) {
@@ -178,7 +164,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         BtnEdit.setBackgroundResource(R.drawable.round_square3);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square3);
-                        Log.i("ContainingItem.Category", "" + ContainingItem.Category);
                     }
                 }
                 if(i == 3 && i < CategoryNum) {
@@ -186,7 +171,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         BtnEdit.setBackgroundResource(R.drawable.round_square4);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square4);
-                        Log.i("ContainingItem.Category", "" + ContainingItem.Category);
                     }
                 }
                 if(i == 4 && i < CategoryNum) {
@@ -194,7 +178,6 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                         BtnEdit.setBackgroundResource(R.drawable.round_square5);
                         BtnEdit.setTextColor(0XFF000000);
                         BtnDelete.setBackgroundResource(R.drawable.round_square5);
-                        Log.i("ContainingItem.Category", "" + ContainingItem.Category);
                     }
                 }
             }

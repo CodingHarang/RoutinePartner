@@ -3,11 +3,9 @@ package com.astudio.routinepartner;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 import java.util.*;
 
 
@@ -94,11 +91,7 @@ public class ActInfoListActivity extends AppCompatActivity {
                 for(int i = 0; i < ActInfoList.size(); i++) {
                     MAdapter.addItem(ActInfoItemList.get(i));
                 }
-//                for(int i = 0; i < ActInfoList.size(); i++) {
-//                    MRecyclerView.getLayoutManager().findViewByPosition(i).setBackgroundResource(R.drawable.round_square1);
-//                }
                 MAdapter.notifyDataSetChanged();
-                Log.i("----", "" + ActInfoItemList);
             }
         });
 
@@ -132,12 +125,10 @@ public class ActInfoListActivity extends AppCompatActivity {
             Syear = cal.get(Calendar.YEAR);
             Smonth = cal.get(Calendar.MONTH) + 1;
             Sdate = cal.get(Calendar.DATE);
-            //Toast.makeText(getApplicationContext(), "Syear" + Syear + Smonth + Sdate, Toast.LENGTH_SHORT).show();
         } else {
             Eyear = cal.get(Calendar.YEAR);
             Emonth = cal.get(Calendar.MONTH) + 1;
             Edate = cal.get(Calendar.DATE);
-            //Toast.makeText(getApplicationContext(), "Eyear" + Eyear + Emonth + Edate, Toast.LENGTH_SHORT).show();
         }
     }
     Context getContext() {
