@@ -113,7 +113,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                             actInfo.setEndMinute(ContainingItem.EndMinute);
                             mActInfoDao.updateData(ContainingItem.ItemId, ContainingItem.Category, ContainingItem.Year, ContainingItem.Month, ContainingItem.Date, ContainingItem.StartHour, ContainingItem.StartMinute, ContainingItem.EndHour, ContainingItem.EndMinute);
 
-                            BtnEdit.setText(ContainingItem.Category + "   id : " + Integer.toString(ContainingItem.ItemId) + "\n" + Integer.toString(ContainingItem.Year) + " - " + Integer.toString(ContainingItem.Month) + " - " + Integer.toString(ContainingItem.Date) + "\n" + Integer.toString(ContainingItem.StartHour) + " : " + Integer.toString(ContainingItem.StartMinute) + " ~ " + Integer.toString(ContainingItem.EndHour) + " : " + Integer.toString(ContainingItem.EndMinute));
+                            BtnEdit.setText(ContainingItem.Category + "\n" + Integer.toString(ContainingItem.Year) + " - " + Integer.toString(ContainingItem.Month) + " - " + Integer.toString(ContainingItem.Date) + "\n" + Integer.toString(ContainingItem.StartHour) + " : " + Integer.toString(ContainingItem.StartMinute) + " ~ " + Integer.toString(ContainingItem.EndHour) + " : " + Integer.toString(ContainingItem.EndMinute));
                             alertDialog.dismiss();
                             updateView();
                         }
@@ -141,7 +141,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
         public void setItem(ActInfoItem item, int position) {
             Index = position;
             ContainingItem = item;
-            BtnEdit.setText(item.Category + "   id : " + Integer.toString(item.ItemId) + "\n" + Integer.toString(item.Year) + " - " + Integer.toString(item.Month) + " - " + Integer.toString(item.Date) + "\n" + Integer.toString(item.StartHour) + " : " + Integer.toString(item.StartMinute) + " ~ " + Integer.toString(item.EndHour) + " : " + Integer.toString(item.EndMinute));
+            BtnEdit.setText(item.Category + "\n" + Integer.toString(item.Year) + " - " + Integer.toString(item.Month) + " - " + Integer.toString(item.Date) + "\n" + Integer.toString(item.StartHour) + " : " + Integer.toString(item.StartMinute) + " ~ " + Integer.toString(item.EndHour) + " : " + Integer.toString(item.EndMinute));
             int CategoryNum = SavedSettings.CategoryList.size();
 
             for(int i = 0; i < 5; i++) {
