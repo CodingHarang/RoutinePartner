@@ -11,6 +11,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -92,12 +93,37 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                     BtnOK.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            int SAMPM = NumPickers[0].getValue();
+                            int Shour = NumPickers[2].getValue();
+                            int Sminute = NumPickers[4].getValue();
+                            int EAMPM = NumPickers[1].getValue();
+                            int Ehour = NumPickers[3].getValue();
+                            int Eminute = NumPickers[5].getValue();
+                            if(SAMPM == 0) {
+                                if(Shour == 12) Shour = 0;
+                            } else {
+                                if(Shour == 12) Shour = 12;
+                                else Shour += 12;
+                            }
+                            if(EAMPM == 0) {
+                                if(Ehour == 12) {
+                                    if(Eminute == 0) Ehour = 24;
+                                    else Ehour = 0;
+                                }
+                            } else {
+                                if(Ehour == 12) Ehour = 12;
+                                else Ehour += 12;
+                            }
+                            if(Shour > Ehour || (Shour == Ehour && Sminute > Eminute)) {
+                                Toast.makeText(Context, "Invalid Time", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             ContainingItem.Category = EdtCategory.getText().toString();
                             ContainingItem.Year = cal.get(Calendar.YEAR);
                             ContainingItem.Month = cal.get(Calendar.MONTH) + 1;
                             ContainingItem.Date = cal.get(Calendar.DATE);
-                            ContainingItem.StartHour = NumPickers[0].getValue() == 0 ? NumPickers[2].getValue() : NumPickers[2].getValue() + 12;
-                            ContainingItem.EndHour = NumPickers[1].getValue() == 0 ? NumPickers[3].getValue() : NumPickers[3].getValue() + 12;
+                            ContainingItem.StartHour = NumPickers[0].getValue() == 0 ? (NumPickers[2].getValue() == 12 ? 0 : NumPickers[2].getValue()) : (NumPickers[2].getValue() == 12 ? 12 : NumPickers[2].getValue() + 12);
+                            ContainingItem.EndHour = NumPickers[1].getValue() == 0 ? (NumPickers[3].getValue() == 12 ? 0 : NumPickers[3].getValue()) : (NumPickers[3].getValue() == 12 ? 12 : NumPickers[3].getValue() + 12);
                             ContainingItem.StartMinute = NumPickers[4].getValue();
                             ContainingItem.EndMinute = NumPickers[5].getValue();
                             ActInfoDB db = ActInfoDB.getDatabase(parent.getContext());

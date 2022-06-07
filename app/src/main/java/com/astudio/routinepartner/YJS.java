@@ -23,14 +23,16 @@ public class YJS {
         for(int i = 2; i < 4; i++) {
             NP[i].setTextSize(40);
             NP[i].setMaxValue(12);
-            NP[i].setMinValue(0);
+            NP[i].setMinValue(1);
             NP[i].setTextColor(0xFF333333);
+            NP[i].setTextSize(60);
         }
         for(int i = 4; i < 6; i++) {
             NP[i].setTextSize(40);
             NP[i].setMaxValue(59);
             NP[i].setMinValue(0);
             NP[i].setTextColor(0xFF333333);
+            NP[i].setTextSize(60);
         }
         for(int i = 0; i < 2; i++) {
             NP[i].setTextSize(30);
@@ -38,6 +40,7 @@ public class YJS {
             NP[i].setMinValue(0);
             NP[i].setTextColor(0xFF333333);
             NP[i].setDisplayedValues(new String[] {"AM", "PM"});
+            NP[i].setTextSize(60);
         }
     }
 }

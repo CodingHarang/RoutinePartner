@@ -259,6 +259,31 @@ public class MainActivity extends AppCompatActivity {
                 Year = cal.get(Calendar.YEAR);
                 Month = cal.get(Calendar.MONTH);
                 Date = cal.get(Calendar.DATE);
+                int SAMPM = NumPickers[0].getValue();
+                int Shour = NumPickers[2].getValue();
+                int Sminute = NumPickers[4].getValue();
+                int EAMPM = NumPickers[1].getValue();
+                int Ehour = NumPickers[3].getValue();
+                int Eminute = NumPickers[5].getValue();
+                if(SAMPM == 0) {
+                    if(Shour == 12) Shour = 0;
+                } else {
+                    if(Shour == 12) Shour = 12;
+                    else Shour += 12;
+                }
+                if(EAMPM == 0) {
+                    if(Ehour == 12) {
+                        if(Eminute == 0) Ehour = 24;
+                        else Ehour = 0;
+                    }
+                } else {
+                    if(Ehour == 12) Ehour = 12;
+                    else Ehour += 12;
+                }
+                if(Shour > Ehour || (Shour == Ehour && Sminute > Eminute)) {
+                    Toast.makeText(getApplicationContext(), "Invalid Time", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 makeData();
                 timeToAngle(PieYear, PieMonth, PieDay);
                 timeToAngleYesterday(YesterdayYear, YesterdayMonth, YesterdayDay);
@@ -286,6 +311,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Test Data Created", Toast.LENGTH_SHORT).show();
                 makeTestData();
+                timeToAngle(PieYear, PieMonth, PieDay);
+                timeToAngleYesterday(YesterdayYear, YesterdayMonth, YesterdayDay);
+                sendDataToPieChart();
+                PieChart.update();
             }
         });
         BtnDeleteAll.setOnClickListener(new View.OnClickListener() {
@@ -296,6 +325,10 @@ public class MainActivity extends AppCompatActivity {
                 mActInfoDao.deleteAll();
                 setRadarData();//[PSY] 추가코드
                 PreferenceManage.clear(MainContext); //[PSY] 추가코드
+                timeToAngle(PieYear, PieMonth, PieDay);
+                timeToAngleYesterday(YesterdayYear, YesterdayMonth, YesterdayDay);
+                sendDataToPieChart();
+                PieChart.update();
                 Toast.makeText(getApplicationContext(), "All Data Deleted", Toast.LENGTH_SHORT).show();
             }
         });
@@ -593,7 +626,7 @@ public class MainActivity extends AppCompatActivity {
         Ehour = NumPickers[3].getValue();
         Eminute = NumPickers[5].getValue();
 
-        addToActDB(CategoryName, Year, Month + 1, Date, SAMPM == 0 ? Shour : Shour + 12, Sminute, EAMPM == 0 ? Ehour : Ehour + 12, Eminute);
+        addToActDB(CategoryName, Year, Month + 1, Date, SAMPM == 0 ? (Shour == 12 ? 0 : Shour) : (Shour == 12 ? 12 : Shour + 12), Sminute, EAMPM == 0 ? (Ehour == 12 ? 0 : Ehour) : (Ehour == 12 ? 12 : Ehour + 12), Eminute);
 
         ArrayList<Integer> AffectingStat=SavedSettings.AffectingStat;
         ArrayList<String> StatList=SavedSettings.StatList;
