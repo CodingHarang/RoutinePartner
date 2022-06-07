@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class BarChartActivity extends AppCompatActivity {
@@ -38,8 +40,8 @@ public class BarChartActivity extends AppCompatActivity {
     protected ArrayList<ActInfoItem> ActInfoItemListTemp = new ArrayList<ActInfoItem>();
     BarChart Bar_Chart;
     Calendar ChartCalender = Calendar.getInstance();
+    Calendar SCal = Calendar.getInstance(), ECal = Calendar.getInstance();
     EditText DateWhen, EditStart, EditEnd;
-    String[] ActItems = {"Select","Eat", "Sleep", "Study", "Etc"};
     String CurrentCategory, EditStartText, EditEndText;
     Boolean CategoryValue = false, DateCompareValue = false, DefaultData = true;
     ArrayList<String> DayList = new ArrayList<>();
@@ -47,9 +49,9 @@ public class BarChartActivity extends AppCompatActivity {
     ArrayList<ArrayList<Float>> WeekTimeList = new ArrayList<>();
     Spinner ChartSpinner;
     Button BtnMakeChart;
-    TextView PercnetText, ProgressDataText;
+    TextView PercentText, ProgressDataText;
     ProgressBar CircularProgressBar;
-    ArrayList<String> CatetoryList = new ArrayList<>(Arrays.asList("선택"));
+    ArrayList<String> CategoryList = new ArrayList<>(Arrays.asList("선택"));
     XAxis Xaxis;
 
     int Syear, Smonth, Sday, Eyear, Emonth, Eday, SDate, EDate, Chartdata = 7;
@@ -68,7 +70,8 @@ public class BarChartActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        CircularProgressBar.setProgress(0, true);
+        CircularProgressBar.setMax(100);
+        CircularProgressBar.setProgress(100);
     }
 
     @Override
@@ -81,12 +84,12 @@ public class BarChartActivity extends AppCompatActivity {
         EditEnd = (EditText) findViewById(R.id.EditEnd);
         ChartSpinner = (Spinner) findViewById(R.id.ChartSpinner);
         BtnMakeChart = (Button) findViewById(R.id.BtnMakeChart);
-        PercnetText = findViewById(R.id.ProgressPercent);
+        PercentText = findViewById(R.id.ProgressPercent);
         CircularProgressBar = findViewById(R.id.CirCularprogressBar);
         ProgressDataText = findViewById(R.id.ProgressDataText);
 
         CircularProgressBar.setMax(100);
-        CatetoryList.addAll(SavedSettings.CategoryList);
+        CategoryList.addAll(SavedSettings.CategoryList);
 
         YAxis Yraxis, Ylaxis;
 
@@ -124,14 +127,14 @@ public class BarChartActivity extends AppCompatActivity {
 
 
         //스피너에 관한 부분
-        ArrayAdapter<String> ChartAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CatetoryList);
+        ArrayAdapter<String> ChartAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CategoryList);
 
         ChartAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         ChartSpinner.setAdapter(ChartAdapter);
         ChartSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                CurrentCategory = CatetoryList.get(i);
+                CurrentCategory = CategoryList.get(i);
                 CategoryValue = true;
                 if(i == 0){
                     CategoryValue = false;
@@ -141,7 +144,7 @@ public class BarChartActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 CategoryValue = false;
-                CurrentCategory = ActItems[0];
+                CurrentCategory = CategoryList.get(0);
                 DayList.clear();
                 TimeList.clear();
             }
@@ -210,17 +213,18 @@ public class BarChartActivity extends AppCompatActivity {
             Syear = ChartCalender.get(Calendar.YEAR);
             Smonth = ChartCalender.get(Calendar.MONTH) + 1;
             Sday = ChartCalender.get(Calendar.DAY_OF_MONTH);
-            SDate = ChartCalender.get(Calendar.DATE);
+
+            SCal = new GregorianCalendar(Syear, Smonth-1, Sday);
 
             EditStartText = SDF.format(ChartCalender.getTime());
         }else if(DateWhen == EditEnd){
             Eyear = ChartCalender.get(Calendar.YEAR);
             Emonth = ChartCalender.get(Calendar.MONTH) + 1;
             Eday = ChartCalender.get(Calendar.DAY_OF_MONTH);
-            EDate = ChartCalender.get(Calendar.DATE);
+
+            ECal = new GregorianCalendar(Eyear, Emonth-1, Eday);
 
             EditEndText = SDF.format(ChartCalender.getTime());
-
         }
     }
 
@@ -479,10 +483,13 @@ public class BarChartActivity extends AppCompatActivity {
             }
         }
 
+
+        long DiffSec = (ECal.getTimeInMillis() - SCal.getTimeInMillis())/1000;
+        long DiffDay = (DiffSec / (24*60*60));
         CircularProgressBar.setMax(SizeOfData);
         CircularProgressBar.setProgress(SuccessGoal, true);
-        PercnetText.setText(""+(Math.round((double)SuccessGoal/(double)SizeOfData*100))+"%");
-        ProgressDataText.setText("총 "+(EDate-SDate+1)+"일 동안 "+SuccessGoal+"번 목표를 달성했습니다.");
+        PercentText.setText(""+(Math.round((double)SuccessGoal/(double)SizeOfData*100))+"%");
+        ProgressDataText.setText("총 "+(DiffDay+1)+"일 동안 "+SuccessGoal+"번 목표를 달성했습니다.");
 
     }
 
