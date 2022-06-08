@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
                     else Ehour += 12;
                 }
                 if(Shour > Ehour || (Shour == Ehour && Sminute > Eminute)) {
-                    Toast.makeText(getApplicationContext(), "Invalid Time", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "시간을 다시 입력해주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 makeData();
@@ -665,9 +665,7 @@ public class MainActivity extends AppCompatActivity {
             addToActDB("수면", 2022, 6, i, 22, 0, 0, 0);
 
             addToActDB("수면", 2022, 6, i+1, 0, 0, 8, 0);
-            addToActDB("공부", 2022, 6, i+1, 10, 0, 14, 0);
             addToActDB("식사", 2022, 6, i+1, 14, 0, 15, 0);
-            addToActDB("공부", 2022, 6, i+1, 15, 0, 19, 30);
             addToActDB("식사", 2022, 6, i+1, 20, 0, 20, 30);
             addToActDB("공부", 2022, 6, i+1, 21, 0, 22, 30);
             addToActDB("수면", 2022, 6, i+1, 23, 0, 0, 0);

@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:id="@+id/btnOK"
-            android:text="OK"
+            android:text="저장"
             android:textColor="#333333"
             android:textAllCaps="false"
             android:background="@drawable/button_square" />
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:id="@+id/btnCancel"
-            android:text="Cancel"
+            android:text="취소"
             android:textColor="#333333"
             android:textAllCaps="false"
             android:background="@drawable/button_square" />

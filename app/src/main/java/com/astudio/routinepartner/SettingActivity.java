@@ -159,13 +159,13 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(View v, int pos) {
                 if(pos == 0 || pos == 1){
-                    Toast.makeText(getApplicationContext(), "기본 카테고리는 삭제할 수 없어요.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "기본 카테고리는 삭제할 수 없어요",Toast.LENGTH_SHORT).show();
 
                 }else{
                     AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
 
                     builder.setTitle("정말 삭제하시겠습니까?");
-                    builder.setMessage("카테고리를 삭제하면 저장되어있던 해당 카테고리의 모든 기록이 삭제됩니다.");
+                    builder.setMessage("카테고리를 삭제하면 저장되어있던 해당 카테고리의 모든 기록이 삭제됩니다");
                     builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -195,7 +195,7 @@ public class SettingActivity extends AppCompatActivity {
                                         SavedSettings.AffectingStat.get(k), SavedSettings.GoalType.get(k), SavedSettings.Goal.get(k), SavedSettings.Order.get(k)));
                             }
 
-                            Toast.makeText(SettingActivity.this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingActivity.this, "삭제되었습니다", Toast.LENGTH_SHORT).show();
 
 
                             mSettingsDao.deleteAll();

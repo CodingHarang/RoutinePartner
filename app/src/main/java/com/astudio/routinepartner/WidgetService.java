@@ -48,7 +48,7 @@ public class WidgetService extends Service {
     @Override // startService()로 서비스를 시작할 때 호출
     public int onStartCommand(Intent intent, int flags, int startId) {
         CategoryNum = WidgetSettings.ClickedWidgetButton;
-        Toast.makeText(getApplicationContext(), "Service Started", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "활동 기록이 시작되었습니다", Toast.LENGTH_SHORT).show();
 
         Calendar cal = Calendar.getInstance();
         SYear = cal.get(Calendar.YEAR);
@@ -91,7 +91,7 @@ public class WidgetService extends Service {
         actInfo.setEndHour(EHour);
         actInfo.setEndMinute(EMinute);
         mActInfoDao.insert(actInfo);
-        Toast.makeText(getApplicationContext(), "Service Ended", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "활동 기록이 종료되었습니다", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 

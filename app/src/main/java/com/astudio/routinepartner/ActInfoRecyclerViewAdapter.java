@@ -115,7 +115,7 @@ public class ActInfoRecyclerViewAdapter extends RecyclerView.Adapter<ActInfoRecy
                                 else Ehour += 12;
                             }
                             if(Shour > Ehour || (Shour == Ehour && Sminute > Eminute)) {
-                                Toast.makeText(Context, "Invalid Time", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Context, "시간을 다시 입력해주세요", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             ContainingItem.Category = EdtCategory.getText().toString();

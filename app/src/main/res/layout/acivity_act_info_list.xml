@@ -23,7 +23,7 @@
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_margin="5dp"
-        android:text="Show List"
+        android:text="기록 보기"
         android:background="@drawable/button_square"
         android:textAllCaps="false"
         android:textColor="#333333" />

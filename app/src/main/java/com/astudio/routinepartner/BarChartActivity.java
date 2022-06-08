@@ -121,7 +121,7 @@ public class BarChartActivity extends AppCompatActivity {
         Bar_Chart.setDrawGridBackground(false);
         Bar_Chart.setDrawValueAboveBar(true); //수치가 그래프 위에 표시
         Bar_Chart.setDescription(null);
-        Bar_Chart.setNoDataText("데이터가 없습니다.");
+        Bar_Chart.setNoDataText("데이터가 없습니다");
 
         weekChart();
 
@@ -178,11 +178,11 @@ public class BarChartActivity extends AppCompatActivity {
                 compareDate();
 
                 if(!CategoryValue&&!DateCompareValue){
-                    Toast.makeText(getApplicationContext(), "카테고리 선택과 날짜 설정을 다시 해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "카테고리 선택과 날짜 설정을 다시 해주세요", Toast.LENGTH_SHORT).show();
                 }else if(!DateCompareValue){
-                    Toast.makeText(getApplicationContext(), "날짜 설정이 올바르지 않아요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "날짜 설정이 올바르지 않아요", Toast.LENGTH_SHORT).show();
                 }else if(!CategoryValue){
-                    Toast.makeText(getApplicationContext(), "카테고리를 선택해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "카테고리를 선택해주세요", Toast.LENGTH_SHORT).show();
                 }else{
                     DefaultData = false;
                     CircularProgressBar.setProgress(0);
@@ -193,7 +193,7 @@ public class BarChartActivity extends AppCompatActivity {
                     getCategory();
                     drawBarChart(DayList, TimeList);
                     if(DayList.size() == 0){
-                        Bar_Chart.setNoDataText("데이터가 없습니다.");
+                        Bar_Chart.setNoDataText("데이터가 없습니다");
                     }
                     GoalPercent();
                 }
@@ -276,7 +276,7 @@ public class BarChartActivity extends AppCompatActivity {
             barDataSet.setColors(Color.parseColor("#AEDDEF"));
 
             if(entries.size() == 0){
-                Bar_Chart.setNoDataText("데이터가 없습니다.");
+                Bar_Chart.setNoDataText("데이터가 없습니다");
             }else{
                 Bar_Chart.setData(data);
                 Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정
@@ -345,7 +345,7 @@ public class BarChartActivity extends AppCompatActivity {
             Bar_Chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(daylist));
 
             if(entries.size() == 0){
-                Bar_Chart.setNoDataText("일주일 간의 데이터가 없습니다.");
+                Bar_Chart.setNoDataText("일주일 간의 데이터가 없습니다");
             }else{
                 Bar_Chart.setData(data);
                 Bar_Chart.getLegend().setEnabled(false); //하단 라벨 안보이게 설정
@@ -489,7 +489,7 @@ public class BarChartActivity extends AppCompatActivity {
         CircularProgressBar.setMax(SizeOfData);
         CircularProgressBar.setProgress(SuccessGoal, true);
         PercentText.setText(""+(Math.round((double)SuccessGoal/(double)SizeOfData*100))+"%");
-        ProgressDataText.setText("총 "+(DiffDay+1)+"일 동안 "+SuccessGoal+"번 목표를 달성했습니다.");
+        ProgressDataText.setText("총 "+(DiffDay+1)+"일 동안 "+SuccessGoal+"번 목표를 달성했습니다");
 
     }
 
